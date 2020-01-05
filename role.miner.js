@@ -36,7 +36,7 @@ var roleMiner = {
   sing: function (creep) {
     switch (creep.memory.say) {
       case 1:
-        creep.say("Hi Ho ⛏️", true);
+        creep.say("Hello Ho ⛏️", true);
         break;
       case 2:
         creep.say("⛏️ Hi Ho", true);
