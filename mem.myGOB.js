@@ -1,12 +1,15 @@
 var memGOB = {
-
   /** @param {Creep} creep **/
   getMyGOB: function () {
-    var thisGOB = new {};
+    var thisGOB = new {}();
 
     // Room W17N38
-    var RoomW17N38 = new {};
-    var structures = Game.rooms.W17N38.find(FIND_STRUCTURES, { filter: (structure) => { return (structure.structureType == STRUCTURE_LINK); } });
+    var RoomW17N38 = new {}();
+    var structures = Game.rooms.W17N38.find(FIND_STRUCTURES, {
+      filter: (structure) => {
+        return structure.structureType == STRUCTURE_LINK;
+      },
+    });
     for (var struct in structures) {
       switch (struct.structureType) {
         case STRUCTURE_LINK:
@@ -16,13 +19,13 @@ var memGOB = {
           RoomW17N38.structures.towers.push(struct);
           break;
         case STRUCTURE_EXTENSION:
-          if(struct.energy < struct.energyCapacity){
-          RoomW17N38.structures.extensions.push(struct);
+          if (struct.energy < struct.energyCapacity) {
+            RoomW17N38.structures.extensions.push(struct);
           }
           break;
         case STRUCTURE_SPAWNER:
-          if(struct.energy < struct.energyCapacity){
-          RoomW17N38.structures.spawners.push(struct);
+          if (struct.energy < struct.energyCapacity) {
+            RoomW17N38.structures.spawners.push(struct);
           }
           break;
         case STRUCTURE_CONTAINER:
@@ -36,14 +39,11 @@ var memGOB = {
           break;
       }
     }
-    
-
 
     thisGOB.RoomW17N38 = RoomW17N38;
 
-
     return thisGOB;
-  }
+  },
 };
 
 module.exports = memGOB;
@@ -68,8 +68,8 @@ module.exports = memGOB;
 //     my.tickUptime += 1
 //     var tOut = ""
 //     tOut = tOut + ""
-//     tOut = tOut + '  T: ' + (Game.time - my.tickDiff) 
-//     tOut = tOut + ', t:' + my.tickUptime 
+//     tOut = tOut + '  T: ' + (Game.time - my.tickDiff)
+//     tOut = tOut + ', t:' + my.tickUptime
 //     tOut = tOut + ', L: ' + Game.cpu.limit
 //     tOut = tOut + ', tL: ' + Game.cpu.tickLimit
 //     tOut = tOut + ', b: ' + Game.cpu.bucket
@@ -90,33 +90,47 @@ module.exports = memGOB;
 function genUtils() {
   //clock in all rooms
   var time = Game.time % 1500;
-  for (var key in Game.rooms) { Game.rooms[key].visual.text("Time: " + time, 10, 49, { color: 'white', font: 1 }); }
+  for (var key in Game.rooms) {
+    Game.rooms[key].visual.text("Time: " + time, 10, 49, {
+      color: "white",
+      font: 1,
+    });
+  }
 
   //attack logs in all rooms
   for (var key in Game.rooms) {
     var tempRoom = Game.rooms[key];
-    if (typeof tempRoom.memory.attackLogs == 'undefined') { tempRoom.memory.attackLogs = []; }
-    if (typeof tempRoom.memory.underAttackFlag == 'undefined') { tempRoom.memory.underAttackFlag = false; }
+    if (typeof tempRoom.memory.attackLogs == "undefined") {
+      tempRoom.memory.attackLogs = [];
+    }
+    if (typeof tempRoom.memory.underAttackFlag == "undefined") {
+      tempRoom.memory.underAttackFlag = false;
+    }
 
     var ensInRoom = tempRoom.find(FIND_HOSTILE_CREEPS);
     if (ensInRoom.length > 0) {
       if (tempRoom.memory.underAttackFlag == false) {
         tempRoom.memory.underAttackFlag = true;
         tempRoom.memory.attackLogs.push(Game.time);
-        if (tempRoom.memory.attackLogs.length > 10) { tempRoom.memory.attackLogs.shift(); }
+        if (tempRoom.memory.attackLogs.length > 10) {
+          tempRoom.memory.attackLogs.shift();
+        }
       }
-    }
-    else {
+    } else {
       tempRoom.memory.underAttackFlag = false;
     }
     if (tempRoom.memory.attackLogs.length > 0) {
-      tempRoom.visual.text("Ticks since last attack: " + (Game.time - tempRoom.memory.attackLogs[tempRoom.memory.attackLogs.length - 1]), 10, 48, { color: 'red', font: 1 });
+      tempRoom.visual.text(
+        "Ticks since last attack: " +
+          (Game.time -
+            tempRoom.memory.attackLogs[tempRoom.memory.attackLogs.length - 1]),
+        10,
+        48,
+        { color: "red", font: 1 }
+      );
     }
   }
 }
 
-
 //  Add construction
 //  var path = room.findPath(srcs[i].pos,targPos, {ignoreCreeps: true, range: 1});
-
-
