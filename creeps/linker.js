@@ -1,4 +1,4 @@
-var roleUtilities = require("role.Utilities");
+// var roleUtilities = require("role.Utilities");
 var roleLinker = {
   /** @param {Creep} creep **/
   run: function (creep) {
@@ -200,4 +200,4 @@ var roleLinker = {
   //   }
 };
 
-module.exports = roleLinker;
+module.exports.Linker = roleLinker;

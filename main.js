@@ -1,16 +1,16 @@
-var roles = {};
-roles.Defender = require("creeps.defender");
-roles.Carrier = require("creeps.carrier");
-roles.upCarrier = require("creeps.upCarrier");
-roles.Upgrader = require("creeps.upgrader");
-roles.Builder = require("creeps.builder");
-roles.Signer = require("creeps.signer");
-roles.Miner = require("creeps.miner");
-roles.Linker = require("creeps.linker");
-roles.Repair = require("creeps.repair");
-roles.Lab = require("creeps.lab");
-var modTower = require("structures.tower");
-roles.Utilities = require("creeps.utilities");
+var roles = require("creeps.all");
+// roles.Defender = require("creeps.defender");
+// roles.Carrier = require("creeps.carrier");
+// roles.upCarrier = require("creeps.upCarrier");
+// roles.Upgrader = require("creeps.upgrader");
+// roles.Builder = require("creeps.builder");
+// roles.Signer = require("creeps.signer");
+// roles.Miner = require("creeps.miner");
+// roles.Linker = require("creeps.linker");
+// roles.Repair = require("creeps.repair");
+// roles.Lab = require("creeps.lab");
+var structures = require("structures.all");
+// roles.Utilities = require("creeps.utilities");
 
 module.exports.loop = function () {
   //  Ticks
@@ -40,11 +40,11 @@ module.exports.loop = function () {
   // });
   try {
     for (var i = 0; i < towers.length; i++) {
-      modTower.run(towers[i]);
+      structures.Tower.run(towers[i]);
       displayAttackRings(myRoomOne, towers[i]);
     }
     //  for (var i = 0; i < moTowers.length; i++) {
-    //   modTower.run(moTowers[i]);
+    //   structures.Tower.run(moTowers[i]);
     //   displayAttackRings(myRoomTwo, moTowers[i]);
     //  }
   } catch (e) {

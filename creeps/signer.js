@@ -1,4 +1,4 @@
-var roleUtilities = require("role.Utilities");
+// var roleUtilities = require("role.Utilities");
 var roleSigner = {
   /** @param {Creep} creep **/
   run: function (creep) {
@@ -57,7 +57,7 @@ var roleSigner = {
   },
 };
 
-module.exports = roleSigner;
+module.exports.Signer = roleSigner;
 
 // Memory.TaskMan.E46N33.spawn.push({
 //   Signer: {

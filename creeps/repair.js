@@ -1,4 +1,4 @@
-var roleUtilities = require("role.Utilities");
+// var roleUtilities = require("role.Utilities");
 var roleRepair = {
   /** @param {Creep} creep **/
   run: function (creep) {
@@ -81,4 +81,4 @@ var roleRepair = {
   },
 };
 
-module.exports = roleRepair;
+module.exports.Repair = roleRepair;

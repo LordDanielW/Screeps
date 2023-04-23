@@ -1,4 +1,4 @@
-var roleUtilities = require("role.Utilities");
+// var roleUtilities = require("role.Utilities");
 var roleBuilder = {
   /** @param {Creep} creep **/
   run: function (creep) {
@@ -57,7 +57,7 @@ var roleBuilder = {
   },
 };
 
-module.exports = roleBuilder;
+module.exports.Builder = roleBuilder;
 
 // Memory.TaskMan.W17N38.spawn.queue.push({
 //   Builder: {

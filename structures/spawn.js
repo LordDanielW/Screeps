@@ -1,9 +1,9 @@
-var roleUpCarrier = require("role.upCarrier");
-var roleCarrier = require("role.carrier");
-var roleUpgrader = require("role.upgrader");
-var roleBuilder = require("role.builder");
-var roleMiner = require("role.miner");
-var roleLink = require("role.linker");
+// var roleUpCarrier = require("role.upCarrier");
+// var roleCarrier = require("role.carrier");
+// var roleUpgrader = require("role.upgrader");
+// var roleBuilder = require("role.builder");
+// var roleMiner = require("role.miner");
+// var roleLink = require("role.linker");
 
 var modSpawn = {
   //  Spawn Creeps
@@ -127,4 +127,4 @@ var modSpawn = {
   },
 };
 
-module.exports = modSpawn;
+module.exports.Spawn = modSpawn;

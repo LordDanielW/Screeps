@@ -1,4 +1,4 @@
-var roleUtilities = require("role.Utilities");
+// var roleUtilities = require("role.Utilities");
 var roleUpgrader = {
   /** @param {Creep} creep **/
   run: function (creep) {
@@ -55,4 +55,4 @@ var roleUpgrader = {
   },
 };
 
-module.exports = roleUpgrader;
+module.exports.Upgrader = roleUpgrader;

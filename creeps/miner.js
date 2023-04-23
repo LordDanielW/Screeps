@@ -128,4 +128,4 @@ var roleMiner = {
   },
 };
 
-module.exports = roleMiner;
+module.exports.Miner = roleMiner;

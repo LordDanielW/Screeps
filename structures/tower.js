@@ -40,4 +40,4 @@ var modTower = {
 
   //        Game.rooms.W17N38.controller.activateSafeMode();
 };
-module.exports = modTower;
+module.exports.Tower = modTower;

@@ -169,4 +169,4 @@ var roleUtilities = {
   },
 };
 
-module.exports = roleUtilities;
+module.exports.Utilities = roleUtilities;
