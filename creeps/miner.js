@@ -36,8 +36,8 @@ var roleMiner = {
       creepMem
     );
   },
-  body1: [WORK, WORK, WORK, WORK, WORK, MOVE, MOVE],
-  body2: [WORK, MOVE],
+  body2: [WORK, WORK, WORK, WORK, WORK, MOVE, MOVE],
+  body1: [WORK, WORK, WORK, WORK, MOVE],
   body3: [
     WORK,
     WORK,

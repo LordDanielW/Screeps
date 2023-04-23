@@ -1,16 +1,16 @@
 var roles = {};
-roles.Defender = require("role.defender");
-roles.Carrier = require("role.carrier");
-roles.upCarrier = require("role.upCarrier");
-roles.Upgrader = require("role.upgrader");
-roles.Builder = require("role.builder");
-roles.Signer = require("role.signer");
-roles.Miner = require("role.miner");
-roles.Linker = require("role.linker");
-roles.Repair = require("role.repair");
-roles.Lab = require("role.lab");
-var modTower = require("mod.tower");
-roles.Utilities = require("role.Utilities");
+roles.Defender = require("creeps.defender");
+roles.Carrier = require("creeps.carrier");
+roles.upCarrier = require("creeps.upCarrier");
+roles.Upgrader = require("creeps.upgrader");
+roles.Builder = require("creeps.builder");
+roles.Signer = require("creeps.signer");
+roles.Miner = require("creeps.miner");
+roles.Linker = require("creeps.linker");
+roles.Repair = require("creeps.repair");
+roles.Lab = require("creeps.lab");
+var modTower = require("structures.tower");
+roles.Utilities = require("creeps.utilities");
 
 module.exports.loop = function () {
   //  Ticks
