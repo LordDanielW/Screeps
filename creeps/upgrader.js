@@ -14,8 +14,8 @@ var roleUpgrader = {
       roleUtilities.doUpgrade(creep);
     } else {
       if (!roleUtilities.getEnergyLink(creep, 1)) {
-        //roleUtilities.getEnergyContainer(creep, 2);
-        roleUtilities.getEnergyHarvest(creep);
+        roleUtilities.getEnergyContainer(creep, 2);
+        //roleUtilities.getEnergyHarvest(creep);
       }
 
       //   if(creep.memory.source == 1){

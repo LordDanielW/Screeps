@@ -166,7 +166,7 @@ var roleUtilities = {
   //
   giveSpawner: function (creep) {
     let state = "NONE";
-    var emptySpawners = creep.room.find(FIND_STRUCTURES, {
+    let emptySpawners = creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return (
           (structure.structureType == STRUCTURE_EXTENSION ||
@@ -191,7 +191,23 @@ var roleUtilities = {
     return state;
   },
 
-  giveTower: function (creep) {},
+  giveTower: function (creep) {
+    let state = "NONE";
+    let emptyTowers = creep.room.find(FIND_STRUCTURES, {
+      filter: (structure) => {
+        return (
+          structure.structureType == STRUCTURE_TOWER &&
+          structure.energy < structure.energyCapacity
+        );
+      },
+    });
+    if (emptyTowers.length > 0) {
+      let emptyTower = creep.pos.findClosestByPath(emptyTowers);
+      if (creep.transfer(emptyTower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(emptyTower, { visualizePathStyle: { stroke: "#ffffff" } });
+      }
+    }
+  },
 
   giveContainer: function (creep) {},
 
@@ -199,6 +215,8 @@ var roleUtilities = {
   //
   //
   pathStyle: { visualizePathStyle: { stroke: "#ffffff" } },
+
+  transferResponse: function (creep, position, response) {},
 
   emptyCarry: function (creep) {
     creep.moveTo(creep.room.storage);
