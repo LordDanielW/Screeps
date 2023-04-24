@@ -1,32 +1,22 @@
+//  Import Modules
+//
 var roles = require("creeps.all");
-// roles.Defender = require("creeps.defender");
-// roles.Carrier = require("creeps.carrier");
-// roles.upCarrier = require("creeps.upCarrier");
-// roles.Upgrader = require("creeps.upgrader");
-// roles.Builder = require("creeps.builder");
-// roles.Signer = require("creeps.signer");
-// roles.Miner = require("creeps.miner");
-// roles.Linker = require("creeps.linker");
-// roles.Repair = require("creeps.repair");
-// roles.Lab = require("creeps.lab");
 var structures = require("structures.all");
-// roles.Utilities = require("creeps.utilities");
 
+//  Variables
+var myRoomOne = Game.rooms.E9N52;
+//var myRoomTwo = Game.rooms.W16N39;
+
+//  Main Loop
+//
 module.exports.loop = function () {
   //  Ticks
-  //
-  var Tick = Memory.TaskMan.Tick;
-  Memory.TaskMan.Tick++;
-  if (Memory.TaskMan.Tick >= 1460) {
-    Memory.TaskMan.Tick = 0;
-    if (Memory.TaskMan.NameNum >= 100) {
-      Memory.TaskMan.NameNum = 1;
-    }
-  }
-  doTicks(Tick);
+  //  basis for actions on a creeps 1500 tick life.
+  doTicks();
+
+  //  Garbage Collect
+  //  remove dead creeps from memory
   garbageCollect();
-  var myRoomOne = Game.rooms.E9N52;
-  //var myRoomTwo = Game.rooms.W16N39;
 
   //  Towers
   //
@@ -61,7 +51,8 @@ module.exports.loop = function () {
       roles[creep.memory.role].run(creep);
     } catch (e) {
       creep.say("㊙︎ HELP!", true);
-      //creep.memory.role = "Repair";
+      creep.memory.role = "Repair";
+
       console.log("Creep Fail");
       console.log(e);
     }
@@ -213,10 +204,21 @@ function garbageCollect() {
 //  Do Ticks
 //
 //
-function doTicks(ticks) {
+function doTicks() {
+  var ticks = Memory.TaskMan.Tick;
+  Memory.TaskMan.Tick++;
+  if (Memory.TaskMan.Tick >= 1460) {
+    Memory.TaskMan.Tick = 0;
+    // Keeps a unique name for spawned creeps
+    if (Memory.TaskMan.NameNum >= 200) {
+      Memory.TaskMan.NameNum = 1;
+    }
+  }
+
   var roomOne = "E9N52";
   var spawnName = "Spawn1";
   switch (ticks) {
+    //  Memory.TaskMan.E9N52.spawn.push({ Carrier: { memory: { role: "Carrier", task: "Get", iStore:0, spawn: "Spawn1" } } });
     case 1:
       Memory.TaskMan[roomOne].spawn.push({
         Carrier: {
@@ -274,9 +276,11 @@ function doTicks(ticks) {
     //     }
     //   });
     //   break;
-    // case 550:
-    //   Memory.TaskMan[roomOne].spawn.push({ "Repair": { memory: { role: "Repair", task: "get", spawn: "Vat1" } } });
-    //   break;
+    case 550:
+      Memory.TaskMan[roomOne].spawn.push({
+        Repair: { memory: { role: "Repair", task: "get", spawn: spawnName } },
+      });
+      break;
     // case 650:
     //         Memory.TaskMan[roomOne].spawn.push({
     //         Linker: {
@@ -320,6 +324,9 @@ function doTicks(ticks) {
   }
 }
 
+//
+//  Display Attack Rings
+//
 displayAttackRings = function (aRoom, aTower) {
   aRoom.visual.circle(aTower.pos.x, aTower.pos.y, {
     fill: "transparent",

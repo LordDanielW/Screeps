@@ -3,6 +3,7 @@ Memory.TaskMan = {
   NameNum: 1,
   E9N52: {
     spawn: [],
+
     wallHealth: 20000,
   },
 

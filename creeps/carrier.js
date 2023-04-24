@@ -1,31 +1,34 @@
-// var roleUtilities = require("role.Utilities");
 var roleCarrier = {
   /** @param {Creep} creep **/
   run: function (creep) {
-    if (creep.carry.energy == 0 && creep.memory.task == "sow") {
-      creep.memory.task = "reap";
-      creep.say("🔄 reap", true);
+    //  Variables
+
+    // Check State Of Get / Give
+    //
+    if (creep.carry.energy == 0 && creep.memory.task == "Give") {
+      creep.memory.task = "Get";
     } else if (
-      creep.memory.task == "reap" &&
+      creep.memory.task == "Get" &&
       creep.carry.energy == creep.carryCapacity
     ) {
-      creep.memory.task = "sow";
-      creep.say("🌻 sow", true);
+      creep.memory.task = "Give";
+      creep.say("🦑", true);
+    } else if (creep.memory.task != "Get" && creep.memory.task != "Give") {
+      creep.memory.task = "Get";
     }
 
-    //Object.keys(creep.carry)[1]
-    //creep.memory.iStore = 1;
-    if (creep.memory.task == "reap") {
+    //  Get
+    //
+    if (creep.memory.task == "Get") {
       if (!roleUtilities.getEnergyContainer(creep, creep.memory.iStore)) {
         // roleUtilities.getEnergyFactory(creep);
         roleUtilities.getEnergyHarvest(creep);
       }
-      //roleUtilities.getEnergyContainer(creep, 0);
-
-      //   if (!roleUtilities.getEnergyHarvest(creep)) {
-      //     roleUtilities.getEnergyStorage(creep);
-      //   }
-    } else if (creep.memory.task == "sow") {
+    }
+    //  Give
+    //
+    else if (creep.memory.task == "Give") {
+      // Fill Spawners
       var spawners = creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
           return (
@@ -40,7 +43,9 @@ var roleCarrier = {
         if (creep.transfer(spawn, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(spawn, { visualizePathStyle: { stroke: "#ffffff" } });
         }
-      } else {
+      }
+      // Fill Towers
+      else {
         var towers = creep.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
             return (
@@ -54,6 +59,7 @@ var roleCarrier = {
           if (creep.transfer(tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(tower, { visualizePathStyle: { stroke: "#ffffff" } });
           }
+          // Fill Storage
         } else {
           var containers = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
@@ -83,7 +89,7 @@ var roleCarrier = {
     var newName = "Carrier" + Memory.TaskMan.NameNum;
     Memory.TaskMan.NameNum++;
     return Game.spawns[creepMem.memory.spawn].spawnCreep(this.body, newName, {
-      memory: { role: "Carrier", task: "reap" },
+      memory: { role: "Carrier", task: "Get" },
     });
   },
 };

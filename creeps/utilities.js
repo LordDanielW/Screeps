@@ -1,4 +1,50 @@
 var roleUtilities = {
+  //
+  //
+  //
+  sayState: function (creep, state, public) {
+    let emojiSay = "❓❔❕❗";
+    switch (state) {
+      case "MOVE":
+        emojiSay = "🍄🦽";
+        break;
+      case "GET":
+        emojiSay = "🔋⚡";
+        break;
+      case "GIVE":
+        emojiSay = "🦑 🪄";
+        break;
+      case "MINE":
+        emojiSay = "⛏️";
+        break;
+      case "BUILD":
+        emojiSay = "🚧 🛠️";
+        break;
+      case "HEAL":
+        emojiSay = "🧙 PEW ✨";
+        break;
+      case "WORK":
+        emojiSay = "👩🏼‍🚀";
+        break;
+      case "UPGRADE":
+        emojiSay = "✨ 🔫 🦄";
+        break;
+      case "IDLE":
+        emojiSay = "🍦";
+        break;
+      case "ERROR":
+        emojiSay = "🎊";
+        break;
+      default:
+        emojiSay = "defaulting";
+        break;
+    }
+    creep.say(emojiSay, public);
+  },
+
+  //
+  //  Get
+  //
   getEnergyLink: function (creep, iNum) {
     var enLink = creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
@@ -7,9 +53,7 @@ var roleUtilities = {
     });
     var iState = creep.withdraw(enLink[iNum], RESOURCE_ENERGY);
     if (iState == ERR_NOT_IN_RANGE) {
-      creep.moveTo(enLink[iNum].pos, {
-        visualizePathStyle: { stroke: "#00ffff" },
-      });
+      creep.moveTo(enLink[iNum].pos, this.pathStyle);
       return true;
     } else if (iState == OK) {
       return true;
@@ -22,7 +66,7 @@ var roleUtilities = {
     var storage = creep.room.storage; //.find(FIND_STRUCTURES, { filter: (structure) => { return (structure.structureType == STRUCTURE_STORAGE); } });
     var iState = creep.withdraw(storage, RESOURCE_ENERGY);
     if (iState == ERR_NOT_IN_RANGE) {
-      creep.moveTo(storage.pos, { visualizePathStyle: { stroke: "#00ffff" } });
+      creep.moveTo(storage.pos, this.pathStyle);
       return true;
     } else if (iState == OK) {
       return true;
@@ -61,9 +105,7 @@ var roleUtilities = {
       // && containers[0].energry > 50) {
       var iState = creep.withdraw(container, RESOURCE_ENERGY);
       if (iState == ERR_NOT_IN_RANGE) {
-        creep.moveTo(container.pos, {
-          visualizePathStyle: { stroke: "#00cc00" },
-        });
+        creep.moveTo(container.pos, this.pathStyle);
         return true;
       } else if (iState == OK) {
         return true;
@@ -81,7 +123,7 @@ var roleUtilities = {
       },
     });
     if (creep.withdraw(factory[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-      creep.moveTo(factory[0], { visualizePathStyle: { stroke: "#00ffff" } });
+      creep.moveTo(factory[0], this.pathStyle);
     }
   },
   checkTombstones: function (creep) {
@@ -93,9 +135,7 @@ var roleUtilities = {
     if (dropped) {
       var iState = creep.withdraw(dropped, RESOURCE_ENERGY);
       if (iState == ERR_NOT_IN_RANGE) {
-        creep.moveTo(dropped.pos, {
-          visualizePathStyle: { stroke: "#ffff66" },
-        });
+        creep.moveTo(dropped.pos, this.pathStyle);
         return true;
       } else if (iState == OK) {
         return true;
@@ -114,12 +154,52 @@ var roleUtilities = {
     });
     var iState = creep.pickup(dropenergy);
     if (dropenergy && iState == ERR_NOT_IN_RANGE) {
-      creep.moveTo(dropenergy, { visualizePathStyle: { stroke: "#0066ff" } });
+      creep.moveTo(dropenergy, this.pathStyle);
       return true;
     } else {
       this.getEnergy(creep);
     }
   },
+
+  //
+  //  Give
+  //
+  giveSpawner: function (creep) {
+    let state = "NONE";
+    var emptySpawners = creep.room.find(FIND_STRUCTURES, {
+      filter: (structure) => {
+        return (
+          (structure.structureType == STRUCTURE_EXTENSION ||
+            structure.structureType == STRUCTURE_SPAWN) &&
+          structure.energy < structure.energyCapacity
+        );
+      },
+    });
+
+    if (emptySpawners.length > 0) {
+      let emptySpawn = creep.pos.findClosestByPath(emptySpawners);
+      let response = creep.transfer(emptySpawn, RESOURCE_ENERGY);
+      if (response == ERR_NOT_IN_RANGE) {
+        creep.moveTo(emptySpawn, this.pathStyle);
+        state = "MOVE";
+      } else if (response == OK) {
+        state = "GIVE";
+      } else {
+        state = "ERROR";
+      }
+    }
+    return state;
+  },
+
+  giveTower: function (creep) {},
+
+  giveContainer: function (creep) {},
+
+  //
+  //
+  //
+  pathStyle: { visualizePathStyle: { stroke: "#ffffff" } },
+
   emptyCarry: function (creep) {
     creep.moveTo(creep.room.storage);
     for (const resourceType in creep.carry) {
@@ -131,23 +211,15 @@ var roleUtilities = {
       return true;
     }
   },
-  timeToDie: function (creep) {
-    creep.moveTo(Game.flags.Flag1.pos, {
-      visualizePathStyle: { stroke: "#ffffff" },
-    });
-  },
+
   idle: function (creep) {
     creep.say("🍦 Idle", true);
-    creep.moveTo(Game.flags.Flag1.pos, {
-      visualizePathStyle: { stroke: "#ff00ff" },
-    });
+    creep.moveTo(Game.flags.Flag1.pos, this.pathStyle);
   },
   doUpgrade: function (creep) {
     var iState = creep.upgradeController(creep.room.controller);
     if (iState == ERR_NOT_IN_RANGE) {
-      creep.moveTo(creep.room.controller, {
-        visualizePathStyle: { stroke: "#ff0000" },
-      });
+      creep.moveTo(creep.room.controller, this.pathStyle);
       return true;
     } else if (iState == OK) {
       creep.say("🌟 🔫 🦄", true);

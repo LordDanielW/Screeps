@@ -69,7 +69,7 @@ var roleRepair = {
       }
     }
   },
-  body: [MOVE, WORK, WORK, MOVE, WORK, MOVE, MOVE, CARRY, CARRY],
+  body: [WORK, WORK, MOVE, MOVE, CARRY],
   build: function (creepMem) {
     var newName = "Repair" + Memory.TaskMan.NameNum;
     Memory.TaskMan.NameNum++;

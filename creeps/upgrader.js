@@ -43,7 +43,7 @@ var roleUpgrader = {
   ], //WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
   //WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
   body2: [WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE, MOVE],
-  body3: [WORK, CARRY, MOVE],
+  body3: [WORK, WORK, WORK, CARRY, MOVE],
   build: function (creepMem) {
     var newName = "Upgrader" + Memory.TaskMan.NameNum;
     Memory.TaskMan.NameNum++;
