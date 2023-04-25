@@ -205,7 +205,7 @@ function spawnCreeps2(theRoom) {
 //
 //
 function structureMessage(structureId, message) {
-  let structure = Game.getObjectByID(structureId);
+  let structure = Game.getObjectById(structureId);
   structure.pos.x += 1;
   structure.room.visual.text(message, structure.pos, {
     align: "left",
