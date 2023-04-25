@@ -29,12 +29,13 @@ var roleCarrier = {
     //  Give
     //
     else if (creep.memory.task == "Give") {
+      // ** TODO : save path **
       // Keep previous target
-      //      let emptyStructure = creep.memory.emptyStructure;
+      //let emptyStructure = creep.memory.emptyStructure;
       // If no target, get one
-      //      if (emptyStructure == null) {
+      //if (emptyStructure == null) {
       let emptyStructure = this.findEmpty(creep);
-      //      }
+      //}
 
       // Move and transfer energy
       if (emptyStructure != null) {
@@ -100,13 +101,13 @@ var roleCarrier = {
       }
     }
     // Check upgrade Container
-    if (containers.length >= 3 && containers[2].store.energy < 250) {
+    if (containers.length >= 3 && containers[2].store.energy < 1500) {
       return containers[2];
     }
     //  Nothing to fill Return Empty
     return null;
   },
-  body: [CARRY, CARRY, MOVE], // CARRY, CARRY, MOVE, CARRY, CARRY, MOVE],// CARRY, MOVE],
+  body: [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE], // CARRY, CARRY, MOVE],// CARRY, MOVE],
   build: function (creepMem) {
     var newName = "Carrier" + Memory.TaskMan.NameNum;
     Memory.TaskMan.NameNum++;

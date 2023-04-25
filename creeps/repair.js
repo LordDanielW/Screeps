@@ -1,4 +1,3 @@
-// var roleUtilities = require("role.Utilities");
 var roleRepair = {
   /** @param {Creep} creep **/
   run: function (creep) {

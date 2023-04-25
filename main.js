@@ -51,7 +51,7 @@ module.exports.loop = function () {
       roles[creep.memory.role].run(creep);
     } catch (e) {
       creep.say("㊙︎ HELP!", true);
-      creep.memory.role = "Repair";
+      // creep.memory.role = "Repair";
 
       console.log("Creep Fail");
       console.log(e);
@@ -219,6 +219,8 @@ function doTicks() {
   var spawnName = "Spawn1";
   switch (ticks) {
     //  Memory.TaskMan.E9N52.spawn.push({ Carrier: { memory: { role: "Carrier", task: "Get", iStore:0, spawn: "Spawn1" } } });
+    //  Memory.TaskMan.E9N52.spawn.push({ Builder: { memory: { role: 'Builder', task:'get', spawn:"Spawn1" }}});
+    //  Memory.TaskMan.E9N52.spawn.push({ Upgrader: { memory: { role: "Upgrader", body: "body3", source: 1, spawn: "Spawn1",},},});
     case 1:
       Memory.TaskMan[roomOne].spawn.push({
         Carrier: {
@@ -278,17 +280,25 @@ function doTicks() {
     //   break;
     case 550:
       Memory.TaskMan[roomOne].spawn.push({
-        Repair: { memory: { role: "Repair", task: "get", spawn: spawnName } },
+        Builder: { memory: { role: "Builder", task: "get", spawn: spawnName } },
       });
+      // Memory.TaskMan[roomOne].spawn.push({
+      //   Repair: { memory: { role: "Repair", task: "get", spawn: spawnName } },
+      // });
       break;
-    // case 650:
-    //         Memory.TaskMan[roomOne].spawn.push({
-    //         Linker: {
-    //          memory: {
-    //             role: "Linker", run: 2, atDest: false, body: "body2", sitPOS: { x: 26, y: 21, roomName: "E46N33" }, spawn: "Vat1", task:"reap"}
-    //           }
-    //         });
-    //     break;
+    case 650:
+      Memory.TaskMan[roomOne].spawn.push({
+        Carrier: {
+          memory: { role: "Carrier", task: "get", iStore: 1, spawn: spawnName },
+        },
+      });
+      //         Memory.TaskMan[roomOne].spawn.push({
+      //         Linker: {
+      //          memory: {
+      //             role: "Linker", run: 2, atDest: false, body: "body2", sitPOS: { x: 26, y: 21, roomName: "E46N33" }, spawn: "Vat1", task:"reap"}
+      //           }
+      //         });
+      break;
     //     case 750:
     //         Memory.TaskMan[roomOne].spawn.push({
     //         Linker: {

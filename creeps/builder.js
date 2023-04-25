@@ -3,7 +3,7 @@ var roleBuilder = {
   /** @param {Creep} creep **/
   run: function (creep) {
     //creep.memory.moveTO = { x: 24, y: 47, roomName: "W16N39"};
-    creep.memory.role = "Repair";
+    // creep.memory.role = "Repair";
     if (creep.carry.energy == 0 && creep.memory.task == "build") {
       creep.memory.task = "get";
       creep.say("🔄 get", true);
