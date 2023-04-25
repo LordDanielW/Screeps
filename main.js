@@ -106,8 +106,10 @@ module.exports.loop = function () {
 //
 //
 function spawnCreeps(theRoom) {
-  var roomName = theRoom.name;
-  var spawnName = "Spawn1";
+  let roomName = theRoom.name;
+  let spawnName = "Spawn1";
+  let spawn = Game.spawns[spawnName];
+  // If Spawn que overloaded, clear and make a Carrier
   if (Memory.TaskMan[roomName].spawn.length > 5) {
     Memory.TaskMan[roomName].spawn = [];
     Memory.TaskMan[roomName].spawn.push({
@@ -116,22 +118,26 @@ function spawnCreeps(theRoom) {
       },
     });
   }
-  if (Game.spawns[spawnName].spawning) {
-    var spawningCreep = Game.creeps[Game.spawns[spawnName].spawning.name];
-    theRoom.visual.text(
-      "🛠️" + spawningCreep.memory.role,
-      Game.spawns[spawnName].pos.x + 1,
-      Game.spawns[spawnName].pos.y,
-      { align: "left", opacity: 0.8 }
-    );
-  } else if (Memory.TaskMan[roomName].spawn.length != 0) {
+  // If Spawning, Display it
+  if (spawn.spawning) {
+    structureMessage(spawn.id, "🛠️" + spawn.spawning.name);
+  }
+  // Else Check Spawn Que
+  else if (Memory.TaskMan[roomName].spawn.length != 0) {
     var Role = Memory.TaskMan[roomName].spawn[0];
     var roleKey = Object.keys(Role);
-    //Memory.Foo = roleKey[0];
-    if (roles[roleKey[0]].build(Role[roleKey[0]]) == OK) {
+    // Try Spawn
+    let response = roles[roleKey[0]].build(Role[roleKey[0]]);
+    if (response == OK) {
       Memory.TaskMan[roomName].spawn.shift();
+    } else {
+      structureMessage(spawn.id, "🎊 " + response);
+      // console.log("Error " + response + ". Spawning:" + Role.memory.role);
     }
-  } else {
+  }
+  //  Ensure Miner and Carriers are up
+  else {
+    // Count Miners and Carriers
     var countRoles = {};
     for (var name in Game.creeps) {
       var role = Game.creeps[name].memory.role;
@@ -141,13 +147,16 @@ function spawnCreeps(theRoom) {
         countRoles[role]++;
       }
     }
+    // Check Carriers
     if (countRoles.Carrier == undefined || countRoles.Carrier < 1) {
       Memory.TaskMan[roomName].spawn.push({
         Carrier: {
           memory: { role: "Carrier", task: "get", iStore: 1, spawn: spawnName },
         },
       });
-    } else if (countRoles.Miner == undefined || countRoles.Miner < 1) {
+    }
+    // Check Miners
+    else if (countRoles.Miner == undefined || countRoles.Miner < 1) {
       Memory.TaskMan[roomName].spawn.push({
         Miner: {
           memory: {
@@ -164,6 +173,10 @@ function spawnCreeps(theRoom) {
     }
   }
 }
+
+//  Spawn Creeps 2
+//
+//
 function spawnCreeps2(theRoom) {
   if (Memory.TaskMan[roomName].spawn.length > 5) {
     Memory.TaskMan[roomName].spawn = [];
@@ -175,11 +188,9 @@ function spawnCreeps2(theRoom) {
   }
   if (Game.spawns["Spawn1"].spawning) {
     var spawningCreep = Game.creeps[Game.spawns["Spawn1"].spawning.name];
-    theRoom.visual.text(
-      "🛠️" + spawningCreep.memory.role,
-      Game.spawns["Spawn1"].pos.x + 1,
-      Game.spawns["Spawn1"].pos.y,
-      { align: "left", opacity: 0.8 }
+    structureMessage(
+      Game.spawns["Spawn1"].id,
+      "🛠️" + spawningCreep.memory.role
     );
   } else if (Memory.TaskMan[roomName].spawn.queue.length > 0) {
     var Role = Memory.TaskMan[roomName].spawn.queue[0];
@@ -188,6 +199,18 @@ function spawnCreeps2(theRoom) {
       Memory.TaskMan[roomName].spawn.queue.shift();
     }
   }
+}
+
+//  Structure Message
+//
+//
+function structureMessage(structureId, message) {
+  let structure = Game.getObjectByID(structureId);
+  structure.pos.x += 1;
+  structure.room.visual.text(message, structure.pos, {
+    align: "left",
+    opacity: 0.8,
+  });
 }
 
 //  Garbage Collect
@@ -334,8 +357,8 @@ function doTicks() {
   }
 }
 
-//
 //  Display Attack Rings
+//
 //
 displayAttackRings = function (aRoom, aTower) {
   aRoom.visual.circle(aTower.pos.x, aTower.pos.y, {
