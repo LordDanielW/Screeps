@@ -1,18 +1,24 @@
-// var roleUtilities = require("role.Utilities");
+//
+//
+//
 var roleUpgrader = {
   /** @param {Creep} creep **/
   run: function (creep) {
-    if (creep.memory.upgrading && creep.carry.energy == 0) {
+    //creep.memory.task = "UPGRADE";
+    if (creep.memory.task == "UPGRADE" && creep.carry.energy == 0) {
       creep.memory.upgrading = false;
       creep.say("🔋", true);
     }
-    if (!creep.memory.upgrading && creep.carry.energy == creep.carryCapacity) {
-      creep.memory.upgrading = true;
+    if (
+      creep.memory.task == "GET" &&
+      creep.carry.energy == creep.carryCapacity
+    ) {
+      creep.memory.task = "UPGRADE";
     }
 
-    if (creep.memory.upgrading) {
+    if (creep.memory.task == "UPGRADE") {
       roleUtilities.doUpgrade(creep);
-    } else {
+    } else if (creep.memory.task == "GET") {
       if (!roleUtilities.getEnergyLink(creep, 1)) {
         roleUtilities.getEnergyContainer(creep, 2);
         //roleUtilities.getEnergyHarvest(creep);
@@ -23,35 +29,9 @@ var roleUpgrader = {
       //   } else{
       //     roleUtilities.getEnergyHarvest(creep);
       //   }
+    } else {
+      creep.memory.task = "GET";
     }
-  },
-  body1: [
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    MOVE,
-    MOVE,
-    CARRY,
-    CARRY,
-  ], //WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
-  //WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
-  body2: [WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE, MOVE],
-  body3: [WORK, WORK, WORK, WORK, CARRY, MOVE],
-  build: function (creepMem) {
-    var newName = "Upgrader" + Memory.TaskMan.NameNum;
-    Memory.TaskMan.NameNum++;
-    return Game.spawns[creepMem.memory.spawn].spawnCreep(
-      this[creepMem.memory.body],
-      newName,
-      creepMem
-    );
   },
 };
 

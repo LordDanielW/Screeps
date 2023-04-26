@@ -328,7 +328,11 @@ function doTicks() {
         roomOne,
         {
           role: "Upgrader",
-          body: [[WORK, 5], [CARRY, 1], [(MOVE, 2)]],
+          body: [
+            [WORK, 5],
+            [CARRY, 1],
+            [MOVE, 2],
+          ],
         },
       ]);
       break;

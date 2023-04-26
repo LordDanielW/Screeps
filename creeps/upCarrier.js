@@ -1,18 +1,20 @@
-// var roleUtilities = require("role.Utilities");
+//
+//
+//
 var roleUpCarrier = {
   /** @param {Creep} creep **/
   run: function (creep) {
-    if (creep.store.getUsedCapacity() == 0 && creep.memory.task != "reap") {
-      creep.memory.task = "reap";
-      creep.say("🔄 reap", true);
+    if (creep.store.getUsedCapacity() == 0 && creep.memory.task != "GET") {
+      creep.memory.task = "GET";
+      creep.say("🔄 GET", true);
     } else if (
-      creep.memory.task == "reap" &&
+      creep.memory.task == "GET" &&
       creep.store.getUsedCapacity() != 0
     ) {
-      creep.memory.task = "sow";
-      creep.say("🌻 sow", true);
+      creep.memory.task = "GIVE";
+      creep.say("🌻 GIVE", true);
     }
-    if (creep.memory.task == "reap") {
+    if (creep.memory.task == "GET") {
       const target = creep.room.find(FIND_STRUCTURES, {
         filter: (d) => {
           return d.structureType == STRUCTURE_CONTAINER;
@@ -26,7 +28,7 @@ var roleUpCarrier = {
       }
       //}
     } else {
-      // if Sow
+      // if GIVE
       var factory = creep.room.find(FIND_STRUCTURES, {
         filter: (d) => {
           return d.structureType == STRUCTURE_FACTORY;
@@ -38,16 +40,6 @@ var roleUpCarrier = {
       }
       //roleUtilities.emptyCarry(creep);
     }
-  },
-  body1: [CARRY, MOVE, CARRY, MOVE, CARRY, MOVE],
-  build: function (creepMem) {
-    var newName = "UpCarry" + Memory.TaskMan.NameNum;
-    Memory.TaskMan.NameNum++;
-    return Game.spawns[creepMem.memory.spawn].spawnCreep(
-      this[creepMem.memory.body],
-      newName,
-      creepMem
-    );
   },
 };
 

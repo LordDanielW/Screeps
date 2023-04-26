@@ -6,21 +6,21 @@ var roleCarrier = {
 
     // Check State Of Get / Give
     //
-    if (creep.carry.energy == 0 && creep.memory.task == "Give") {
-      creep.memory.task = "Get";
+    if (creep.carry.energy == 0 && creep.memory.task == "GIVE") {
+      creep.memory.task = "GET";
     } else if (
-      creep.memory.task == "Get" &&
+      creep.memory.task == "GET" &&
       creep.carry.energy == creep.carryCapacity
     ) {
-      creep.memory.task = "Give";
+      creep.memory.task = "GIVE";
       creep.say("🦑", true);
-    } else if (creep.memory.task != "Get" && creep.memory.task != "Give") {
-      creep.memory.task = "Get";
+    } else if (creep.memory.task != "GET" && creep.memory.task != "GIVE") {
+      creep.memory.task = "GET";
     }
 
     //  Get
     //
-    if (creep.memory.task == "Get") {
+    if (creep.memory.task == "GET") {
       if (!roleUtilities.getEnergyContainer(creep, creep.memory.iStore)) {
         // roleUtilities.getEnergyFactory(creep);
         roleUtilities.getEnergyHarvest(creep);
@@ -28,7 +28,7 @@ var roleCarrier = {
     }
     //  Give
     //
-    else if (creep.memory.task == "Give") {
+    else if (creep.memory.task == "GIVE") {
       // ** TODO : save path **
       // Keep previous target
       //let emptyStructure = creep.memory.emptyStructure;
@@ -55,11 +55,13 @@ var roleCarrier = {
 
       // Report state
       roleUtilities.sayState(creep, state, true);
+    } else {
+      creep.memory.task = "GET";
     }
   },
   findEmpty: function (creep) {
     let emptyStructure = [];
-    // Check Spawners
+    // Check Spawner Extensions
     emptyStructure = creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return (
@@ -106,14 +108,6 @@ var roleCarrier = {
     }
     //  Nothing to fill Return Empty
     return null;
-  },
-  body: [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE], // CARRY, CARRY, MOVE],// CARRY, MOVE],
-  build: function (creepMem) {
-    var newName = "Carrier" + Memory.TaskMan.NameNum;
-    Memory.TaskMan.NameNum++;
-    return Game.spawns[creepMem.memory.spawn].spawnCreep(this.body, newName, {
-      memory: { role: "Carrier", task: "Get" },
-    });
   },
 };
 

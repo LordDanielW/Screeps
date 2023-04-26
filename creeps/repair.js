@@ -1,20 +1,20 @@
 var roleRepair = {
   /** @param {Creep} creep **/
   run: function (creep) {
-    //creep.memory.task = 'repair';
-    if (creep.carry.energy == 0 && creep.memory.task == "repair") {
-      creep.memory.task = "get";
+    //creep.memory.task = "REPAIR";
+    if (creep.carry.energy == 0 && creep.memory.task == "REPAIR") {
+      creep.memory.task = "GET";
       creep.say("🔋", true);
     }
     if (
-      creep.memory.task == "get" &&
+      creep.memory.task == "GET" &&
       creep.carry.energy == creep.carryCapacity
     ) {
       creep.memory.task = "repair";
       creep.say("🛠️", true);
     }
 
-    if (creep.memory.task == "repair") {
+    if (creep.memory.task == "REPAIR") {
       var closestDamagedStructure = creep.pos.findClosestByRange(
         FIND_STRUCTURES,
         {
@@ -55,7 +55,7 @@ var roleRepair = {
           Memory.TaskMan[creep.pos.roomName].wallHealth = wallHealth + 500;
         }
       }
-    } else if (creep.memory.task == "get") {
+    } else if (creep.memory.task == "GET") {
       //roleUtilities.getEnergyFactory(creep);
       roleUtilities.getEnergyHarvest(creep);
     } else if (creep.memory.task == "movin") {
@@ -66,11 +66,13 @@ var roleRepair = {
       } else {
         creep.moveTo(nextRoom, { visualizePathStyle: { stroke: "#ffaa00" } });
       }
+    } else {
+      creep.memory.task = "GET";
     }
   },
   body: [WORK, WORK, WORK, MOVE, MOVE, MOVE, CARRY, CARRY],
   build: function (creepMem) {
-    var newName = "Repair" + Memory.TaskMan.NameNum;
+    var newName = "REPAIR" + Memory.TaskMan.NameNum;
     Memory.TaskMan.NameNum++;
     return Game.spawns[creepMem.memory.spawn].spawnCreep(
       this.body,
