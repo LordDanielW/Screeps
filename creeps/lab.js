@@ -159,16 +159,10 @@ var roleLab = {
         break;
     }
   },
-  body1: [CARRY, CARRY, MOVE, CARRY, CARRY, MOVE], // WORK],
-  build: function (creepMem) {
-    var newName = "lab" + Memory.TaskMan.NameNum;
-    Memory.TaskMan.NameNum++;
-    return Game.spawns[creepMem.memory.spawn].spawnCreep(
-      this[creepMem.memory.body],
-      newName,
-      creepMem
-    );
-  },
+  body: [
+    [CARRY, 4],
+    [MOVE, 2],
+  ],
 };
 
 module.exports.Lab = roleLab;

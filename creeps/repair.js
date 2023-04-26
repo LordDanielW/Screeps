@@ -70,16 +70,6 @@ var roleRepair = {
       creep.memory.task = "GET";
     }
   },
-  body: [WORK, WORK, WORK, MOVE, MOVE, MOVE, CARRY, CARRY],
-  build: function (creepMem) {
-    var newName = "REPAIR" + Memory.TaskMan.NameNum;
-    Memory.TaskMan.NameNum++;
-    return Game.spawns[creepMem.memory.spawn].spawnCreep(
-      this.body,
-      newName,
-      creepMem
-    );
-  },
 };
 
 module.exports.Repair = roleRepair;

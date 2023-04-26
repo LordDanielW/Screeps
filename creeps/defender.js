@@ -1,4 +1,6 @@
-// var roleUtilities = require("role.Utilities");
+//
+//
+//
 var roleDefender = {
   /** @param {Creep} creep **/
   run: function (creep) {
@@ -19,31 +21,11 @@ var roleDefender = {
     }
   },
   body: [
-    TOUGH,
-    TOUGH,
-    TOUGH,
-    TOUGH,
-    ATTACK,
-    ATTACK,
-    ATTACK,
-    ATTACK,
-    CARRY,
-    MOVE,
-    MOVE,
-    MOVE,
-    MOVE,
-    MOVE,
-    MOVE,
-    MOVE,
-    MOVE,
+    [TOUGH, 4],
+    [ATTACK, 4],
+    [CARRY, 1],
+    [MOVE, 8],
   ],
-  build: function (creepMem) {
-    var newName = "Defender" + Memory.TaskMan.NameNum;
-    Memory.TaskMan.NameNum++;
-    return Game.spawns["BabyCakes"].spawnCreep(this.body, newName, {
-      memory: { role: "Defender", task: "movin" },
-    });
-  },
 };
 
 module.exports.Defender = roleDefender;

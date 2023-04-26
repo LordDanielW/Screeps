@@ -27,55 +27,7 @@ var roleMiner = {
       }
     }
   },
-  build: function (creepMem) {
-    var newName = "Miner" + Memory.TaskMan.NameNum;
-    Memory.TaskMan.NameNum++;
-    return Game.spawns[creepMem.memory.spawn].spawnCreep(
-      this[creepMem.memory.body],
-      newName,
-      creepMem
-    );
-  },
-  body1: [WORK, WORK, WORK, WORK, WORK, MOVE, MOVE],
-  body2: [WORK, WORK, WORK, WORK, MOVE],
-  body3: [
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    MOVE,
-    MOVE,
-    MOVE,
-    MOVE,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    MOVE,
-    MOVE,
-    MOVE,
-    MOVE,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    WORK,
-    MOVE,
-    MOVE,
-    MOVE,
-    MOVE,
-  ],
+
   sing: function (creep) {
     switch (creep.memory.say) {
       case 1:

@@ -171,36 +171,7 @@ var roleLinker = {
       }
     }
   },
-  body3: [
-    WORK,
-    MOVE,
-    CARRY,
-    CARRY,
-    MOVE,
-    CARRY,
-    CARRY,
-    MOVE,
-    CARRY,
-    CARRY,
-    MOVE,
-    CARRY,
-    CARRY,
-    MOVE,
-    CARRY,
-    CARRY,
-    MOVE,
-    CARRY,
-    CARRY,
-    MOVE,
-    CARRY,
-    CARRY,
-    MOVE,
-  ],
-  //   build3: function (creepMem) {
-  //     var newName = 'Linker' + Memory.TaskMan.NameNum;
-  //     Memory.TaskMan.NameNum++;
-  //     return Game.spawns[creepMem.memory.spawn].spawnCreep(this[creepMem.memory.body], newName, creepMem);
-  //   }
+  body: [],
 };
 
 module.exports.Linker = roleLinker;

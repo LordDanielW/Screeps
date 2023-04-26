@@ -1,4 +1,3 @@
-// var roleUtilities = require("role.Utilities");
 var roleBuilder = {
   /** @param {Creep} creep **/
   run: function (creep) {
@@ -43,17 +42,6 @@ var roleBuilder = {
       roleUtilities.getEnergyHarvest(creep);
       //  roleUtilities.getEnergyStorage(creep);
     }
-  },
-  // 	body: [MOVE, WORK, WORK, WORK, WORK, MOVE, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE],
-  body: [MOVE, WORK, CARRY],
-  build: function (creepMem) {
-    var newName = "Builder" + Memory.TaskMan.NameNum;
-    Memory.TaskMan.NameNum++;
-    return Game.spawns[creepMem.memory.spawn].spawnCreep(
-      this.body,
-      newName,
-      creepMem
-    );
   },
 };
 
