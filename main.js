@@ -101,9 +101,9 @@ const SPAWN_PARAMETERS_DEFAULT = {
   source: [],
   spawn: "Spawn1",
   body: [
-    ["MOVE", 1],
-    ["WORK", 1],
-    ["CARRY", 1],
+    [MOVE, 1],
+    [WORK, 1],
+    [CARRY, 1],
   ],
 };
 
@@ -135,14 +135,19 @@ function spawnCreeps(theRoom) {
     }
 
     // Generate Unique Name
-    let newCreepName = "Builder" + Memory.TaskMan.NameNum;
+    let newCreepName = spawnMemory.role + Memory.TaskMan.NameNum;
     Memory.TaskMan.NameNum++;
 
     // Build Body
+    let creepBody = spawnMemory.body;
+    if (!creepBody) {
+      creepBody = SPAWN_PARAMETERS_DEFAULT.body;
+    }
+
     let buildBody = [];
-    for (let i = 0; i < body.length; i++) {
-      for (var j = 0; j < body[i][1]; j++) {
-        buildBody.push(body[i][0]);
+    for (let i = 0; i < creepBody.length; i++) {
+      for (var j = 0; j < creepBody[i][1]; j++) {
+        buildBody.push(creepBody[i][0]);
       }
     }
 
@@ -163,6 +168,7 @@ function spawnCreeps(theRoom) {
   //  Ensure Miner and Carriers are up
   else {
     // Count Miners and Carriers
+    // ToDo add for multi Rooms
     var countRoles = {};
     for (var name in Game.creeps) {
       var role = Game.creeps[name].memory.role;
@@ -174,27 +180,11 @@ function spawnCreeps(theRoom) {
     }
     // Check Carriers
     if (countRoles.Carrier == undefined || countRoles.Carrier < 1) {
-      Memory.TaskMan[roomName].spawn.push({
-        Carrier: {
-          memory: { role: "Carrier", task: "get", iStore: 1, spawn: spawnName },
-        },
-      });
+      Memory.TaskMan[roomName].spawn.push({ role: "Carrier" });
     }
     // Check Miners
     else if (countRoles.Miner == undefined || countRoles.Miner < 1) {
-      Memory.TaskMan[roomName].spawn.push({
-        Miner: {
-          memory: {
-            role: "Miner",
-            say: 1,
-            atDest: false,
-            body: "body1",
-            sourceType: FIND_SOURCES,
-            sitPOS: { x: 15, y: 31, roomName: roomName },
-            spawn: spawnName,
-          },
-        },
-      });
+      Memory.TaskMan[roomName].spawn.push({ role: "Miner" });
     }
   }
 }
@@ -274,14 +264,20 @@ function doTicks() {
       ]);
       break;
     case 350:
-      const constructSites 
-      addSpawn.push([roomOne, { role: "Builder",
-      body: [
-        [WORK, 5],
-        [CARRY, 2],
-        [MOVE, 5],
-      ],
-      spawn: spawnName, }]);
+      // ToDo only spawn when construction sites
+      // const constructSites
+      addSpawn.push([
+        roomOne,
+        {
+          role: "Builder",
+          body: [
+            [WORK, 5],
+            [CARRY, 2],
+            [MOVE, 5],
+          ],
+          spawn: spawnName,
+        },
+      ]);
       break;
     case 400:
       addSpawn.push([
@@ -301,17 +297,38 @@ function doTicks() {
       ]);
       break;
     case 550:
-      addSpawn.push([roomOne, { role: "Repair" }]);
+      addSpawn.push([
+        roomOne,
+        {
+          role: "Repair",
+          body: [
+            [WORK, 5],
+            [CARRY, 2],
+            [MOVE, 5],
+          ],
+          spawn: spawnName,
+        },
+      ]);
       break;
     case 650:
-      addSpawn.push([roomOne, { role: "Carrier" }]);
+      addSpawn.push([
+        roomOne,
+        {
+          role: "Carrier",
+          body: [
+            [CARRY, 10],
+            [MOVE, 5],
+          ],
+          spawn: spawnName,
+        },
+      ]);
       break;
     case 850:
       addSpawn.push([
         roomOne,
         {
           role: "Upgrader",
-          body: [[WORK, 5], [CARRY, 1][(MOVE, 2)]],
+          body: [[WORK, 5], [CARRY, 1], [(MOVE, 2)]],
         },
       ]);
       break;
