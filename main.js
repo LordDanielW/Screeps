@@ -84,23 +84,28 @@ module.exports.loop = function () {
 
   try {
     spawnCreeps(myRoomOne);
-    //spawnCreeps2(myRoomTwo);
   } catch (e) {
     console.log("Spawn Fail");
     console.log(e);
     Memory.TaskMan.E9N52.spawn.shift();
-    //Memory.TaskMan.W16N39.spawn.shift();
   }
-  // Memory.TaskMan.W17N38.spawn.queue.shift();
-  // Memory.TaskMan.W16N39.spawn.queue.shift();
   //  console.log("tick message");
 };
 //  *****************************  //
 //         END Main Loop           //
 //  *****************************  //
 
-//Memory.TaskMan.E46N33.spawn.push({ upCarrier: { memory: { role: "upCarrier", task: "reap", iStore:1, body: "body1", spawn: "Vat2" } } });
-// Memory.TaskMan.E46N33.spawn.push({ Lab: { memory: { role: "Lab", task: "getTask", spawn: "Vat1", body: "body1" } } });
+const SPAWN_PARAMETERS_DEFAULT = {
+  role: "Carrier",
+  task: "GET",
+  source: [],
+  spawn: "Spawn1",
+  body: [
+    ["MOVE", 1],
+    ["WORK", 1],
+    ["CARRY", 1],
+  ],
+};
 
 //  Spawn Creeps
 //
@@ -112,11 +117,7 @@ function spawnCreeps(theRoom) {
   // If Spawn que overloaded, clear and make a Carrier
   if (Memory.TaskMan[roomName].spawn.length > 5) {
     Memory.TaskMan[roomName].spawn = [];
-    Memory.TaskMan[roomName].spawn.push({
-      Carrier: {
-        memory: { role: "Carrier", task: "get", iStore: 1, spawn: spawnName },
-      },
-    });
+    Memory.TaskMan[roomName].spawn.push({ role: "Carrier" });
   }
   // If Spawning, Display it
   if (spawn.spawning) {
@@ -124,10 +125,34 @@ function spawnCreeps(theRoom) {
   }
   // Else Check Spawn Que
   else if (Memory.TaskMan[roomName].spawn.length != 0) {
-    var Role = Memory.TaskMan[roomName].spawn[0];
-    var roleKey = Object.keys(Role);
+    var spawnMemory = Memory.TaskMan[roomName].spawn[0];
+
+    // Set Spawn Parameters
+    let selectSpawn = spawnMemory.spawn;
+    if (!selectSpawn) {
+      // ToDo grab first spawn in room
+      selectSpawn = "Spawn1";
+    }
+
+    // Generate Unique Name
+    let newCreepName = "Builder" + Memory.TaskMan.NameNum;
+    Memory.TaskMan.NameNum++;
+
+    // Build Body
+    let buildBody = [];
+    for (let i = 0; i < body.length; i++) {
+      for (var j = 0; j < body[i][1]; j++) {
+        buildBody.push(body[i][0]);
+      }
+    }
+
     // Try Spawn
-    let response = roles[roleKey[0]].build(Role[roleKey[0]]);
+    let response = Game.spawns[selectSpawn].spawnCreep(
+      buildBody,
+      newCreepName,
+      { memory: spawnMemory }
+    );
+
     if (response == OK) {
       Memory.TaskMan[roomName].spawn.shift();
     } else {
@@ -174,33 +199,6 @@ function spawnCreeps(theRoom) {
   }
 }
 
-//  Spawn Creeps 2
-//
-//
-function spawnCreeps2(theRoom) {
-  if (Memory.TaskMan[roomName].spawn.length > 5) {
-    Memory.TaskMan[roomName].spawn = [];
-    Memory.TaskMan[roomName].spawn.push({
-      Carrier: {
-        memory: { role: "Carrier", task: "get", iStore: 1, spawn: "Vat1" },
-      },
-    });
-  }
-  if (Game.spawns["Spawn1"].spawning) {
-    var spawningCreep = Game.creeps[Game.spawns["Spawn1"].spawning.name];
-    structureMessage(
-      Game.spawns["Spawn1"].id,
-      "🛠️" + spawningCreep.memory.role
-    );
-  } else if (Memory.TaskMan[roomName].spawn.queue.length > 0) {
-    var Role = Memory.TaskMan[roomName].spawn.queue[0];
-    var roleKey = Object.keys(Role);
-    if (roles[roleKey[0]].build(Role[roleKey[0]]) == OK) {
-      Memory.TaskMan[roomName].spawn.queue.shift();
-    }
-  }
-}
-
 //  Structure Message
 //
 //
@@ -240,120 +238,88 @@ function doTicks() {
 
   var roomOne = "E9N52";
   var spawnName = "Spawn1";
+  //  Memory.TaskMan.E9N52.spawn.push({ role: '' });
+  //  Miner  Carrier  Builder  Upgrader  Repair upCarrier
+
+  let addSpawn = [];
   switch (ticks) {
-    //  Memory.TaskMan.E9N52.spawn.push({ Carrier: { memory: { role: "Carrier", task: "Get", iStore:0, spawn: "Spawn1" } } });
-    //  Memory.TaskMan.E9N52.spawn.push({ Builder: { memory: { role: 'Builder', task:'get', spawn:"Spawn1" }}});
-    //  Memory.TaskMan.E9N52.spawn.push({ Upgrader: { memory: { role: "Upgrader", body: "body3", source: 1, spawn: "Spawn1",},},});
     case 1:
-      Memory.TaskMan[roomOne].spawn.push({
-        Carrier: {
-          memory: { role: "Carrier", task: "get", iStore: 1, spawn: spawnName },
+      addSpawn.push([
+        roomOne,
+        {
+          role: "Carrier",
+          body: [
+            [CARRY, 10],
+            [MOVE, 5],
+          ],
+          spawn: spawnName,
         },
-      });
+      ]);
       break;
-    // case 100:
-    //   Memory.TaskMan[roomOne].spawn.push({ upCarrier: { memory: { role: "upCarrier", task: "reap", iStore:1, body: "body1", spawn: "Vat2" } } });
-    //   //  Memory.TaskMan.E46N33.spawn.push({ Builder: { memory: { role: 'Builder', task:'get', spawn:"Vat1" }}});
-    //   //  Memory.TaskMan.E46N33.spawn.push({ Carrier: { memory: { role: "Carrier", task: "get", iStore:0, spawn: "Vat1" } } });
-    //   break;
     case 250:
-      Memory.TaskMan.E9N52.spawn.push({
-        Miner: {
-          memory: {
-            role: "Miner",
-            say: 1,
-            atDest: false,
-            sourceType: FIND_SOURCES,
-            body: "body1",
-            sitPOS: { x: 15, y: 31, roomName: "E9N52" },
-            spawn: "Spawn1",
-          },
+      addSpawn.push([
+        roomOne,
+        {
+          role: "Miner",
+          say: 1,
+          atDest: false,
+          sourceType: FIND_SOURCES,
+          body: [
+            [WORK, 5],
+            [MOVE, 2],
+          ],
+          sitPOS: { x: 15, y: 31, roomName: roomOne },
+          spawn: spawnName,
         },
-      });
+      ]);
       break;
     case 350:
-      //Memory.TaskMan.E46N33.spawn.push({ Lab: { memory: { role: "Lab", task: "getTask", spawn: "Vat1", body: "body1" } } });
-      Memory.TaskMan[roomOne].spawn.push({
-        Builder: { memory: { role: "Builder", task: "get", spawn: spawnName } },
-      });
+      const constructSites 
+      addSpawn.push([roomOne, { role: "Builder",
+      body: [
+        [WORK, 5],
+        [CARRY, 2],
+        [MOVE, 5],
+      ],
+      spawn: spawnName, }]);
       break;
     case 400:
-      Memory.TaskMan[roomOne].spawn.push({
-        Miner: {
-          memory: {
-            role: "Miner",
-            say: 6,
-            atDest: false,
-            sourceType: FIND_SOURCES,
-            body: "body1",
-            sitPOS: { x: 23, y: 36, roomName: roomOne },
-            spawn: spawnName,
-          },
+      addSpawn.push([
+        roomOne,
+        {
+          role: "Miner",
+          say: 6,
+          atDest: false,
+          sourceType: FIND_SOURCES,
+          body: [
+            [WORK, 5],
+            [MOVE, 2],
+          ],
+          sitPOS: { x: 23, y: 36, roomName: roomOne },
+          spawn: spawnName,
         },
-      });
+      ]);
       break;
-    // case 500:
-    //   Memory.TaskMan[roomOne].spawn.push({
-    //     Miner: {
-    //       memory: {
-    //         role: 'Miner', say: 6, atDest: false, sourceType: FIND_MINERALS, body: "body3", sitPOS: { x: 37, y: 35, roomName: "E46N33" }, spawn: "Vat1"
-    //       }
-    //     }
-    //   });
-    //   break;
     case 550:
-      Memory.TaskMan[roomOne].spawn.push({
-        Builder: { memory: { role: "Builder", task: "get", spawn: spawnName } },
-      });
-      // Memory.TaskMan[roomOne].spawn.push({
-      //   Repair: { memory: { role: "Repair", task: "get", spawn: spawnName } },
-      // });
+      addSpawn.push([roomOne, { role: "Repair" }]);
       break;
     case 650:
-      Memory.TaskMan[roomOne].spawn.push({
-        Carrier: {
-          memory: { role: "Carrier", task: "get", iStore: 1, spawn: spawnName },
-        },
-      });
-      //         Memory.TaskMan[roomOne].spawn.push({
-      //         Linker: {
-      //          memory: {
-      //             role: "Linker", run: 2, atDest: false, body: "body2", sitPOS: { x: 26, y: 21, roomName: "E46N33" }, spawn: "Vat1", task:"reap"}
-      //           }
-      //         });
+      addSpawn.push([roomOne, { role: "Carrier" }]);
       break;
-    //     case 750:
-    //         Memory.TaskMan[roomOne].spawn.push({
-    //         Linker: {
-    //          memory: {
-    //             role: "Linker", run: 2, atDest: false, body: "body2", sitPOS: { x: 43, y: 25, roomName: "E46N33" }, spawn: "Vat1", task:"reap"}
-    //           }
-    //         });
-    //     break;
     case 850:
-      Memory.TaskMan[roomOne].spawn.push({
-        Upgrader: {
-          memory: {
-            role: "Upgrader",
-            body: "body3",
-            source: 1,
-            spawn: spawnName,
-          },
+      addSpawn.push([
+        roomOne,
+        {
+          role: "Upgrader",
+          body: [[WORK, 5], [CARRY, 1][(MOVE, 2)]],
         },
-      });
+      ]);
       break;
-    case 1000:
-      Memory.TaskMan[roomOne].spawn.push({
-        Upgrader: {
-          memory: {
-            role: "Upgrader",
-            body: "body3",
-            source: 2,
-            spawn: spawnName,
-          },
-        },
-      });
-      break;
+  }
+
+  // Move Added Spawns from local to remote Memory
+  for (let i = 0; i < addSpawn.length; i++) {
+    Memory.TaskMan[addSpawn[i][0]].spawn.push(addSpawn[i][1]);
   }
 }
 
