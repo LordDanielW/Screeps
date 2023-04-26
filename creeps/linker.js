@@ -1,5 +1,8 @@
-// var roleUtilities = require("role.Utilities");
+//
+//
+//
 var roleLinker = {
+  // { role: "Linker", run: 2, atDest: false, body: "body2", sitPOS: { x: 26, y: 21, roomName: "E46N33" }, spawn: "Vat1", task:"reap"} }
   /** @param {Creep} creep **/
   run: function (creep) {
     //  creep.memory.run = 1;

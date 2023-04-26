@@ -1,5 +1,8 @@
-// var roleUtilities = require('role.Utilities');
+//
+//
+//
 var roleLab = {
+  //Memory.TaskMan.E46N33.spawn.push({ Lab: { memory: { role: "Lab", task: "getTask", spawn: "Vat1", body: "body1" } } });
   /** @param {Creep} creep **/
   run: function (creep) {
     //creep.memory.task = "getFin";
