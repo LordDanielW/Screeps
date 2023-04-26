@@ -68,6 +68,7 @@ var roleRepair = {
       }
     } else {
       creep.memory.task = "GET";
+      //test
     }
   },
 };
