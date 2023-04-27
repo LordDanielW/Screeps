@@ -34,7 +34,12 @@ var roleCarrier = {
 
       // Move and transfer energy
       if (fullSource != null) {
-        let response = creep.withdraw(fullSource, RESOURCE_ENERGY);
+        let response;
+        if (creep.memory.sourceType == "DROPPED_RESOURCES") {
+          response = creep.pickup(fullSource);
+        } else {
+          response = creep.withdraw(fullSource, RESOURCE_ENERGY);
+        }
         if (response == ERR_NOT_IN_RANGE) {
           creep.moveTo(fullSource, roleUtilities.pathStyle);
           state = "MOVE";
@@ -96,34 +101,34 @@ var roleCarrier = {
     });
     if (fullSource.length > 0) {
       creep.memory.source = creep.pos.findClosestByPath(fullSource).id;
+      creep.memory.sourceType = "TOMBSTONES";
       return true;
     }
     // Check Dropped
-    // console.log("here2");
-    // fullSource = creep.room.find(FIND_DROPPED_RESOURCES, {
-    //   filter: (dropped) => {
-    //     return dropped.creep.store >= creep.carryCapacity;
-    //   },
-    // });
-    // if (fullSource.length > 0) {
-    //   creep.memory.source = creep.pos.findClosestByPath(fullSource).id;
-    //   return true;
-    // }
+    fullSource = creep.room.find(FIND_DROPPED_RESOURCES, {
+      filter: (dropped) => {
+        return dropped.amount >= creep.carryCapacity;
+      },
+    });
+    if (fullSource.length > 0) {
+      creep.memory.source = creep.pos.findClosestByPath(fullSource).id;
+      creep.memory.sourceType = "DROPPED_RESOURCES";
+      return true;
+    }
     // Check Room Sources
     let roomSources = Memory.TaskMan[creep.room.name].sources;
     for (let i = 0; i < roomSources.length; i++) {
       let sourceContainer = Game.getObjectById(roomSources[i]);
       if (sourceContainer.store[RESOURCE_ENERGY] >= creep.carryCapacity) {
         creep.memory.source = sourceContainer.id;
+        creep.memory.sourceType = "SOURCES";
         return true;
-        fullSource.push(sourceContainer);
       }
     }
     //
     if (fullSource.length > 0) {
       creep.memory.task = "IDLE";
       return false;
-      //return creep.pos.findClosestByPath(fullSource);
     }
   },
 
