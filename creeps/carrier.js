@@ -62,6 +62,8 @@ var roleCarrier = {
       creep.memory.task = "GET";
     }
   },
+  //  Find Empty
+  //
   findEmpty: function (creep) {
     let emptyStructure = [];
     // Check Spawner Extensions
@@ -70,7 +72,7 @@ var roleCarrier = {
         return (
           (structure.structureType == STRUCTURE_EXTENSION ||
             structure.structureType == STRUCTURE_SPAWN) &&
-          structure.energy < structure.energyCapacity
+          structure.store.getUsedCapacity < structure.store.getCapacity
         );
       },
     });
@@ -82,7 +84,7 @@ var roleCarrier = {
       filter: (structure) => {
         return (
           structure.structureType == STRUCTURE_TOWER &&
-          structure.energy < structure.energyCapacity
+          structure.store.getUsedCapacity < structure.store.getCapacity
         );
       },
     });

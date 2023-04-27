@@ -6,8 +6,8 @@ var roleUpgrader = {
   run: function (creep) {
     //creep.memory.task = "UPGRADE";
     if (creep.memory.task == "UPGRADE" && creep.carry.energy == 0) {
-      creep.memory.upgrading = false;
       creep.say("🔋", true);
+      creep.memory.task = "GET";
     }
     if (
       creep.memory.task == "GET" &&

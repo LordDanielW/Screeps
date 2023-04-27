@@ -266,18 +266,18 @@ function doTicks() {
     case 350:
       // ToDo only spawn when construction sites
       // const constructSites
-      addSpawn.push([
-        roomOne,
-        {
-          role: "Builder",
-          body: [
-            [WORK, 5],
-            [CARRY, 2],
-            [MOVE, 5],
-          ],
-          spawn: spawnName,
-        },
-      ]);
+      // addSpawn.push([
+      //   roomOne,
+      //   {
+      //     role: "Builder",
+      //     body: [
+      //       [WORK, 5],
+      //       [CARRY, 2],
+      //       [MOVE, 5],
+      //     ],
+      //     spawn: spawnName,
+      //   },
+      // ]);
       break;
     case 400:
       addSpawn.push([

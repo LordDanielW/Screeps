@@ -18,7 +18,8 @@ var modTower = {
       );
       if (
         closestDamagedStructure &&
-        tower.pos.getRangeTo(closestDamagedStructure) < 21
+        // tower.pos.getRangeTo(closestDamagedStructure) < 21
+        tower.pos.getRangeTo(closestDamagedStructure) < 15
       ) {
         tower.repair(closestDamagedStructure);
       } else {

@@ -10,7 +10,7 @@ var roleRepair = {
       creep.memory.task == "GET" &&
       creep.carry.energy == creep.carryCapacity
     ) {
-      creep.memory.task = "repair";
+      creep.memory.task = "REPAIR";
       creep.say("🛠️", true);
     }
 
@@ -58,7 +58,7 @@ var roleRepair = {
     } else if (creep.memory.task == "GET") {
       //roleUtilities.getEnergyFactory(creep);
       roleUtilities.getEnergyHarvest(creep);
-    } else if (creep.memory.task == "movin") {
+    } else if (creep.memory.task == "MOVIN") {
       var nextRoom = new RoomPosition(02, 17, "W16N38");
       if (creep.pos.isEqualTo(nextRoom)) {
         creep.memory.task = "repair";

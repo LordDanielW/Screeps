@@ -129,7 +129,7 @@ var roleUtilities = {
   checkTombstones: function (creep) {
     var dropped = creep.pos.findClosestByPath(FIND_TOMBSTONES, {
       filter: (tomb) => {
-        return tomb.creep.store >= 50;
+        return tomb.creep.store >= creep.carryCapacity;
       },
     });
     if (dropped) {
@@ -149,7 +149,9 @@ var roleUtilities = {
   getEnergyHarvest: function (creep) {
     var dropenergy = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
       filter: (d) => {
-        return d.resourceType == RESOURCE_ENERGY && d.amount > 50;
+        return (
+          d.resourceType == RESOURCE_ENERGY && d.amount > creep.carryCapacity
+        );
       },
     });
     var iState = creep.pickup(dropenergy);
@@ -171,7 +173,7 @@ var roleUtilities = {
         return (
           (structure.structureType == STRUCTURE_EXTENSION ||
             structure.structureType == STRUCTURE_SPAWN) &&
-          structure.energy < structure.energyCapacity
+          structure.store.getUsedCapacity < structure.store.getCapacity
         );
       },
     });
@@ -197,7 +199,7 @@ var roleUtilities = {
       filter: (structure) => {
         return (
           structure.structureType == STRUCTURE_TOWER &&
-          structure.energy < structure.energyCapacity
+          structure.store.getUsedCapacity < structure.store.getCapacity
         );
       },
     });
