@@ -74,10 +74,17 @@ var roleUtilities = {
       return false;
     }
   },
-  getEnergyContainer: function (creep, iNum) {
+  getEnergyContainer: function (creep) {
+    let iNum = creep.memory.iStore;
+    if (!iNum) {
+      creep.memory.iStore = 0;
+    }
     var container = creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
-        return structure.structureType == STRUCTURE_CONTAINER;
+        return (
+          structure.structureType == STRUCTURE_CONTAINER &&
+          structure.store[RESOURCE_ENERGY] > creep.store.getCapacity()
+        );
       },
     });
     var iState = creep.withdraw(container[iNum], RESOURCE_ENERGY);
@@ -87,6 +94,14 @@ var roleUtilities = {
       });
       return true;
     } else if (iState == OK) {
+      if (iNum == 2) {
+        //  Do Nothing
+      }
+      if (iNum == 0) {
+        creep.memory.iStore = 1;
+      } else if (iNum == 1) {
+        creep.memory.iStore = 0;
+      }
       return true;
     } else {
       return false;

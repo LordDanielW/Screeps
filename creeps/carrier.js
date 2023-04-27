@@ -3,46 +3,65 @@
 //
 var roleCarrier = {
   /** @param {Creep} creep **/
+  run1: function (creep) {},
   run: function (creep) {
     //  Variables
     let state = "NONE";
 
     // Check State Of Get / Give
     //
-    if (creep.carry.energy == 0 && creep.memory.task == "GIVE") {
+    if (
+      (creep.carry.energy == 0 && creep.memory.task == "GIVE") ||
+      (creep.memory.task != "GET" && creep.memory.task != "GIVE")
+    ) {
       creep.memory.task = "GET";
-    } else if (
+      this.findFullSource(creep);
+    }
+    //
+    else if (
       creep.memory.task == "GET" &&
       creep.carry.energy == creep.carryCapacity
     ) {
       creep.memory.task = "GIVE";
-      creep.say("🦑", true);
-    } else if (creep.memory.task != "GET" && creep.memory.task != "GIVE") {
-      creep.memory.task = "GET";
+      creep.memory.destination = this.findEmptyStructure(creep).id;
     }
 
     //  Get
     //
     if (creep.memory.task == "GET") {
-      if (!roleUtilities.getEnergyContainer(creep, creep.memory.iStore)) {
-        // roleUtilities.getEnergyFactory(creep);
-        roleUtilities.getEnergyHarvest(creep);
+      // Selected Destination from Memory
+      let fullSource = Game.getObjectById(creep.memory.source);
+
+      // Move and transfer energy
+      if (fullSource != null) {
+        let response = creep.withdraw(fullSource, RESOURCE_ENERGY);
+        if (response == ERR_NOT_IN_RANGE) {
+          creep.moveTo(fullSource, roleUtilities.pathStyle);
+          state = "MOVE";
+        } else if (response == OK) {
+          state = "GET";
+        } else {
+          if (this.findFullSource(creep)) {
+            state = "ERROR";
+          }
+        }
+      } else {
+        if (!this.findFullSource(creep)) {
+          state = "ERROR";
+        }
       }
+
+      // Report state
+      roleUtilities.sayState(creep, state, true);
     }
     //  Give
     //
     else if (creep.memory.task == "GIVE") {
-      // ** TODO : save path **
-      // Keep previous target
-      //let emptyStructure = creep.memory.emptyStructure;
-      // If no target, get one
-      //if (emptyStructure == null) {
-      let emptyStructure = this.findEmpty(creep);
-      //}
+      // Selected Destination from Memory
+      let emptyStructure = Game.getObjectById(creep.memory.destination);
 
       // Move and transfer energy
       if (emptyStructure != null) {
-        creep.memory.emptyStructure = emptyStructure;
         let response = creep.transfer(emptyStructure, RESOURCE_ENERGY);
         if (response == ERR_NOT_IN_RANGE) {
           creep.moveTo(emptyStructure, roleUtilities.pathStyle);
@@ -51,9 +70,11 @@ var roleCarrier = {
           state = "GIVE";
         } else {
           state = "ERROR";
+          creep.memory.destination = this.findEmptyStructure(creep).id;
         }
       } else {
-        state = "IDLE";
+        state = "ERROR";
+        creep.memory.destination = this.findEmptyStructure(creep).id;
       }
 
       // Report state
@@ -62,9 +83,53 @@ var roleCarrier = {
       creep.memory.task = "GET";
     }
   },
-  //  Find Empty
+
+  //  Find Full Source
   //
-  findEmpty: function (creep) {
+  findFullSource: function (creep) {
+    let fullSource = [];
+    // Check Tombstones
+    fullSource = creep.room.find(FIND_TOMBSTONES, {
+      filter: (tomb) => {
+        return tomb.creep.store >= creep.carryCapacity;
+      },
+    });
+    if (fullSource.length > 0) {
+      creep.memory.source = creep.pos.findClosestByPath(fullSource).id;
+      return true;
+    }
+    // Check Dropped
+    // console.log("here2");
+    // fullSource = creep.room.find(FIND_DROPPED_RESOURCES, {
+    //   filter: (dropped) => {
+    //     return dropped.creep.store >= creep.carryCapacity;
+    //   },
+    // });
+    // if (fullSource.length > 0) {
+    //   creep.memory.source = creep.pos.findClosestByPath(fullSource).id;
+    //   return true;
+    // }
+    // Check Room Sources
+    let roomSources = Memory.TaskMan[creep.room.name].sources;
+    for (let i = 0; i < roomSources.length; i++) {
+      let sourceContainer = Game.getObjectById(roomSources[i]);
+      if (sourceContainer.store[RESOURCE_ENERGY] >= creep.carryCapacity) {
+        creep.memory.source = sourceContainer.id;
+        return true;
+        fullSource.push(sourceContainer);
+      }
+    }
+    //
+    if (fullSource.length > 0) {
+      creep.memory.task = "IDLE";
+      return false;
+      //return creep.pos.findClosestByPath(fullSource);
+    }
+  },
+
+  //  Find Empty Structure
+  //
+  findEmptyStructure: function (creep) {
     let emptyStructure = [];
     // Check Spawner Extensions
     emptyStructure = creep.room.find(FIND_STRUCTURES, {
@@ -72,7 +137,7 @@ var roleCarrier = {
         return (
           (structure.structureType == STRUCTURE_EXTENSION ||
             structure.structureType == STRUCTURE_SPAWN) &&
-          structure.store.getUsedCapacity < structure.store.getCapacity
+          structure.energy < structure.energyCapacity
         );
       },
     });
@@ -91,28 +156,12 @@ var roleCarrier = {
     if (emptyStructure.length > 0) {
       return creep.pos.findClosestByPath(emptyStructure);
     }
-    // Check Storage
-    let containers = creep.room.find(FIND_STRUCTURES, {
+    // Return The Storage
+    return creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
-        return structure.structureType == STRUCTURE_CONTAINER;
+        return structure.structureType == STRUCTURE_STORAGE;
       },
-    });
-    if (containers.length > 0 && containers[0].store.energy > 500) {
-      emptyStructure = creep.room.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-          return structure.structureType == STRUCTURE_STORAGE;
-        },
-      });
-      if (emptyStructure.length > 0) {
-        return emptyStructure[0];
-      }
-    }
-    // Check upgrade Container
-    if (containers.length >= 3 && containers[2].store.energy < 1500) {
-      return containers[2];
-    }
-    //  Nothing to fill Return Empty
-    return null;
+    })[0];
   },
 };
 

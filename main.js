@@ -314,7 +314,7 @@ function doTicks() {
       addSpawn.push([
         roomOne,
         {
-          role: "Carrier",
+          role: "upCarrier",
           body: [
             [CARRY, 10],
             [MOVE, 5],
@@ -329,10 +329,11 @@ function doTicks() {
         {
           role: "Upgrader",
           body: [
-            [WORK, 5],
-            [CARRY, 1],
-            [MOVE, 2],
+            [WORK, 8],
+            [CARRY, 2],
+            [MOVE, 3],
           ],
+          iStore: 2,
         },
       ]);
       break;
