@@ -73,6 +73,7 @@ var roleCarrier = {
           if (creep.carry.energy == 0) {
             this.findFullSource(creep);
           } else {
+            this.findEmptyStructure(creep);
           }
 
           state = "GIVE";
