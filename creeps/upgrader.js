@@ -7,7 +7,7 @@ var roleUpgrader = {
     //creep.memory.task = "UPGRADE";
     if (
       (creep.memory.task == "UPGRADE" && creep.carry.energy == 0) ||
-      creep.memory.task != "GET"
+      (creep.memory.task != "GET" && creep.memory.task != "UPGRADE")
     ) {
       roleUtilities.sayState(creep, "GET", true);
       creep.memory.task = "GET";

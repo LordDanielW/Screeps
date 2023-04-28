@@ -264,6 +264,18 @@ function doTicks() {
       ]);
       break;
     case 350:
+      addSpawn.push([
+        roomOne,
+        {
+          role: "Upgrader",
+          body: [
+            [WORK, 8],
+            [CARRY, 2],
+            [MOVE, 3],
+          ],
+          iStore: 2,
+        },
+      ]);
       // ToDo only spawn when construction sites
       // const constructSites
       // addSpawn.push([
