@@ -14,7 +14,6 @@ var roleCarrier = {
       (creep.carry.energy == 0 && creep.memory.task == "GIVE") ||
       (creep.memory.task != "GET" && creep.memory.task != "GIVE")
     ) {
-      creep.memory.task = "GET";
       this.findFullSource(creep);
     }
     //
@@ -22,8 +21,7 @@ var roleCarrier = {
       creep.memory.task == "GET" &&
       creep.carry.energy == creep.carryCapacity
     ) {
-      creep.memory.task = "GIVE";
-      creep.memory.destination = this.findEmptyStructure(creep).id;
+      this.findEmptyStructure(creep);
     }
 
     //  Get
@@ -72,26 +70,33 @@ var roleCarrier = {
           creep.moveTo(emptyStructure, roleUtilities.pathStyle);
           state = "MOVE";
         } else if (response == OK) {
+          if (creep.carry.energy == 0) {
+            this.findFullSource(creep);
+          } else {
+          }
+
           state = "GIVE";
         } else {
           state = "ERROR";
-          creep.memory.destination = this.findEmptyStructure(creep).id;
+          this.findEmptyStructure(creep);
         }
       } else {
         state = "ERROR";
-        creep.memory.destination = this.findEmptyStructure(creep).id;
+        this.findEmptyStructure(creep);
       }
 
       // Report state
       roleUtilities.sayState(creep, state, true);
     } else {
-      creep.memory.task = "GET";
+      this.findFullSource(creep);
     }
   },
 
   //  Find Full Source
   //
   findFullSource: function (creep) {
+    creep.memory.task = "GET";
+
     let fullSource = [];
     // Check Tombstones
     fullSource = creep.room.find(FIND_TOMBSTONES, {
@@ -135,6 +140,8 @@ var roleCarrier = {
   //  Find Empty Structure
   //
   findEmptyStructure: function (creep) {
+    creep.memory.task = "GIVE";
+
     let emptyStructure = [];
     // Check Spawner Extensions
     emptyStructure = creep.room.find(FIND_STRUCTURES, {
@@ -147,7 +154,8 @@ var roleCarrier = {
       },
     });
     if (emptyStructure.length > 0) {
-      return creep.pos.findClosestByPath(emptyStructure);
+      creep.memory.destination = creep.pos.findClosestByPath(emptyStructure).id;
+      return true;
     }
     // Check Towers
     emptyStructure = creep.room.find(FIND_STRUCTURES, {
@@ -159,14 +167,21 @@ var roleCarrier = {
       },
     });
     if (emptyStructure.length > 0) {
-      return creep.pos.findClosestByPath(emptyStructure);
+      creep.memory.destination = creep.pos.findClosestByPath(emptyStructure).id;
+      return true;
     }
     // Return The Storage
-    return creep.room.find(FIND_STRUCTURES, {
+    emptyStructure = creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType == STRUCTURE_STORAGE;
       },
-    })[0];
+    });
+    if (emptyStructure.length > 0) {
+      creep.memory.destination = emptyStructure[0].id;
+      return true;
+    } else {
+      return false;
+    }
   },
 };
 
