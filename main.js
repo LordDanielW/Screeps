@@ -89,6 +89,7 @@ module.exports.loop = function () {
     console.log(e);
     Memory.TaskMan.E9N52.spawn.shift();
   }
+
   //  console.log("tick message");
 };
 //  *****************************  //
@@ -276,20 +277,32 @@ function doTicks() {
           iStore: 2,
         },
       ]);
-      // ToDo only spawn when construction sites
-      // const constructSites
-      // addSpawn.push([
-      //   roomOne,
-      //   {
-      //     role: "Builder",
-      //     body: [
-      //       [WORK, 5],
-      //       [CARRY, 2],
-      //       [MOVE, 5],
-      //     ],
-      //     spawn: spawnName,
-      //   },
-      // ]);
+
+      // roomOne
+      // "E9N52"
+
+      let roomConstructionSites = false;
+      Object.keys(Game.constructionSites).forEach((x) => {
+        if (Game.constructionSites[x].room.name == roomOne) {
+          roomConstructionSites = true;
+          console.log("true");
+          return;
+        }
+      });
+      if (roomConstructionSites) {
+        addSpawn.push([
+          roomOne,
+          {
+            role: "Builder",
+            body: [
+              [WORK, 5],
+              [CARRY, 2],
+              [MOVE, 5],
+            ],
+            spawn: spawnName,
+          },
+        ]);
+      }
       break;
     case 400:
       addSpawn.push([
