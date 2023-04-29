@@ -163,7 +163,8 @@ var roleCarrier = {
       filter: (structure) => {
         return (
           structure.structureType == STRUCTURE_TOWER &&
-          structure.store.getUsedCapacity < structure.store.getCapacity
+          structure.store.getUsedCapacity(RESOURCE_ENERGY) <
+            structure.store.getCapacity(RESOURCE_ENERGY)
         );
       },
     });

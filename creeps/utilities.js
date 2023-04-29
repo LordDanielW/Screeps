@@ -188,7 +188,8 @@ var roleUtilities = {
         return (
           (structure.structureType == STRUCTURE_EXTENSION ||
             structure.structureType == STRUCTURE_SPAWN) &&
-          structure.store.getUsedCapacity < structure.store.getCapacity
+          structure.store.getUsedCapacity(RESOURCE_ENERGY) <
+            structure.store.getCapacity(RESOURCE_ENERGY)
         );
       },
     });
@@ -214,7 +215,8 @@ var roleUtilities = {
       filter: (structure) => {
         return (
           structure.structureType == STRUCTURE_TOWER &&
-          structure.store.getUsedCapacity < structure.store.getCapacity
+          structure.store.getUsedCapacity(RESOURCE_ENERGY) <
+            structure.store.getCapacity(RESOURCE_ENERGY)
         );
       },
     });
