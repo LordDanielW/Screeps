@@ -10,6 +10,24 @@ var myRoomOne = Game.rooms.E9N52;
 //  Main Loop
 //
 module.exports.loop = function () {
+  // Last Loop Failed
+  //  if the last loop failed, try catch everything
+  let lastLoopFailed = Memory.lastLoopFailed;
+  Memory.lastLoopFailed = true;
+
+  if (lastLoopFailed) {
+    //  Slow Loop
+    module.exports.slowLoop();
+  } else {
+    // Fast Loop
+    module.exports.fastLoop();
+    Memory.lastLoopFailed = false;
+  }
+};
+
+//  Fast loop
+//
+module.exports.fastLoop = function () {
   //  Ticks
   //  basis for actions on a creeps 1500 tick life.
   doTicks();
@@ -19,82 +37,169 @@ module.exports.loop = function () {
   garbageCollect();
 
   //  Towers
-  //
-  var towers = myRoomOne.find(FIND_STRUCTURES, {
-    filter: (structure) => {
-      return structure.structureType == STRUCTURE_TOWER;
-    },
-  });
-  // var moTowers = myRoomTwo.find(FIND_STRUCTURES, {
-  //   filter: (structure) => { return structure.structureType == STRUCTURE_TOWER; }
-  // });
-  try {
-    for (var i = 0; i < towers.length; i++) {
-      structures.Tower.run(towers[i]);
-      displayAttackRings(myRoomOne, towers[i]);
-    }
-    //  for (var i = 0; i < moTowers.length; i++) {
-    //   structures.Tower.run(moTowers[i]);
-    //   displayAttackRings(myRoomTwo, moTowers[i]);
-    //  }
-  } catch (e) {
-    console.log("Tower Fail");
-    console.log(e);
-  }
+  //  check repair, heal, and attack
+  //  show attack rings
+  runTowers();
 
   //  Screep Run Loop
   //
-  for (var name in Game.creeps) {
-    var creep = Game.creeps[name];
+  runScreeps();
 
-    try {
-      roles[creep.memory.role].run(creep);
-    } catch (e) {
-      creep.say("㊙︎ HELP!", true);
-      // creep.memory.role = "Repair";
+  //  run Linker Transfer
+  //
+  // runLinkerTransfer();
 
-      console.log("Creep Fail");
-      console.log(e);
-    }
+  // run Factory
+  //
+  // runFatcory();
+
+  // run Spawn
+  //
+  spawnCreeps(myRoomOne);
+};
+// End Fast Loop
+
+//  Slow Loop
+//
+module.exports.slowLoop = function () {
+  let stillFailing = false;
+
+  //  Ticks
+  try {
+    doTicks();
+  } catch (e) {
+    console.log("Ticks Fail");
+    console.log(e);
+    stillFailing = true;
   }
 
-  //  Linker Transfer
-  //
-  //   var linkers = myRoomOne.find(FIND_STRUCTURES, {
-  //      filter: (structure) => { return (structure.structureType == STRUCTURE_LINK); }
-  //   });
-  //   var error = linkers[0].transferEnergy(linkers[1]);
-  //   var error2 = linkers[2].transferEnergy(linkers[1]);
+  //  Garbage Collect
+  try {
+    garbageCollect();
+  } catch (e) {
+    console.log("Garbage Collect Fail");
+    console.log(e);
+    stillFailing = true;
+  }
 
-  //   Factory
-  //
-  //   var factory = myRoomOne.find(FIND_STRUCTURES, {
-  //      filter: (structure) => { return (structure.structureType == STRUCTURE_FACTORY); }
-  //   })[0];
-  //   //Memory.Foo = factory.store[RESOURCE_LEMERGIUM] ;
-  //   if(factory.cooldown == 0)
-  //   {
-  //       factory.produce(RESOURCE_LEMERGIUM_BAR);
-  //     //   if(factory.store.energy == null || factory.store.energy < 5000){
-  //     //     factory.produce(RESOURCE_ENERGY);
-  //     //   } else{
-  //     //     factory.produce(RESOURCE_LEMERGIUM_BAR);
-  //     //   }
-  //   }
+  //  Towers
+  try {
+    runTowers();
+  } catch (e) {
+    console.log("Tower Fail");
+    console.log(e);
+    stillFailing = true;
+  }
 
+  //  Try Screep Run Loop
+  try {
+    runTryScreeps();
+  } catch (e) {
+    console.log("Screep Run Loop Fail");
+    console.log(e);
+    stillFailing = true;
+  }
+
+  //  run Linker Transfer
+  // try {
+  //   runLinkerTransfer();
+  // } catch (e) {
+  //   console.log("Linker Transfer Fail");
+  //   console.log(e);
+  //   stillFailing = true;
+  // }
+
+  // run Factory
+  // try {
+  //   runFatcory();
+  // } catch (e) {
+  //   console.log("Factory Fail");
+  //   console.log(e);
+  //   stillFailing = true;
+  // }
+
+  // run Spawn
   try {
     spawnCreeps(myRoomOne);
   } catch (e) {
     console.log("Spawn Fail");
     console.log(e);
     Memory.TaskMan.E9N52.spawn.shift();
+    stillFailing = true;
   }
 
-  //  console.log("tick message");
+  Memory.lastLoopFailed = stillFailing;
 };
-//  *****************************  //
-//         END Main Loop           //
-//  *****************************  //
+// End Slow Loop
+
+// run Towers
+//
+function runTowers(theRoom) {
+  var towers = theRoom.find(FIND_STRUCTURES, {
+    filter: (structure) => {
+      return structure.structureType == STRUCTURE_TOWER;
+    },
+  });
+  for (var i = 0; i < towers.length; i++) {
+    structures.Tower.run(towers[i]);
+    displayAttackRings(theRoom, towers[i]);
+  }
+}
+// End Towers
+
+// Run Screeps
+//
+function runScreeps() {
+  for (var name in Game.creeps) {
+    var creep = Game.creeps[name];
+    roles[creep.memory.role].run(creep);
+  }
+}
+// End Run Screeps
+
+// run try Screeps
+//
+function runTryScreeps() {
+  for (var name in Game.creeps) {
+    var creep = Game.creeps[name];
+    try {
+      roles[creep.memory.role].run(creep);
+    } catch (e) {
+      console.log("Creep Fail");
+      console.log(e);
+    }
+  }
+}
+
+//  run link transfer
+//
+function runLinkerTransfer(theRoom) {
+  var linkers = theRoom.find(FIND_STRUCTURES, {
+    filter: (structure) => {
+      return structure.structureType == STRUCTURE_LINK;
+    },
+  });
+  var error = linkers[0].transferEnergy(linkers[1]);
+  var error2 = linkers[2].transferEnergy(linkers[1]);
+}
+
+// run factory
+//
+function runFatcory(theRoom) {
+  var factory = theRoom.find(FIND_STRUCTURES, {
+    filter: (structure) => {
+      return structure.structureType == STRUCTURE_FACTORY;
+    },
+  })[0];
+  if (factory.cooldown == 0) {
+    factory.produce(RESOURCE_LEMERGIUM_BAR);
+    if (factory.store.energy == null || factory.store.energy < 5000) {
+      factory.produce(RESOURCE_ENERGY);
+    } else {
+      factory.produce(RESOURCE_LEMERGIUM_BAR);
+    }
+  }
+}
 
 const SPAWN_PARAMETERS_DEFAULT = {
   role: "Carrier",
