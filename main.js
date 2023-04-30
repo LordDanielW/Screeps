@@ -39,7 +39,7 @@ module.exports.fastLoop = function () {
   //  Towers
   //  check repair, heal, and attack
   //  show attack rings
-  runTowers();
+  runTowers(myRoomOne);
 
   //  Screep Run Loop
   //
@@ -47,11 +47,11 @@ module.exports.fastLoop = function () {
 
   //  run Linker Transfer
   //
-  // runLinkerTransfer();
+  // runLinkerTransfer(myRoomOne);
 
   // run Factory
   //
-  // runFatcory();
+  // runFatcory(myRoomOne);
 
   // run Spawn
   //
@@ -84,7 +84,7 @@ module.exports.slowLoop = function () {
 
   //  Towers
   try {
-    runTowers();
+    runTowers(myRoomOne);
   } catch (e) {
     console.log("Tower Fail");
     console.log(e);
@@ -102,7 +102,7 @@ module.exports.slowLoop = function () {
 
   //  run Linker Transfer
   // try {
-  //   runLinkerTransfer();
+  //   runLinkerTransfer(myRoomOne);
   // } catch (e) {
   //   console.log("Linker Transfer Fail");
   //   console.log(e);
@@ -111,7 +111,7 @@ module.exports.slowLoop = function () {
 
   // run Factory
   // try {
-  //   runFatcory();
+  //   runFatcory(myRoomOne);
   // } catch (e) {
   //   console.log("Factory Fail");
   //   console.log(e);
