@@ -479,6 +479,22 @@ function doTicks() {
         },
       ]);
       break;
+    case 1250:
+      addSpawn.push([
+        roomOne,
+        {
+          role: "Breaker",
+          body: [
+            [WORK, 8],
+            [CARRY, 0],
+            [MOVE, 8],
+          ],
+          task: "MOVIN",
+          roomPos: { x: 48, y: 25, roomName: "E9N54" },
+          break: "6349177791a2f47ff1f08602",
+        },
+      ]);
+      break;
   }
 
   // Move Added Spawns from local to remote Memory

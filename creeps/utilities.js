@@ -20,7 +20,7 @@ var roleUtilities = {
       case "BUILD":
         emojiSay = "🚧 🛠️";
         break;
-      case "BREAk":
+      case "BREAK":
         emojiSay = "⛏️ ⛏️";
         break;
       case "HEAL":
@@ -40,6 +40,7 @@ var roleUtilities = {
         break;
       default:
         emojiSay = "defaulting";
+        // console.log(state);
         break;
     }
     creep.say(emojiSay, public);
