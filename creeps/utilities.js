@@ -20,6 +20,9 @@ var roleUtilities = {
       case "BUILD":
         emojiSay = "🚧 🛠️";
         break;
+      case "BREAk":
+        emojiSay = "⛏️ ⛏️";
+        break;
       case "HEAL":
         emojiSay = "🧙 PEW ✨";
         break;
