@@ -1,47 +1,39 @@
 //
 //
-var roleBreaker = {
+var roleAttacker = {
   /** @param {Creep} creep **/
   run: function (creep) {
     // creep.memory.task = "MOVIN";
     // creep.memory.roomPos = { x: 48, y: 25, roomName: "E9N54" };
-    creep.memory.break = "6453dd062dcf1466c079d6d8";
 
-    if (creep.memory.task != "MOVIN" && creep.memory.task != "BREAK") {
+    if (creep.memory.task != "MOVIN" && creep.memory.task != "ATTACK") {
       roleUtilities.sayState(creep, "IDLE", true);
       return;
     }
 
-    // Selected Destination from Memory
-    let breakOBJ = Game.getObjectById(creep.memory.break);
-
-    let breakPos = new RoomPosition(
+    let attackRoom = new RoomPosition(
       creep.memory.roomPos.x,
       creep.memory.roomPos.y,
       creep.memory.roomPos.roomName
     );
 
     if (creep.memory.task == "MOVIN") {
-      if (creep.pos.inRangeTo(breakPos, 1)) {
-        creep.memory.task = "BREAK";
-        roleUtilities.sayState(creep, "BREAK", true);
+      if (creep.pos.inRangeTo(attackRoom, 1)) {
+        creep.memory.task = "ATTACK";
+        roleUtilities.sayState(creep, "ATTACK", true);
         this.run(creep);
       } else {
         roleUtilities.sayState(creep, "MOVE", true);
-        creep.moveTo(breakPos, {
+        creep.moveTo(attackRoom, {
           visualizePathStyle: { stroke: "#ffaa00" },
         });
       }
-    } else if (creep.memory.task == "BREAK") {
-      let response = creep.dismantle(breakOBJ);
-      if (response == ERR_NOT_IN_RANGE) {
-        creep.moveTo(breakOBJ, {
-          visualizePathStyle: { stroke: "#ffaa00" },
-        });
-      } else if (response == OK) {
-        roleUtilities.sayState(creep, "BREAK", true);
-      } else {
-        roleUtilities.sayState(creep, "ERROR", true);
+    } else if (creep.memory.task == "ATTACK") {
+      const target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+      if (target) {
+        if (creep.attack(target) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(target);
+        }
       }
     }
   },

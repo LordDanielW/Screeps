@@ -122,7 +122,6 @@ var roleCarrier = {
     }
     // Check Room Sources
     let roomSources = Memory.TaskMan[creep.room.name].sourceContainers;
-    console.log(roomSources);
     for (let i = 0; i < roomSources.length; i++) {
       let sourceContainer = Game.getObjectById(roomSources[i]);
       if (sourceContainer.store[RESOURCE_ENERGY] >= creep.carryCapacity) {
