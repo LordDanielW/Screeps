@@ -7,6 +7,9 @@ var structures = require("structures.all");
 var myRoomOne = Game.rooms.E9N52;
 //var myRoomTwo = Game.rooms.W16N39;
 
+// This is a function accessible to all modules and the console
+global.helloWorld = () => console.log("Hello Console.");
+
 //  Main Loop
 //
 module.exports.loop = function () {
@@ -352,6 +355,26 @@ function doTicks() {
         },
       ]);
       break;
+    case 150:
+      //
+      if (Game.rooms[roomOne].find(FIND_MINERALS).length > 0) {
+        addSpawn.push([
+          roomOne,
+          {
+            role: "Miner",
+            say: 1,
+            atDest: false,
+            sourceType: FIND_MINERALS,
+            body: [
+              [WORK, 15],
+              [MOVE, 5],
+            ],
+            sitPOS: { x: 42, y: 39, roomName: roomOne },
+            spawn: spawnName,
+          },
+        ]);
+      }
+      break;
     case 250:
       addSpawn.push([
         roomOne,
@@ -370,19 +393,6 @@ function doTicks() {
       ]);
       break;
     case 350:
-      // addSpawn.push([
-      //   roomOne,
-      //   {
-      //     role: "Upgrader",
-      //     body: [
-      //       [WORK, 8],
-      //       [CARRY, 2],
-      //       [MOVE, 3],
-      //     ],
-      //     iStore: 2,
-      //   },
-      // ]);
-
       //  Check for Construction Sites
       let roomConstructionSites = false;
       Object.keys(Game.constructionSites).forEach((x) => {
@@ -485,9 +495,10 @@ function doTicks() {
         {
           role: "Breaker",
           body: [
-            [WORK, 8],
+            [TOUGH, 0],
+            [WORK, 2],
             [CARRY, 0],
-            [MOVE, 8],
+            [MOVE, 2],
           ],
           task: "MOVIN",
           roomPos: { x: 48, y: 25, roomName: "E9N54" },

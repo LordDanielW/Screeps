@@ -11,16 +11,13 @@ var roleCarrier = {
     // Check State Of Get / Give
     //
     if (
-      (creep.carry.energy == 0 && creep.memory.task == "GIVE") ||
+      (creep.store.getUsedCapacity() == 0 && creep.memory.task == "GIVE") ||
       (creep.memory.task != "GET" && creep.memory.task != "GIVE")
     ) {
       this.findFullSource(creep);
     }
     //
-    else if (
-      creep.memory.task == "GET" &&
-      creep.carry.energy == creep.carryCapacity
-    ) {
+    else if (creep.memory.task == "GET" && creep.store.getFreeCapacity() == 0) {
       this.findEmptyStructure(creep);
     }
 
@@ -63,6 +60,11 @@ var roleCarrier = {
       // Selected Destination from Memory
       let emptyStructure = Game.getObjectById(creep.memory.destination);
 
+      if (emptyStructure == null) {
+        this.findEmptyStructure(creep);
+        emptyStructure = Game.getObjectById(creep.memory.destination);
+      }
+
       // Move and transfer energy
       if (emptyStructure != null) {
         let response = creep.transfer(emptyStructure, RESOURCE_ENERGY);
@@ -70,13 +72,11 @@ var roleCarrier = {
           creep.moveTo(emptyStructure, roleUtilities.pathStyle);
           state = "MOVE";
         } else if (response == OK) {
-          if (creep.carry.energy == 0) {
-            this.findFullSource(creep);
-          } else {
-            this.findEmptyStructure(creep);
-          }
+          creep.memory.destination = null;
 
           state = "GIVE";
+        } else if (response == ERR_NOT_ENOUGH_RESOURCES) {
+          response = creep.transfer(emptyStructure, RESOURCE_OXYGEN);
         } else {
           state = "ERROR";
           this.findEmptyStructure(creep);
@@ -142,47 +142,64 @@ var roleCarrier = {
   //
   findEmptyStructure: function (creep) {
     creep.memory.task = "GIVE";
-
-    let emptyStructure = [];
-    // Check Spawner Extensions
-    emptyStructure = creep.room.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return (
-          (structure.structureType == STRUCTURE_EXTENSION ||
-            structure.structureType == STRUCTURE_SPAWN) &&
-          structure.energy < structure.energyCapacity
-        );
-      },
-    });
-    if (emptyStructure.length > 0) {
-      creep.memory.destination = creep.pos.findClosestByPath(emptyStructure).id;
-      return true;
-    }
-    // Check Towers
-    emptyStructure = creep.room.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return (
-          structure.structureType == STRUCTURE_TOWER &&
-          structure.store.getUsedCapacity(RESOURCE_ENERGY) <
-            structure.store.getCapacity(RESOURCE_ENERGY)
-        );
-      },
-    });
-    if (emptyStructure.length > 0) {
-      creep.memory.destination = creep.pos.findClosestByPath(emptyStructure).id;
-      return true;
-    }
-    // Return The Storage
-    emptyStructure = creep.room.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return structure.structureType == STRUCTURE_STORAGE;
-      },
-    });
-    if (emptyStructure.length > 0) {
-      creep.memory.destination = emptyStructure[0].id;
-      return true;
+    console.log(creep.store[RESOURCE_ENERGY]);
+    if (creep.store[RESOURCE_ENERGY] != 0) {
+      let emptyStructure = [];
+      // Check Spawner Extensions
+      emptyStructure = creep.room.find(FIND_STRUCTURES, {
+        filter: (structure) => {
+          return (
+            (structure.structureType == STRUCTURE_EXTENSION ||
+              structure.structureType == STRUCTURE_SPAWN) &&
+            structure.energy < structure.energyCapacity
+          );
+        },
+      });
+      if (emptyStructure.length > 0) {
+        creep.memory.destination =
+          creep.pos.findClosestByPath(emptyStructure).id;
+        return true;
+      }
+      // Check Towers
+      emptyStructure = creep.room.find(FIND_STRUCTURES, {
+        filter: (structure) => {
+          return (
+            structure.structureType == STRUCTURE_TOWER &&
+            structure.store.getUsedCapacity(RESOURCE_ENERGY) <
+              structure.store.getCapacity(RESOURCE_ENERGY)
+          );
+        },
+      });
+      if (emptyStructure.length > 0) {
+        creep.memory.destination =
+          creep.pos.findClosestByPath(emptyStructure).id;
+        return true;
+      }
+      // Return The Storage
+      emptyStructure = creep.room.find(FIND_STRUCTURES, {
+        filter: (structure) => {
+          return structure.structureType == STRUCTURE_STORAGE;
+        },
+      });
+      if (emptyStructure.length > 0) {
+        creep.memory.destination = emptyStructure[0].id;
+        return true;
+      } else {
+        return false;
+      }
     } else {
-      return false;
+      // Return The Storage
+      emptyStructure = creep.room.find(FIND_STRUCTURES, {
+        filter: (structure) => {
+          return structure.structureType == STRUCTURE_STORAGE;
+        },
+      });
+      if (emptyStructure.length > 0) {
+        creep.memory.destination = emptyStructure[0].id;
+        return true;
+      } else {
+        return false;
+      }
     }
   },
 };
