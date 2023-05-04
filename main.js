@@ -2,6 +2,7 @@
 //
 var roles = require("creeps.all");
 var structures = require("structures.all");
+// var myMemory = require("memory.all");
 
 //  Variables
 var myRoomOne = Game.rooms.E9N52;
@@ -31,6 +32,11 @@ module.exports.loop = function () {
 //  Fast loop
 //
 module.exports.fastLoop = function () {
+  try {
+    console.log(myMemory.spawnList[0].role);
+  } catch (e) {
+    console.log(e);
+  }
   //  Ticks
   //  basis for actions on a creeps 1500 tick life.
   doTicks();
@@ -227,6 +233,7 @@ function spawnCreeps(theRoom) {
   if (Memory.TaskMan[roomName].spawn.length > 5) {
     Memory.TaskMan[roomName].spawn = [];
     Memory.TaskMan[roomName].spawn.push({ role: "Carrier" });
+    Memory.TaskMan[roomName].spawnNumber = 0;
   }
   // If Spawning, Display it
   if (spawn.spawning) {

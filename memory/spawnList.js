@@ -8,7 +8,6 @@ var spawnList = [
       [CARRY, 8],
       [MOVE, 4],
     ],
-    spawn: spawnName,
   },
   {
     role: "Miner",
@@ -19,7 +18,7 @@ var spawnList = [
       [WORK, 5],
       [MOVE, 2],
     ],
-    sitPOS: { x: 15, y: 31, roomName: roomOne },
+    sitPOS: { x: 15, y: 31, roomName: "E9N52" },
   },
   {
     role: "Miner",
@@ -30,7 +29,7 @@ var spawnList = [
       [WORK, 5],
       [MOVE, 2],
     ],
-    sitPOS: { x: 23, y: 36, roomName: roomOne },
+    sitPOS: { x: 23, y: 36, roomName: "E9N52" },
   },
   {
     role: "Repair",

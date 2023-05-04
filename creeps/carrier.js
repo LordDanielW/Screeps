@@ -3,7 +3,6 @@
 //
 var roleCarrier = {
   /** @param {Creep} creep **/
-  run1: function (creep) {},
   run: function (creep) {
     //  Variables
     let state = "NONE";
@@ -122,7 +121,8 @@ var roleCarrier = {
       return true;
     }
     // Check Room Sources
-    let roomSources = Memory.TaskMan[creep.room.name].sources;
+    let roomSources = Memory.TaskMan[creep.room.name].sourceContainers;
+    console.log(roomSources);
     for (let i = 0; i < roomSources.length; i++) {
       let sourceContainer = Game.getObjectById(roomSources[i]);
       if (sourceContainer.store[RESOURCE_ENERGY] >= creep.carryCapacity) {
@@ -142,7 +142,6 @@ var roleCarrier = {
   //
   findEmptyStructure: function (creep) {
     creep.memory.task = "GIVE";
-    console.log(creep.store[RESOURCE_ENERGY]);
     if (creep.store[RESOURCE_ENERGY] != 0) {
       let emptyStructure = [];
       // Check Spawner Extensions

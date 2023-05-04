@@ -1,13 +1,14 @@
-Memory.TaskMan = {
+TaskMan = {
   Tick: 1,
   NameNum: 1,
   E9N52: {
     spawn: [],
-
+    spawnListNumber: -1,
+    spawnExtrasNumber: -1,
+    sourceContainers: ["6444fc8e758fbdce3b725bbb", "64450bc42f446e38bfca900a"],
+    upgradeContainer: "6445761e9ab55f36918b58ee",
     wallHealth: 20000,
   },
-
-  uniNumber: 1,
 };
 
 module.exports = memTaskMan;

@@ -5,7 +5,7 @@ var roleBreaker = {
   run: function (creep) {
     // creep.memory.task = "MOVIN";
     // creep.memory.roomPos = { x: 48, y: 25, roomName: "E9N54" };
-    // creep.memory.break = "6349177791a2f47ff1f08602";
+    creep.memory.break = "6453dd062dcf1466c079d6d8";
 
     if (creep.memory.task != "MOVIN" && creep.memory.task != "BREAK") {
       roleUtilities.sayState(creep, "IDLE", true);
