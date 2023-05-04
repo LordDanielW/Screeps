@@ -357,7 +357,10 @@ function doTicks() {
       break;
     case 150:
       //
-      if (Game.rooms[roomOne].find(FIND_MINERALS).length > 0) {
+      if (
+        Game.rooms[roomOne].find(FIND_MINERALS).length > 0 &&
+        Game.rooms[roomOne].find(FIND_MINERALS)[0].mineralAmount > 0
+      ) {
         addSpawn.push([
           roomOne,
           {
@@ -454,8 +457,8 @@ function doTicks() {
         {
           role: "upCarrier",
           body: [
-            [CARRY, 8],
-            [MOVE, 4],
+            [CARRY, 6],
+            [MOVE, 3],
           ],
           spawn: spawnName,
         },
@@ -467,23 +470,9 @@ function doTicks() {
         {
           role: "Upgrader",
           body: [
-            [WORK, 8],
+            [WORK, 12],
             [CARRY, 2],
-            [MOVE, 3],
-          ],
-          iStore: 2,
-        },
-      ]);
-      break;
-    case 1050:
-      addSpawn.push([
-        roomOne,
-        {
-          role: "Upgrader",
-          body: [
-            [WORK, 8],
-            [CARRY, 2],
-            [MOVE, 3],
+            [MOVE, 4],
           ],
           iStore: 2,
         },
@@ -502,7 +491,7 @@ function doTicks() {
           ],
           task: "MOVIN",
           roomPos: { x: 48, y: 25, roomName: "E9N54" },
-          break: "6349177791a2f47ff1f08602",
+          break: "6453dd062dcf1466c079d6d8",
         },
       ]);
       break;
