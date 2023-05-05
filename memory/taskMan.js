@@ -2,14 +2,112 @@ TaskMan = {
   Tick: 1,
   NameNum: 1,
   E9N52: {
-    spawn: [],
-    spawnListNumber: -1,
-    spawnExtrasNumber: -1,
     sourceContainers: ["6444fc8e758fbdce3b725bbb", "64450bc42f446e38bfca900a"],
     upgradeContainer: "6445761e9ab55f36918b58ee",
     wallHealth: 20000,
   },
+  Spawn1: {
+    spawn: [],
+    spawnListNumber: -1,
+    spawnExtrasNumber: -1,
+  },
 };
+
+global.createCreeps = function (spawnType) {
+  switch (spawnType) {
+    case "Miner":
+      Memory.TaskMan.Spawn1.spawn.push({
+        role: "Miner",
+        say: 1,
+        atDest: false,
+        sourceType: FIND_MINERALS,
+        body: [
+          [WORK, 15],
+          [MOVE, 5],
+        ],
+      });
+      break;
+    case "Carrier":
+      Memory.TaskMan.Spawn1.spawn.push({
+        role: "Carrier",
+        body: [
+          [CARRY, 8],
+          [MOVE, 4],
+        ],
+      });
+      break;
+    case "Builder":
+      Memory.TaskMan.Spawn1.spawn.push({
+        role: "Builder",
+        body: [
+          [WORK, 5],
+          [CARRY, 5],
+          [MOVE, 5],
+        ],
+      });
+      break;
+    case "Upgrader":
+      Memory.TaskMan.Spawn1.spawn.push({
+        role: "Upgrader",
+        body: [
+          [WORK, 5],
+          [CARRY, 5],
+          [MOVE, 5],
+        ],
+      });
+      break;
+    case "Repair":
+      Memory.TaskMan.Spawn1.spawn.push({
+        role: "Repair",
+        body: [
+          [WORK, 5],
+          [CARRY, 5],
+          [MOVE, 5],
+        ],
+      });
+      break;
+    case "upCarrier":
+      Memory.TaskMan.Spawn1.spawn.push({
+        role: "upCarrier",
+        body: [
+          [CARRY, 8],
+          [MOVE, 4],
+        ],
+      });
+      break;
+    case "Breaker":
+      Memory.TaskMan.Spawn1.spawn.push({
+        role: "Breaker",
+        body: [
+          [TOUGH, 0],
+          [WORK, 2],
+          [CARRY, 0],
+          [MOVE, 2],
+        ],
+        task: "MOVIN",
+        roomPos: { x: 48, y: 25, roomName: "E9N54" },
+        break: "6453dd062dcf1466c079d6d8",
+      });
+      break;
+    case "Trader":
+      Memory.TaskMan.Spawn1.spawn.push({
+        role: "Trader",
+        body: [
+          [CARRY, 2],
+          [MOVE, 2],
+        ],
+        transferType: RESOURCE_OXYGEN,
+        source: "6447e69b9f63116b12ee59f9",
+        dest: "64536a7d9f75eab498c15957",
+      });
+      break;
+    default:
+      return false;
+  }
+  return true;
+};
+
+exports.createCreeps = createCreeps;
 
 // module.exports = memTaskMan;
 
