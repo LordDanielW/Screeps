@@ -73,8 +73,6 @@ module.exports.fastLoop = function () {
   // run Spawn
   //
   for (const spawnName in Game.spawns) {
-    // var creep = Game.creeps[name];
-    // roles[creep.memory.role].run(creep);
     manage.spawnCreeps(spawnName);
   }
 };
@@ -141,17 +139,12 @@ module.exports.slowLoop = function () {
 
   // run Spawn
   try {
-    // run Spawn
-    //
     for (const spawnName in Game.spawns) {
-      // var creep = Game.creeps[name];
-      // roles[creep.memory.role].run(creep);
       manage.spawnCreeps(spawnName);
     }
   } catch (e) {
     console.log("Spawn Fail");
     console.log(e);
-    // Memory.TaskMan.Spawn1.spawn.shift();
     stillFailing = true;
   }
 
