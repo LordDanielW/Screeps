@@ -8,7 +8,7 @@ var roleClaimer = {
     creep.memory.claim = "6453dd062dcf1466c079d6d8";
 
     if (creep.memory.task != "MOVIN" && creep.memory.task != "CLAIM") {
-      roleUtilities.sayState(creep, "IDLE", true);
+      utilities.roleUtilities.sayState(creep, "IDLE", true);
       return;
     }
 
@@ -24,10 +24,10 @@ var roleClaimer = {
     if (creep.memory.task == "MOVIN") {
       if (creep.pos.inRangeTo(claimPos, 1)) {
         creep.memory.task = "CLAIM";
-        roleUtilities.sayState(creep, "CLAIM", true);
+        utilities.roleUtilities.sayState(creep, "CLAIM", true);
         this.run(creep);
       } else {
-        roleUtilities.sayState(creep, "MOVE", true);
+        utilities.roleUtilities.sayState(creep, "MOVE", true);
         creep.moveTo(claimPos, {
           visualizePathStyle: { stroke: "#ffaa00" },
         });
@@ -39,9 +39,9 @@ var roleClaimer = {
           visualizePathStyle: { stroke: "#ffaa00" },
         });
       } else if (response == OK) {
-        roleUtilities.sayState(creep, "CLAIM", true);
+        utilities.roleUtilities.sayState(creep, "CLAIM", true);
       } else {
-        roleUtilities.sayState(creep, "ERROR", true);
+        utilities.roleUtilities.sayState(creep, "ERROR", true);
       }
     }
   },

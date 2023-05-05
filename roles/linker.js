@@ -165,7 +165,7 @@ var roleLinker = {
     } else {
       // Reap
       if (creep.room.name == reapPOS.roomName) {
-        roleUtilities.getEnergyHarvest(creep);
+        utilities.roleUtilities.getEnergyHarvest(creep);
       } else {
         creep.moveTo(reapPOS, { visualizePathStyle: { stroke: "#ffaa00" } });
       }

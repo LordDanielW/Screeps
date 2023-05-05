@@ -59,9 +59,9 @@ var roleRepair = {
         }
       }
     } else if (creep.memory.task == "GET") {
-      //roleUtilities.getEnergyFactory(creep);
-      //roleUtilities.getEnergyHarvest(creep);
-      roleUtilities.getEnergyStorage(creep);
+      //utilities.roleUtilities.getEnergyFactory(creep);
+      //utilities.roleUtilities.getEnergyHarvest(creep);
+      utilities.roleUtilities.getEnergyStorage(creep);
     } else if (creep.memory.task == "MOVIN") {
       var nextRoom = new RoomPosition(02, 17, "W16N38");
       if (creep.pos.isEqualTo(nextRoom)) {

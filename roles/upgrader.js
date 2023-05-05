@@ -9,7 +9,7 @@ var roleUpgrader = {
       (creep.memory.task == "UPGRADE" && creep.carry.energy == 0) ||
       (creep.memory.task != "GET" && creep.memory.task != "UPGRADE")
     ) {
-      roleUtilities.sayState(creep, "GET", true);
+      utilities.roleUtilities.sayState(creep, "GET", true);
       creep.memory.task = "GET";
     } else if (
       creep.memory.task == "GET" &&
@@ -19,7 +19,7 @@ var roleUpgrader = {
     }
 
     if (creep.memory.task == "UPGRADE") {
-      roleUtilities.doUpgrade(creep);
+      utilities.roleUtilities.doUpgrade(creep);
     } else if (creep.memory.task == "GET") {
       let upSource = Game.getObjectById(
         Memory.TaskMan[creep.room.name].upgradeContainer
@@ -38,15 +38,15 @@ var roleUpgrader = {
       return false;
     }
 
-    // if (!roleUtilities.getEnergyLink(creep, 1)) {
-    //   roleUtilities.getEnergyContainer(creep, 2);
-    //   //roleUtilities.getEnergyHarvest(creep);
+    // if (!utilities.roleUtilities.getEnergyLink(creep, 1)) {
+    //   utilities.roleUtilities.getEnergyContainer(creep, 2);
+    //   //utilities.roleUtilities.getEnergyHarvest(creep);
     // }
 
     //   if(creep.memory.source == 1){
-    //     roleUtilities.getEnergyLink(creep, 1);
+    //     utilities.roleUtilities.getEnergyLink(creep, 1);
     //   } else{
-    //     roleUtilities.getEnergyHarvest(creep);
+    //     utilities.roleUtilities.getEnergyHarvest(creep);
     //   }
     // } else {
     //   creep.memory.task = "GET";

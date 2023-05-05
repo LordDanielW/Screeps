@@ -8,7 +8,7 @@ var roleBreaker = {
     creep.memory.break = "6453dd062dcf1466c079d6d8";
 
     if (creep.memory.task != "MOVIN" && creep.memory.task != "BREAK") {
-      roleUtilities.sayState(creep, "IDLE", true);
+      utilities.roleUtilities.sayState(creep, "IDLE", true);
       return;
     }
 
@@ -24,10 +24,10 @@ var roleBreaker = {
     if (creep.memory.task == "MOVIN") {
       if (creep.pos.inRangeTo(breakPos, 1)) {
         creep.memory.task = "BREAK";
-        roleUtilities.sayState(creep, "BREAK", true);
+        utilities.roleUtilities.sayState(creep, "BREAK", true);
         this.run(creep);
       } else {
-        roleUtilities.sayState(creep, "MOVE", true);
+        utilities.roleUtilities.sayState(creep, "MOVE", true);
         creep.moveTo(breakPos, {
           visualizePathStyle: { stroke: "#ffaa00" },
         });
@@ -39,9 +39,9 @@ var roleBreaker = {
           visualizePathStyle: { stroke: "#ffaa00" },
         });
       } else if (response == OK) {
-        roleUtilities.sayState(creep, "BREAK", true);
+        utilities.roleUtilities.sayState(creep, "BREAK", true);
       } else {
-        roleUtilities.sayState(creep, "ERROR", true);
+        utilities.roleUtilities.sayState(creep, "ERROR", true);
       }
     }
   },

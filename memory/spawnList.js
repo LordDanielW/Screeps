@@ -69,4 +69,4 @@ var spawnList = [
   },
 ];
 
-module.exports = spawnList;
+module.exports.spawnList = spawnList;

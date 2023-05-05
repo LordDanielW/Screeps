@@ -35,7 +35,7 @@ var roleCarrier = {
           response = creep.withdraw(fullSource, RESOURCE_ENERGY);
         }
         if (response == ERR_NOT_IN_RANGE) {
-          creep.moveTo(fullSource, roleUtilities.pathStyle);
+          creep.moveTo(fullSource, utilities.roleUtilities.pathStyle);
           state = "MOVE";
         } else if (response == OK) {
           state = "GET";
@@ -51,7 +51,7 @@ var roleCarrier = {
       }
 
       // Report state
-      roleUtilities.sayState(creep, state, true);
+      utilities.roleUtilities.sayState(creep, state, true);
     }
     //  Give
     //
@@ -68,7 +68,7 @@ var roleCarrier = {
       if (emptyStructure != null) {
         let response = creep.transfer(emptyStructure, RESOURCE_ENERGY);
         if (response == ERR_NOT_IN_RANGE) {
-          creep.moveTo(emptyStructure, roleUtilities.pathStyle);
+          creep.moveTo(emptyStructure, utilities.roleUtilities.pathStyle);
           state = "MOVE";
         } else if (response == OK) {
           creep.memory.destination = null;
@@ -86,7 +86,7 @@ var roleCarrier = {
       }
 
       // Report state
-      roleUtilities.sayState(creep, state, true);
+      utilities.roleUtilities.sayState(creep, state, true);
     } else {
       this.findFullSource(creep);
     }

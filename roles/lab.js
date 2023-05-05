@@ -31,7 +31,7 @@ var roleLab = {
         break;
 
       case "Empty":
-        if (roleUtilities.emptyCarry(creep)) {
+        if (utilities.roleUtilities.emptyCarry(creep)) {
           creep.memory.task = "getTask";
         }
         break;

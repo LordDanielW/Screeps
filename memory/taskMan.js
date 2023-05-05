@@ -11,7 +11,7 @@ TaskMan = {
   },
 };
 
-module.exports = memTaskMan;
+// module.exports = memTaskMan;
 
 //  Create a sell order
 //

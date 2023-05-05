@@ -41,11 +41,11 @@ var roleBuilder = {
       } else {
         //  creep.say(creep.memory.dest.x + ',' + creep.memory.dest.y);
         creep.moveTo(moveTO, { visualizePathStyle: { stroke: "#ffaa00" } });
-        //roleUtilities.moveRooms(creep);
+        //utilities.roleUtilities.moveRooms(creep);
       }
     } else {
-      // roleUtilities.getEnergyHarvest(creep);
-      roleUtilities.getEnergyStorage(creep);
+      // utilities.roleUtilities.getEnergyHarvest(creep);
+      utilities.roleUtilities.getEnergyStorage(creep);
     }
   },
 };
