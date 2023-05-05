@@ -10,11 +10,18 @@ var myRoomOne = Game.rooms.E9N52;
 //var myRoomTwo = Game.rooms.W16N39;
 
 // This is a function accessible to all modules and the console
-global.helloWorld = () => console.log("Hello Console.");
+global.helloWorld = () => {
+  console.log("Hello Console.");
+  return true;
+};
 
 //  Main Loop
 //
 module.exports.loop = function () {
+  // Memory.TaskMan.Spawn1.spawn = [];
+  // Memory.TaskMan.Spawn1.spawnListNumber = -1;
+  // Memory.TaskMan.Spawn1.spawnExtrasNumber = -1;
+
   // Last Loop Failed
   //  if the last loop failed, try catch everything
   let lastLoopFailed = Memory.lastLoopFailed;
@@ -65,7 +72,11 @@ module.exports.fastLoop = function () {
 
   // run Spawn
   //
-  manage.spawnCreeps(myRoomOne);
+  for (const spawnName in Game.spawns) {
+    // var creep = Game.creeps[name];
+    // roles[creep.memory.role].run(creep);
+    manage.spawnCreeps(spawnName);
+  }
 };
 // End Fast Loop
 
@@ -130,11 +141,17 @@ module.exports.slowLoop = function () {
 
   // run Spawn
   try {
-    manage.spawnCreeps(myRoomOne);
+    // run Spawn
+    //
+    for (const spawnName in Game.spawns) {
+      // var creep = Game.creeps[name];
+      // roles[creep.memory.role].run(creep);
+      manage.spawnCreeps(spawnName);
+    }
   } catch (e) {
     console.log("Spawn Fail");
     console.log(e);
-    Memory.TaskMan.E9N52.spawn.shift();
+    // Memory.TaskMan.Spawn1.spawn.shift();
     stillFailing = true;
   }
 
