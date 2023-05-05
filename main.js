@@ -18,9 +18,16 @@ global.helloWorld = () => {
 //  Main Loop
 //
 module.exports.loop = function () {
+  //
   // Memory.TaskMan.Spawn1.spawn = [];
   // Memory.TaskMan.Spawn1.spawnListNumber = -1;
   // Memory.TaskMan.Spawn1.spawnExtrasNumber = -1;
+
+  //
+  // Memory.TaskMan.Vat2 = {};
+  // Memory.TaskMan.Vat2.spawn = [];
+  // Memory.TaskMan.Vat2.spawnListNumber = -1;
+  // Memory.TaskMan.Vat2.spawnExtrasNumber = -1;
 
   // Last Loop Failed
   //  if the last loop failed, try catch everything

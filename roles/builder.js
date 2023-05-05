@@ -32,7 +32,7 @@ var roleBuilder = {
         //	creep.say('🍄 Movin', true);
       }
     } else if (creep.memory.task == "MOVIN") {
-      var mPOS = creep.memory.moveTO;
+      var mPOS = creep.memory.movePOS;
       var moveTO = new RoomPosition(mPOS.x, mPOS.y, mPOS.roomName);
       //var nextRoom = new RoomPosition(6, 17, "W16N38");
       if (creep.pos.isEqualTo(moveTO)) {
@@ -45,7 +45,9 @@ var roleBuilder = {
       }
     } else {
       // utilities.roleUtilities.getEnergyHarvest(creep);
-      utilities.roleUtilities.getEnergyStorage(creep);
+      if (!utilities.roleUtilities.getEnergyStorage(creep)) {
+        utilities.roleUtilities.getEnergyHarvest(creep);
+      }
     }
   },
 };

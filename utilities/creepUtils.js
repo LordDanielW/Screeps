@@ -253,10 +253,6 @@ var roleUtilities = {
     }
   },
 
-  idle: function (creep) {
-    creep.say("🍦 Idle", true);
-    creep.moveTo(Game.flags.Flag1.pos, this.pathStyle);
-  },
   doUpgrade: function (creep) {
     var iState = creep.upgradeController(creep.room.controller);
     if (iState == ERR_NOT_IN_RANGE) {

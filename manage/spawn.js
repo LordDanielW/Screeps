@@ -112,7 +112,9 @@ addSpawnQue = function (spawnName) {
     }
     // Add routine creeps to spawn que
     else if (Memory.TaskMan[spawnName].spawn.length == 0) {
-      Memory.TaskMan[spawnName].spawn.push(myMemory.spawnList[spawnListNumber]);
+      Memory.TaskMan[spawnName].spawn.push(
+        myMemory.spawnList[spawnName][spawnListNumber]
+      );
       Memory.TaskMan[spawnName].spawnListNumber++;
     }
   }
@@ -131,7 +133,15 @@ conditionalSpawnQue = function (spawnName) {
       //  Check for Minerals
       if (
         Game.spawns[spawnName].room.find(FIND_MINERALS).length > 0 &&
-        Game.spawns[spawnName].room.find(FIND_MINERALS)[0].mineralAmount > 0
+        Game.spawns[spawnName].room.find(FIND_MINERALS)[0].mineralAmount > 0 &&
+        Game.spawns[spawnName].room.find(FIND_STRUCTURES, {
+          filter: (structure) => {
+            return (
+              structure.structureType == STRUCTURE_EXTRACTOR &&
+              structure.isActive()
+            );
+          },
+        }).length > 0
       ) {
         Memory.TaskMan[spawnName].spawn.push({
           role: "Miner",
@@ -155,13 +165,25 @@ conditionalSpawnQue = function (spawnName) {
         }
       });
       if (roomConstructionSites) {
-        Memory.TaskMan[spawnName].spawn.push({
-          role: "Builder",
-          body: [
+        let myBody = [];
+        // Find body build by room energy
+        if (Game.spawns[spawnName].room.energyCapacityAvailable >= 850) {
+          myBody = [
             [WORK, 5],
             [CARRY, 2],
             [MOVE, 5],
-          ],
+          ];
+        } else {
+          myBody = [
+            [WORK, 2],
+            [CARRY, 1],
+            [MOVE, 1],
+          ];
+        }
+
+        Memory.TaskMan[spawnName].spawn.push({
+          role: "Builder",
+          body: myBody,
         });
       }
       break;

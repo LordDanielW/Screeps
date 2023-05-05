@@ -15,16 +15,29 @@ TaskMan = {
 
 global.createCreeps = function (spawnType) {
   switch (spawnType) {
+    case "Signer":
+      Memory.TaskMan.Spawn1.spawn.push({
+        role: "Signer",
+        say: 1,
+        atDest: false,
+        body: [
+          [CLAIM, 1],
+          [MOVE, 1],
+        ],
+        sitPOS: { x: 7, y: 36, roomName: "E11N51" },
+      });
+      break;
     case "Miner":
       Memory.TaskMan.Spawn1.spawn.push({
         role: "Miner",
-        say: 1,
+        say: 2,
         atDest: false,
-        sourceType: FIND_MINERALS,
+        sourceType: FIND_SOURCES,
         body: [
-          [WORK, 15],
-          [MOVE, 5],
+          [WORK, 1],
+          [MOVE, 1],
         ],
+        sitPOS: { x: 3, y: 33, roomName: "E11N51" },
       });
       break;
     case "Carrier":
@@ -39,21 +52,24 @@ global.createCreeps = function (spawnType) {
     case "Builder":
       Memory.TaskMan.Spawn1.spawn.push({
         role: "Builder",
+        task: "MOVIN",
         body: [
-          [WORK, 5],
-          [CARRY, 5],
-          [MOVE, 5],
+          [WORK, 1],
+          [CARRY, 1],
+          [MOVE, 2],
         ],
+        movePOS: { x: 5, y: 22, roomName: "E11N51" },
       });
       break;
     case "Upgrader":
       Memory.TaskMan.Spawn1.spawn.push({
         role: "Upgrader",
         body: [
-          [WORK, 5],
-          [CARRY, 5],
-          [MOVE, 5],
+          [WORK, 1],
+          [CARRY, 1],
+          [MOVE, 2],
         ],
+        movePOS: { x: 5, y: 22, roomName: "E11N51" },
       });
       break;
     case "Repair":
@@ -96,7 +112,7 @@ global.createCreeps = function (spawnType) {
           [CARRY, 2],
           [MOVE, 2],
         ],
-        transferType: RESOURCE_OXYGEN,
+        transferType: RESOURCE_ENERGY,
         source: "6447e69b9f63116b12ee59f9",
         dest: "64536a7d9f75eab498c15957",
       });
