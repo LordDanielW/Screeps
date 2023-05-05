@@ -43,7 +43,7 @@ var roleTrader = {
     //
     else if (creep.memory.task == "GIVE") {
       // Selected Destination from Memory
-      let emptyStructure = Game.getObjectById(creep.memory.destination);
+      let emptyStructure = Game.getObjectById(creep.memory.dest);
 
       // Move and transfer energy
       if (emptyStructure != null) {
@@ -68,4 +68,4 @@ var roleTrader = {
   },
 };
 
-module.exports.trader = roleTrader;
+module.exports.Trader = roleTrader;

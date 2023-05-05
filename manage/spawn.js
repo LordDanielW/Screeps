@@ -13,34 +13,26 @@ const SPAWN_PARAMETERS_DEFAULT = {
 //  Spawn Creeps
 //
 //
-spawnCreeps = function (theRoom) {
-  let roomName = theRoom.name;
-  let spawnName = "Spawn1";
+spawnCreeps = function (spawnName) {
   let spawn = Game.spawns[spawnName];
+  let roomName = spawn.room.name;
+
   // If Spawn que overloaded, clear and make a Carrier
-  if (Memory.TaskMan[roomName].spawn.length > 5) {
-    Memory.TaskMan[roomName].spawn = [];
-    Memory.TaskMan[roomName].spawn.push({ role: "Carrier" });
-    Memory.TaskMan[roomName].spawnNumber = 0;
+  if (Memory.TaskMan[spawnName].spawn.length > 5) {
+    Memory.TaskMan[spawnName].spawn = [];
+    Memory.TaskMan[spawnName].spawn.push({ role: "Carrier" });
+    Memory.TaskMan[spawnName].spawnListNumber = 0;
   }
   // If Spawning, Display it
   if (spawn.spawning) {
     utilities.structureMessage(spawn.id, "🛠️" + spawn.spawning.name);
   }
   // Else Check Spawn Que
-  else if (Memory.TaskMan[roomName].spawn.length != 0) {
-    var spawnMemory = Memory.TaskMan[roomName].spawn[0];
-
-    // Set Spawn Parameters
-    let selectSpawn = spawnMemory.spawn;
-    if (!selectSpawn) {
-      // ToDo grab first spawn in room
-      selectSpawn = "Spawn1";
-    }
+  else if (Memory.TaskMan[spawnName].spawn.length != 0) {
+    var spawnMemory = Memory.TaskMan[spawnName].spawn[0];
 
     // Generate Unique Name
     let newCreepName = spawnMemory.role + Memory.TaskMan.NameNum;
-    Memory.TaskMan.NameNum++;
 
     // Build Body
     let creepBody = spawnMemory.body;
@@ -55,41 +47,46 @@ spawnCreeps = function (theRoom) {
       }
     }
 
+    // Keeps a unique name for spawned creeps
+    Memory.TaskMan.NameNum++;
+    if (Memory.TaskMan.NameNum >= 1000) {
+      Memory.TaskMan.NameNum = 1;
+    }
+
     // Try Spawn
-    let response = Game.spawns[selectSpawn].spawnCreep(
-      buildBody,
-      newCreepName,
-      { memory: spawnMemory }
-    );
+    let response = Game.spawns[spawnName].spawnCreep(buildBody, newCreepName, {
+      memory: spawnMemory,
+    });
 
     if (response == OK) {
-      Memory.TaskMan[roomName].spawn.shift();
+      Memory.TaskMan[spawnName].spawn.shift();
     } else {
       utilities.structureMessage(spawn.id, "🎊 " + response);
-      // console.log("Error " + response + ". Spawning:" + Role.memory.role);
+      // console.log("Error " + response + ". Spawning:" + spawnMemory.role);
     }
   }
   //  Ensure Miner and Carriers are up
   else {
-    // Count Miners and Carriers
-    // ToDo add for multi Rooms
-    var countRoles = {};
-    for (var name in Game.creeps) {
-      var role = Game.creeps[name].memory.role;
-      if (countRoles[role] == null) {
-        countRoles[role] = 1;
-      } else {
-        countRoles[role]++;
-      }
-    }
-    // Check Carriers
-    if (countRoles.Carrier == undefined || countRoles.Carrier < 1) {
-      Memory.TaskMan[roomName].spawn.push({ role: "Carrier" });
-    }
-    // Check Miners
-    else if (countRoles.Miner == undefined || countRoles.Miner < 1) {
-      Memory.TaskMan[roomName].spawn.push({ role: "Miner" });
-    }
+    this.addSpawnQue(spawnName);
+    // // Count Miners and Carriers
+    // // ToDo add for multi Rooms
+    // var countRoles = {};
+    // for (var name in Game.creeps) {
+    //   var role = Game.creeps[name].memory.role;
+    //   if (countRoles[role] == null) {
+    //     countRoles[role] = 1;
+    //   } else {
+    //     countRoles[role]++;
+    //   }
+    // }
+    // // Check Carriers
+    // if (countRoles.Carrier == undefined || countRoles.Carrier < 1) {
+    //   Memory.TaskMan[spawnName].spawn.push({ role: "Carrier" });
+    // }
+    // // Check Miners
+    // else if (countRoles.Miner == undefined || countRoles.Miner < 1) {
+    //   Memory.TaskMan[spawnName].spawn.push({ role: "Miner" });
+    // }
   }
 };
 
@@ -98,58 +95,82 @@ module.exports.spawnCreeps = spawnCreeps;
 //
 //
 //
-addSpawnQue = function (roomNumber) {};
+addSpawnQue = function (spawnName) {
+  let spawnListNumber = Memory.TaskMan[spawnName].spawnListNumber;
+  let spawnExtrasNumber = Memory.TaskMan[spawnName].spawnExtrasNumber;
+
+  // Set if undefined
+  if (spawnListNumber == undefined || spawnExtrasNumber == undefined) {
+    Memory.TaskMan[spawnName].spawnListNumber = -1;
+    Memory.TaskMan[spawnName].spawnExtrasNumber = -1;
+  }
+  // if end of list go to extras
+  else if (spawnListNumber != -1) {
+    if (myMemory.spawnList.length <= spawnListNumber) {
+      Memory.TaskMan[spawnName].spawnListNumber = -1;
+      Memory.TaskMan[spawnName].spawnExtrasNumber = 0;
+    }
+    // Add routine creeps to spawn que
+    else if (Memory.TaskMan[spawnName].spawn.length == 0) {
+      Memory.TaskMan[spawnName].spawn.push(myMemory.spawnList[spawnListNumber]);
+      Memory.TaskMan[spawnName].spawnListNumber++;
+    }
+  }
+  // check for extras to add to spawn que
+  else if (spawnExtrasNumber != -1) {
+    this.conditionalSpawnQue(spawnName);
+  }
+};
+
+module.exports.addSpawnQue = addSpawnQue;
 
 //  more Creeps
-conditionalSpawnQue = function (roomNumber) {
-  switch (ticks) {
-    case 150:
+conditionalSpawnQue = function (spawnName) {
+  switch (Memory.TaskMan[spawnName].spawnExtrasNumber) {
+    case 1:
       //  Check for Minerals
       if (
-        Game.rooms[roomOne].find(FIND_MINERALS).length > 0 &&
-        Game.rooms[roomOne].find(FIND_MINERALS)[0].mineralAmount > 0
+        Game.spawns[spawnName].room.find(FIND_MINERALS).length > 0 &&
+        Game.spawns[spawnName].room.find(FIND_MINERALS)[0].mineralAmount > 0
       ) {
-        addSpawn.push([
-          roomOne,
-          {
-            role: "Miner",
-            say: 1,
-            atDest: false,
-            sourceType: FIND_MINERALS,
-            body: [
-              [WORK, 15],
-              [MOVE, 5],
-            ],
-            sitPOS: { x: 42, y: 39, roomName: roomOne },
-            spawn: spawnName,
-          },
-        ]);
+        Memory.TaskMan[spawnName].spawn.push({
+          role: "Miner",
+          say: 1,
+          atDest: false,
+          sourceType: FIND_MINERALS,
+          body: [
+            [WORK, 15],
+            [MOVE, 5],
+          ],
+          sitPOS: { x: 42, y: 39, roomName: "E9N52" },
+        });
       }
       break;
-    case 350:
+    case 2:
       //  Check for Construction Sites
       let roomConstructionSites = false;
       Object.keys(Game.constructionSites).forEach((x) => {
-        if (Game.constructionSites[x].room.name == roomOne) {
+        if (Game.constructionSites[x].room == Game.spawns[spawnName].room) {
           roomConstructionSites = true;
-          console.log("true");
-          return;
         }
       });
       if (roomConstructionSites) {
-        addSpawn.push([
-          roomOne,
-          {
-            role: "Builder",
-            body: [
-              [WORK, 5],
-              [CARRY, 2],
-              [MOVE, 5],
-            ],
-            spawn: spawnName,
-          },
-        ]);
+        Memory.TaskMan[spawnName].spawn.push({
+          role: "Builder",
+          body: [
+            [WORK, 5],
+            [CARRY, 2],
+            [MOVE, 5],
+          ],
+        });
       }
       break;
+    default:
+      Memory.TaskMan[spawnName].spawnExtrasNumber = -1;
+      return;
   }
+
+  Memory.TaskMan[spawnName].spawnExtrasNumber++;
 };
+
+module.exports.conditionalSpawnQue = conditionalSpawnQue;

@@ -40,7 +40,7 @@ var roleCarrier = {
         } else if (response == OK) {
           state = "GET";
         } else {
-          if (this.findFullSource(creep)) {
+          if (!this.findFullSource(creep)) {
             state = "ERROR";
           }
         }
@@ -130,6 +130,7 @@ var roleCarrier = {
         return true;
       }
     }
+
     //
     if (fullSource.length > 0) {
       creep.memory.task = "IDLE";
@@ -186,14 +187,9 @@ var roleCarrier = {
         return false;
       }
     } else {
-      // Return The Storage
-      emptyStructure = creep.room.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-          return structure.structureType == STRUCTURE_STORAGE;
-        },
-      });
-      if (emptyStructure.length > 0) {
-        creep.memory.destination = emptyStructure[0].id;
+      // Return The Terminal
+      if (creep.room.terminal) {
+        creep.memory.destination = creep.room.terminal.id;
         return true;
       } else {
         return false;

@@ -55,18 +55,6 @@ var spawnList = [
     ],
     iStore: 2,
   },
-  {
-    role: "Breaker",
-    body: [
-      [TOUGH, 0],
-      [WORK, 2],
-      [CARRY, 0],
-      [MOVE, 2],
-    ],
-    task: "MOVIN",
-    roomPos: { x: 48, y: 25, roomName: "E9N54" },
-    break: "6453dd062dcf1466c079d6d8",
-  },
 ];
 
 module.exports.spawnList = spawnList;
