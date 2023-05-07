@@ -9,6 +9,8 @@ var utilities = require("utilities.all");
 var myRoomOne = Game.rooms.E9N52;
 //var myRoomTwo = Game.rooms.W16N39;
 
+global.showGraphics = false;
+
 // This is a function accessible to all modules and the console
 global.helloWorld = () => {
   console.log("Hello Console.");
@@ -18,17 +20,6 @@ global.helloWorld = () => {
 //  Main Loop
 //
 module.exports.loop = function () {
-  //
-  // Memory.TaskMan.Spawn1.spawn = [];
-  // Memory.TaskMan.Spawn1.spawnListNumber = -1;
-  // Memory.TaskMan.Spawn1.spawnExtrasNumber = -1;
-
-  //
-  // Memory.TaskMan.Vat2 = {};
-  // Memory.TaskMan.Vat2.spawn = [];
-  // Memory.TaskMan.Vat2.spawnListNumber = -1;
-  // Memory.TaskMan.Vat2.spawnExtrasNumber = -1;
-
   // Last Loop Failed
   //  if the last loop failed, try catch everything
   let lastLoopFailed = Memory.lastLoopFailed;
@@ -152,6 +143,15 @@ module.exports.slowLoop = function () {
   } catch (e) {
     console.log("Spawn Fail");
     console.log(e);
+
+    Memory.TaskMan.Spawn1.spawn = [];
+    Memory.TaskMan.Spawn1.spawnListNumber = -1;
+    Memory.TaskMan.Spawn1.spawnExtrasNumber = -1;
+
+    // Memory.TaskMan.Vat2 = {};
+    Memory.TaskMan.Vat2.spawn = [];
+    Memory.TaskMan.Vat2.spawnListNumber = -1;
+    Memory.TaskMan.Vat2.spawnExtrasNumber = -1;
     stillFailing = true;
   }
 
@@ -169,7 +169,9 @@ function runTowers(theRoom) {
   });
   for (var i = 0; i < towers.length; i++) {
     manage.Tower.run(towers[i]);
-    utilities.displayAttackRings(theRoom, towers[i]);
+    if (showGraphics) {
+      utilities.displayAttackRings(theRoom, towers[i]);
+    }
   }
 }
 // End Towers
