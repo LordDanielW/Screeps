@@ -1,7 +1,8 @@
 var roleBuilder = {
   /** @param {Creep} creep **/
   run: function (creep) {
-    //creep.memory.moveTO = { x: 24, y: 47, roomName: "W16N39"};
+    // creep.move(TOP);
+    // creep.memory.movePOS = { x: 3, y: 28, roomName: "E11N51" };
     // creep.memory.role = "Repair";
     if (creep.carry.energy == 0 && creep.memory.task == "BUILD") {
       creep.memory.task = "GET";

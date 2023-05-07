@@ -11,7 +11,9 @@ var roleMiner = {
         // Memory.Foo = error;
         // creep.memory.atDest = false;
       }
-      this.sing(creep);
+      if (global.showGraphics) {
+        this.sing(creep);
+      }
     } else {
       var mPOS = creep.memory.sitPOS;
       var sitPOS = new RoomPosition(mPOS.x, mPOS.y, mPOS.roomName);

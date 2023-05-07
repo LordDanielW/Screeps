@@ -3,6 +3,9 @@ var roleUtilities = {
   //
   //
   sayState: function (creep, state, public) {
+    if (!global.showGraphics) {
+      return;
+    }
     let emojiSay = "❓❔❕❗";
     switch (state) {
       case "MOVE":
@@ -255,6 +258,20 @@ var roleUtilities = {
 
   doUpgrade: function (creep) {
     var iState = creep.upgradeController(creep.room.controller);
+
+    //To Danny: You can actually do some actions concurrently (specifically, pick up energy and upgrade can happen in same tick).
+    //obv shouldnt be here, but ya, put it where u want it. *This works from withdraw from container and transfering between creeps as well (see the chart i opened on other screen)
+    //u could do it every tick if u wanted but it does cost 0.2 cpu (so upgrading and transfering in same tick allows a single creep to take 0.4 cpu)
+    //I just did it at range 1 cause it is free if any energy is lying next to upgrader (as in your new room)
+    if (creep.store.getUsedCapacity() < creep.store.getCapacity() / 2) {
+      let nearDrops = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 1, {
+        filter: { resourceType: RESOURCE_ENERGY },
+      });
+      if (nearDrops.length > 0) {
+        creep.pickup(nearDrops[0]);
+      }
+    }
+
     if (iState == ERR_NOT_IN_RANGE) {
       creep.moveTo(creep.room.controller, this.pathStyle);
       return true;

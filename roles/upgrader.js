@@ -5,7 +5,6 @@ var roleUpgrader = {
   /** @param {Creep} creep **/
   run: function (creep) {
     //creep.memory.task = "UPGRADE";
-
     creepTasks = ["GET", "UPGRADE", "MOVIN"];
 
     //  Check Task

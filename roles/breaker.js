@@ -3,7 +3,7 @@
 var roleBreaker = {
   /** @param {Creep} creep **/
   run: function (creep) {
-    // creep.memory.task = "MOVIN";
+    // creep.memory.task = "BREAK";
     // creep.memory.roomPos = { x: 48, y: 25, roomName: "E9N54" };
     creep.memory.break = "6453dd062dcf1466c079d6d8";
 
