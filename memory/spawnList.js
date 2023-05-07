@@ -72,7 +72,7 @@ var spawnList = {
       direction: BOTTOM,
       sourceType: FIND_SOURCES,
       body: [
-        [WORK, 2],
+        [WORK, 5],
         [MOVE, 1],
       ],
       sitPOS: { x: 3, y: 33, roomName: "E11N51" },
@@ -81,11 +81,121 @@ var spawnList = {
       role: "Upgrader",
       direction: BOTTOM_RIGHT,
       body: [
-        [WORK, 2],
+        [WORK, 4],
         [CARRY, 1],
         [MOVE, 1],
       ],
       iStore: 2,
+    },
+    {
+      role: "Upgrader",
+      direction: BOTTOM_RIGHT,
+      body: [
+        [WORK, 4],
+        [CARRY, 1],
+        [MOVE, 1],
+      ],
+      iStore: 2,
+    },
+    {
+      role: "Repair",
+      body: [
+        [WORK, 1],
+        [CARRY, 1],
+        [MOVE, 1],
+      ],
+    },
+    {
+      role: "Builder",
+      task: "GET",
+      body: [
+        [WORK, 2],
+        [CARRY, 1],
+        [MOVE, 2],
+      ],
+      movePOS: { x: 35, y: 18, roomName: "E14N49" },
+    },
+    // //  ext Room Prep
+    // {
+    //   role: "Miner",
+    //   say: 1,
+    //   atDest: false,
+    //   task: "MOVIN",
+    //   direction: BOTTOM,
+    //   sourceType: FIND_SOURCES,
+    //   body: [
+    //     [WORK, 3],
+    //     [MOVE, 3],
+    //   ],
+    //   sitPOS: { x: 38, y: 27, roomName: "E13N49" },
+    // },
+    // {
+    //   role: "Upgrader",
+    //   task: "MOVIN",
+    //   body: [
+    //     [WORK, 2],
+    //     [CARRY, 1],
+    //     [MOVE, 2],
+    //   ],
+    //   movePOS: { x: 35, y: 18, roomName: "E13N49" },
+    //   iStore: 2,
+    // },
+    // {
+    //   role: "Builder",
+    //   task: "MOVIN",
+    //   body: [
+    //     [WORK, 2],
+    //     [CARRY, 1],
+    //     [MOVE, 2],
+    //   ],
+    //   movePOS: { x: 35, y: 18, roomName: "E13N49" },
+    // },
+  ],
+  Vat3: [
+    {
+      role: "Carrier",
+      body: [
+        [CARRY, 2],
+        [MOVE, 1],
+      ],
+    },
+    {
+      role: "Miner",
+      say: 1,
+      atDest: false,
+      direction: BOTTOM,
+      sourceType: FIND_SOURCES,
+      body: [
+        [WORK, 2],
+        [MOVE, 1],
+      ],
+      sitPOS: { x: 38, y: 37, roomName: "E14N49" },
+    },
+    {
+      role: "Upgrader",
+      direction: BOTTOM_RIGHT,
+      body: [
+        [WORK, 1],
+        [CARRY, 1],
+        [MOVE, 1],
+      ],
+      iStore: 2,
+    },
+    {
+      role: "Repair",
+      body: [
+        [WORK, 1],
+        [CARRY, 1],
+        [MOVE, 1],
+      ],
+    },
+    {
+      role: "Builder",
+      body: [
+        [WORK, 1],
+        [CARRY, 1],
+        [MOVE, 1],
+      ],
     },
   ],
 };
