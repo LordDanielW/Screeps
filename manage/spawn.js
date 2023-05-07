@@ -107,7 +107,7 @@ addSpawnQue = function (spawnName) {
   }
   // if end of list go to extras
   else if (spawnListNumber != -1) {
-    if (myMemory.spawnList.length <= spawnListNumber) {
+    if (myMemory.spawnList[spawnName].length <= spawnListNumber) {
       Memory.TaskMan[spawnName].spawnListNumber = -1;
       Memory.TaskMan[spawnName].spawnExtrasNumber = 0;
     }
