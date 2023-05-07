@@ -6,14 +6,24 @@ TaskMan = {
     upgradeContainer: "6445761e9ab55f36918b58ee",
     wallHealth: 20000,
   },
+  E11N51: {
+    sourceContainers: ["64563dee3e03b753a2b3e97f"],
+    upgradeContainer: "64563dee3e03b753a2b3e97f",
+    wallHealth: 20000,
+  },
   Spawn1: {
+    spawn: [],
+    spawnListNumber: -1,
+    spawnExtrasNumber: -1,
+  },
+  Vat2: {
     spawn: [],
     spawnListNumber: -1,
     spawnExtrasNumber: -1,
   },
 };
 
-global.createCreeps = function (spawnType) {
+global.bCreep = function (spawnType) {
   switch (spawnType) {
     case "Signer":
       Memory.TaskMan.Spawn1.spawn.push({
@@ -28,33 +38,34 @@ global.createCreeps = function (spawnType) {
       });
       break;
     case "Miner":
-      Memory.TaskMan.Spawn1.spawn.push({
+      Memory.TaskMan.Vat2.spawn.push({
         role: "Miner",
         say: 2,
         atDest: false,
         sourceType: FIND_SOURCES,
+        direction: BOTTOM_LEFT,
         body: [
-          [WORK, 1],
+          [WORK, 3],
           [MOVE, 1],
         ],
-        sitPOS: { x: 3, y: 33, roomName: "E11N51" },
+        sitPOS: { x: 2, y: 33, roomName: "E11N51" },
       });
       break;
     case "Carrier":
-      Memory.TaskMan.Spawn1.spawn.push({
+      Memory.TaskMan.Vat2.spawn.push({
         role: "Carrier",
         body: [
-          [CARRY, 8],
-          [MOVE, 4],
+          [CARRY, 2],
+          [MOVE, 2],
         ],
       });
       break;
     case "Builder":
-      Memory.TaskMan.Spawn1.spawn.push({
+      Memory.TaskMan.Vat2.spawn.push({
         role: "Builder",
-        task: "MOVIN",
+        task: "GET",
         body: [
-          [WORK, 1],
+          [WORK, 2],
           [CARRY, 1],
           [MOVE, 2],
         ],
@@ -62,8 +73,9 @@ global.createCreeps = function (spawnType) {
       });
       break;
     case "Upgrader":
-      Memory.TaskMan.Spawn1.spawn.push({
+      Memory.TaskMan.Vat2.spawn.push({
         role: "Upgrader",
+        task: "GET",
         body: [
           [WORK, 1],
           [CARRY, 1],
@@ -73,7 +85,7 @@ global.createCreeps = function (spawnType) {
       });
       break;
     case "Repair":
-      Memory.TaskMan.Spawn1.spawn.push({
+      Memory.TaskMan.Vat2.spawn.push({
         role: "Repair",
         body: [
           [WORK, 5],
@@ -92,7 +104,7 @@ global.createCreeps = function (spawnType) {
       });
       break;
     case "Breaker":
-      Memory.TaskMan.Spawn1.spawn.push({
+      Memory.TaskMan.Vat2.spawn.push({
         role: "Breaker",
         body: [
           [TOUGH, 0],
@@ -123,7 +135,7 @@ global.createCreeps = function (spawnType) {
   return true;
 };
 
-exports.createCreeps = createCreeps;
+exports.bCreep = bCreep;
 
 // module.exports = memTaskMan;
 

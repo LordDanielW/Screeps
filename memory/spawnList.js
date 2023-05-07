@@ -50,7 +50,7 @@ var spawnList = {
     {
       role: "Upgrader",
       body: [
-        [WORK, 12],
+        [WORK, 15],
         [CARRY, 2],
         [MOVE, 4],
       ],
@@ -68,7 +68,7 @@ var spawnList = {
     {
       role: "Miner",
       say: 1,
-      atDest: true,
+      atDest: false,
       direction: BOTTOM,
       sourceType: FIND_SOURCES,
       body: [

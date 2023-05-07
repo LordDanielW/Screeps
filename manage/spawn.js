@@ -56,6 +56,7 @@ spawnCreeps = function (spawnName) {
     // Try Spawn
     let response = Game.spawns[spawnName].spawnCreep(buildBody, newCreepName, {
       memory: spawnMemory,
+      directions: spawnMemory.directions,
     });
 
     if (response == OK) {
