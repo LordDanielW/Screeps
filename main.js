@@ -195,6 +195,7 @@ function runTryScreeps() {
       roles[creep.memory.role].run(creep);
     } catch (e) {
       console.log("Creep Fail");
+      console.log(creep.name);
       console.log(e);
     }
   }
