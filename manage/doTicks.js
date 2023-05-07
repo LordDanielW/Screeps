@@ -7,6 +7,8 @@ var doTicks = function () {
   if (Memory.TaskMan.Tick >= 1460) {
     Memory.TaskMan.Tick = 0;
     Memory.TaskMan.Spawn1.spawnListNumber = 0;
+  } else if (Memory.TaskMan.Tick == 1000) {
+    Memory.TaskMan.Vat2.spawnListNumber = 0;
   }
 
   // var roomOne = "E9N52";
