@@ -43,8 +43,8 @@ var spawnList = {
     {
       role: "upCarrier",
       body: [
-        [CARRY, 6],
-        [MOVE, 3],
+        [CARRY, 7],
+        [MOVE, 4],
       ],
     },
     {
@@ -81,7 +81,7 @@ var spawnList = {
       role: "Upgrader",
       direction: BOTTOM_RIGHT,
       body: [
-        [WORK, 4],
+        [WORK, 7],
         [CARRY, 1],
         [MOVE, 1],
       ],
@@ -91,7 +91,7 @@ var spawnList = {
       role: "Upgrader",
       direction: BOTTOM_RIGHT,
       body: [
-        [WORK, 4],
+        [WORK, 7],
         [CARRY, 1],
         [MOVE, 1],
       ],
@@ -105,16 +105,16 @@ var spawnList = {
         [MOVE, 1],
       ],
     },
-    {
-      role: "Builder",
-      task: "GET",
-      body: [
-        [WORK, 2],
-        [CARRY, 1],
-        [MOVE, 2],
-      ],
-      movePOS: { x: 35, y: 18, roomName: "E14N49" },
-    },
+    // {
+    //   role: "Builder",
+    //   task: "GET",
+    //   body: [
+    //     [WORK, 2],
+    //     [CARRY, 1],
+    //     [MOVE, 2],
+    //   ],
+    //   movePOS: { x: 35, y: 18, roomName: "E14N49" },
+    // },
     // //  ext Room Prep
     // {
     //   role: "Miner",
@@ -169,7 +169,62 @@ var spawnList = {
         [WORK, 2],
         [MOVE, 1],
       ],
-      sitPOS: { x: 38, y: 37, roomName: "E14N49" },
+      sitPOS: { x: 38, y: 26, roomName: "E13N49" },
+    },
+    {
+      role: "Miner",
+      say: 1,
+      atDest: false,
+      direction: BOTTOM,
+      sourceType: FIND_SOURCES,
+      body: [
+        [WORK, 2],
+        [MOVE, 1],
+      ],
+      sitPOS: { x: 38, y: 27, roomName: "E13N49" },
+    },
+    {
+      role: "Miner",
+      say: 2,
+      atDest: false,
+      direction: BOTTOM,
+      sourceType: FIND_SOURCES,
+      body: [
+        [WORK, 2],
+        [MOVE, 1],
+      ],
+      sitPOS: { x: 29, y: 43, roomName: "E13N49" },
+    },
+    {
+      role: "Miner",
+      say: 2,
+      atDest: false,
+      direction: BOTTOM,
+      sourceType: FIND_SOURCES,
+      body: [
+        [WORK, 2],
+        [MOVE, 1],
+      ],
+      sitPOS: { x: 28, y: 43, roomName: "E13N49" },
+    },
+    {
+      role: "Miner",
+      say: 2,
+      atDest: false,
+      direction: BOTTOM,
+      sourceType: FIND_SOURCES,
+      body: [
+        [WORK, 2],
+        [MOVE, 1],
+      ],
+      sitPOS: { x: 28, y: 44, roomName: "E13N49" },
+    },
+    {
+      role: "Carrier",
+      body: [
+        [CARRY, 3],
+        [MOVE, 3],
+      ],
     },
     {
       role: "Upgrader",
