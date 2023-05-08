@@ -11,6 +11,11 @@ TaskMan = {
     upgradeContainer: "64563dee3e03b753a2b3e97f",
     wallHealth: 20000,
   },
+  E13N49: {
+    sourceContainers: [],
+    upgradeContainer: "",
+    wallHealth: 200,
+  },
   Spawn1: {
     spawn: [],
     spawnListNumber: -1,

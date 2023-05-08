@@ -6,7 +6,7 @@ var roleCarrier = {
   run: function (creep) {
     //  Variables
     let state = "NONE";
-
+    // creep.move(TOP);
     // Check State Of Get / Give
     //
     if (

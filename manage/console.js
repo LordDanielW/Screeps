@@ -1,4 +1,4 @@
-global.bCreep = function (spawnType) {
+global.sC = function (spawnType) {
   switch (spawnType) {
     case "Signer":
       Memory.TaskMan.Vat2.spawn.push({
@@ -14,18 +14,18 @@ global.bCreep = function (spawnType) {
       });
       break;
     case "Miner":
-      Memory.TaskMan.Vat2.spawn.push({
+      Memory.TaskMan.Vat3.spawn.push({
         role: "Miner",
-        task: "MOVIN",
+        task: "GET",
         say: 2,
         atDest: false,
         sourceType: FIND_SOURCES,
         direction: BOTTOM_LEFT,
         body: [
-          [WORK, 3],
-          [MOVE, 3],
+          [WORK, 2],
+          [MOVE, 1],
         ],
-        sitPOS: { x: 38, y: 27, roomName: "E13N49" },
+        sitPOS: { x: 29, y: 43, roomName: "E13N49" },
       });
       break;
     case "Carrier":
@@ -38,13 +38,13 @@ global.bCreep = function (spawnType) {
       });
       break;
     case "Builder":
-      Memory.TaskMan.Vat2.spawn.push({
+      Memory.TaskMan.Vat3.spawn.push({
         role: "Builder",
         task: "GET",
         body: [
-          [WORK, 2],
+          [WORK, 1],
           [CARRY, 1],
-          [MOVE, 2],
+          [MOVE, 1],
         ],
         movePOS: { x: 36, y: 18, roomName: "E13N49" },
       });
@@ -91,7 +91,7 @@ global.bCreep = function (spawnType) {
         ],
         task: "MOVIN",
         roomPos: { x: 48, y: 25, roomName: "E9N54" },
-        break: "6453dd062dcf1466c079d6d8",
+        break: "6456651b3179446834401347",
       });
       break;
     case "Trader":
@@ -112,4 +112,14 @@ global.bCreep = function (spawnType) {
   return true;
 };
 
-exports.bCreep = bCreep;
+exports.sC = sC;
+
+// Pick Creep function
+global.pC = function (creepName) {};
+
+exports.pC = pC;
+
+// Move Creep function
+global.mC = function (moveString) {};
+
+exports.mC = mC;
