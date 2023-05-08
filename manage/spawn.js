@@ -66,9 +66,11 @@ spawnCreeps = function (spawnName) {
       // console.log("Error " + response + ". Spawning:" + spawnMemory.role);
     }
   }
-  //  Ensure Miner and Carriers are up
+  //  Else add to Que
   else {
     this.addSpawnQue(spawnName);
+
+    // TODO: Add Back Later
     // // Count Miners and Carriers
     // // ToDo add for multi Rooms
     // var countRoles = {};
@@ -130,7 +132,7 @@ module.exports.addSpawnQue = addSpawnQue;
 //  more Creeps
 conditionalSpawnQue = function (spawnName) {
   switch (Memory.TaskMan[spawnName].spawnExtrasNumber) {
-    case 1:
+    case 0:
       //  Check for Minerals
       if (
         Game.spawns[spawnName].room.find(FIND_MINERALS).length > 0 &&
@@ -157,7 +159,7 @@ conditionalSpawnQue = function (spawnName) {
         });
       }
       break;
-    case 2:
+    case 1:
       //  Check for Construction Sites
       let roomConstructionSites = false;
       Object.keys(Game.constructionSites).forEach((x) => {
