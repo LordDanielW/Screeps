@@ -4,17 +4,26 @@ TaskMan = {
   E9N52: {
     sourceContainers: ["6444fc8e758fbdce3b725bbb", "64450bc42f446e38bfca900a"],
     upgradeContainer: "6445761e9ab55f36918b58ee",
+    upCarryId: "6447e69b9f63116b12ee59f9",
     wallHealth: 20000,
   },
   E11N51: {
     sourceContainers: ["64563dee3e03b753a2b3e97f"],
     upgradeContainer: "64563dee3e03b753a2b3e97f",
+    upCarryId: "",
     wallHealth: 20000,
   },
   E13N49: {
+    sourceContainers: ["6458d5472769d02e084590b8", "645857ed3179443e184087a1"],
+    upgradeContainer: "64591a8f096532ca2ac38fbb",
+    upCarryId: "6458d5472769d02e084590b8",
+    wallHealth: 200,
+  },
+  E14N49: {
     sourceContainers: [],
     upgradeContainer: "",
-    wallHealth: 200,
+    upCarryId: "",
+    wallHealth: 10,
   },
   Spawn1: {
     spawn: [],
@@ -27,6 +36,11 @@ TaskMan = {
     spawnExtrasNumber: -1,
   },
   Vat3: {
+    spawn: [],
+    spawnListNumber: -1,
+    spawnExtrasNumber: -1,
+  },
+  Vat4: {
     spawn: [],
     spawnListNumber: -1,
     spawnExtrasNumber: -1,
