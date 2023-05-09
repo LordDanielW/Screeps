@@ -3,11 +3,14 @@
 var roleBreaker = {
   /** @param {Creep} creep **/
   run: function (creep) {
+    creep.heal(creep);
     // creep.memory.task = "BREAK";
-    // creep.memory.roomPos = { x: 48, y: 25, roomName: "E9N54" };
-    // creep.memory.break = "6453dd062dcf1466c079d6d8";
+    // creep.memory.roomPos = { x: 49, y: 12, roomName: "E9N54" };
+    // creep.memory.break = "645726bebc2f4b95ec1a04f1";
 
-    if (creep.memory.task != "MOVIN" && creep.memory.task != "BREAK") {
+    creepTasks = ["MOVIN", "BREAK", "HEAL"];
+
+    if (!creepTasks.includes(creep.memory.task)) {
       utilities.roleUtilities.sayState(creep, "IDLE", true);
       return;
     }
@@ -22,7 +25,8 @@ var roleBreaker = {
     );
 
     if (creep.memory.task == "MOVIN") {
-      if (creep.pos.inRangeTo(breakPos, 1)) {
+      if (creep.pos.isEqualTo(breakPos)) {
+        // if (creep.pos.inRangeTo(breakPos, 1)) {
         creep.memory.task = "BREAK";
         utilities.roleUtilities.sayState(creep, "BREAK", true);
         this.run(creep);
@@ -33,18 +37,37 @@ var roleBreaker = {
         });
       }
     } else if (creep.memory.task == "BREAK") {
-      let response = creep.dismantle(breakOBJ);
-      if (response == ERR_NOT_IN_RANGE) {
-        creep.moveTo(breakOBJ, {
-          visualizePathStyle: { stroke: "#ffaa00" },
-        });
-      } else if (response == OK) {
-        utilities.roleUtilities.sayState(creep, "BREAK", true);
-      } else {
-        utilities.roleUtilities.sayState(creep, "ERROR", true);
+      // Check Creep health, if les than half change task to HEAL
+      if (creep.hits < creep.hitsMax / 2 + 200) {
+        creep.memory.task = "HEAL";
+      }
+    }
+    if (creep.memory.task == "HEAL") {
+      // Move to range 6 of SafeFlag
+      let safeFlag = Game.flags["SafeFlag"];
+
+      if (!creep.pos.inRangeTo(safeFlag, 6)) {
+        creep.moveTo(safeFlag);
+      }
+      // console.log(
+      //   "creep.hits: " + creep.hits + " creep.hitsMax: " + creep.hitsMax
+      // );
+      if (creep.hits == creep.hitsMax) {
+        creep.memory.task = "MOVIN";
       }
     }
   },
 };
 
 module.exports.Breaker = roleBreaker;
+
+// let response = creep.dismantle(breakOBJ);
+// if (response == ERR_NOT_IN_RANGE) {
+//   creep.moveTo(breakOBJ, {
+//     visualizePathStyle: { stroke: "#ffaa00" },
+//   });
+// } else if (response == OK) {
+//   utilities.roleUtilities.sayState(creep, "BREAK", true);
+// } else {
+//   utilities.roleUtilities.sayState(creep, "ERROR", true);
+// }
