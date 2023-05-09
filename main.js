@@ -58,7 +58,11 @@ module.exports.fastLoop = function () {
 
   //  Screep Run Loop
   //
-  runScreeps();
+  if (Memory.creepMove && Memory.creepMove.length > 0) {
+    runMoveScreeps();
+  } else {
+    runScreeps();
+  }
 
   //  run Linker Transfer
   //
@@ -152,6 +156,11 @@ module.exports.slowLoop = function () {
     Memory.TaskMan.Vat2.spawn = [];
     Memory.TaskMan.Vat2.spawnListNumber = -1;
     Memory.TaskMan.Vat2.spawnExtrasNumber = -1;
+
+    // Memory.TaskMan.Vat3 = {};
+    Memory.TaskMan.Vat3.spawn = [];
+    Memory.TaskMan.Vat3.spawnListNumber = -1;
+    Memory.TaskMan.Vat3.spawnExtrasNumber = -1;
     stillFailing = true;
   }
 
@@ -197,6 +206,19 @@ function runTryScreeps() {
       console.log("Creep Fail");
       console.log(creep.name);
       console.log(e);
+    }
+  }
+}
+
+// Run move Screeps
+//
+function runMoveScreeps() {
+  for (var name in Game.creeps) {
+    var creep = Game.creeps[name];
+    if (name != Memory.selectCreep) {
+      roles[creep.memory.role].run(creep);
+    } else {
+      manage.moveCreep(creep);
     }
   }
 }
