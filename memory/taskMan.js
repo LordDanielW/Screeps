@@ -1,6 +1,11 @@
 TaskMan = {
   Tick: 1,
   NameNum: 1,
+  breakList: [
+    "6459b801756383300e59f19c",
+    "645726bebc2f4b95ec1a04f1",
+    "6453dd062dcf1466c079d6d8",
+  ],
   E9N52: {
     sourceContainers: ["6444fc8e758fbdce3b725bbb", "64450bc42f446e38bfca900a"],
     upgradeContainer: "6445761e9ab55f36918b58ee",
@@ -9,7 +14,7 @@ TaskMan = {
   },
   E11N51: {
     sourceContainers: ["64563dee3e03b753a2b3e97f"],
-    upgradeContainer: "64563dee3e03b753a2b3e97f",
+    upgradeContainer: "645a02c259d8c6ba09e345fa",
     upCarryId: "",
     wallHealth: 20000,
   },

@@ -96,7 +96,6 @@ var roleCarrier = {
   //
   findFullSource: function (creep) {
     creep.memory.task = "GET";
-
     let fullSource = [];
     // Check Tombstones
     fullSource = creep.room.find(FIND_TOMBSTONES, {
@@ -122,15 +121,32 @@ var roleCarrier = {
     }
     // Check Room Sources
     let roomSources = Memory.TaskMan[creep.room.name].sourceContainers;
+    // let i = 0;
     for (let i = 0; i < roomSources.length; i++) {
       let sourceContainer = Game.getObjectById(roomSources[i]);
-      if (sourceContainer.store[RESOURCE_ENERGY] >= creep.carryCapacity) {
-        creep.memory.source = sourceContainer.id;
-        creep.memory.sourceType = "SOURCES";
-        return true;
+      if (
+        sourceContainer.store.getUsedCapacity() >= creep.store.getFreeCapacity()
+      ) {
+        fullSource.push(sourceContainer);
       }
     }
+    if (fullSource.length > 0) {
+      creep.memory.source = creep.pos.findClosestByPath(fullSource).id;
+      creep.memory.sourceType = "SOURCES";
+      return true;
+    }
 
+    // Return The Storage
+    emptyStructure = creep.room.find(FIND_STRUCTURES, {
+      filter: (structure) => {
+        return structure.structureType == STRUCTURE_STORAGE;
+      },
+    });
+    if (emptyStructure.length > 0) {
+      creep.memory.source = emptyStructure[0].id;
+      creep.memory.sourceType = "STORAGE";
+      return true;
+    }
     //
     if (fullSource.length > 0) {
       creep.memory.task = "IDLE";

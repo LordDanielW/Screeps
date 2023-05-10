@@ -63,12 +63,15 @@ var roleRepair = {
         utilities.roleUtilities.getEnergyHarvest(creep);
       }
     } else if (creep.memory.task == "MOVIN") {
-      var nextRoom = new RoomPosition(02, 17, "W16N38");
-      if (creep.pos.isEqualTo(nextRoom)) {
-        creep.memory.task = "repair";
-        creep.say("🛠️", true);
+      var mPOS = creep.memory.movePOS;
+      var moveTO = new RoomPosition(mPOS.x, mPOS.y, mPOS.roomName);
+      //var nextRoom = new RoomPosition(6, 17, "W16N38");
+      if (creep.pos.isEqualTo(moveTO)) {
+        creep.memory.task = "REPAIR";
       } else {
-        creep.moveTo(nextRoom, { visualizePathStyle: { stroke: "#ffaa00" } });
+        //  creep.say(creep.memory.dest.x + ',' + creep.memory.dest.y);
+        creep.moveTo(moveTO, { visualizePathStyle: { stroke: "#ffaa00" } });
+        //utilities.roleUtilities.moveRooms(creep);
       }
     } else {
       creep.memory.task = "GET";

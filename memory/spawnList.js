@@ -81,7 +81,7 @@ var spawnList = {
       role: "Upgrader",
       direction: BOTTOM_RIGHT,
       body: [
-        [WORK, 2],
+        [WORK, 5],
         [CARRY, 1],
         [MOVE, 1],
       ],
@@ -97,13 +97,13 @@ var spawnList = {
     },
   ],
   Vat3: [
-    // {
-    //   role: "Carrier",
-    //   body: [
-    //     [CARRY, 2],
-    //     [MOVE, 1],
-    //   ],
-    // },
+    {
+      role: "Carrier",
+      body: [
+        [CARRY, 3],
+        [MOVE, 3],
+      ],
+    },
     {
       role: "Miner",
       say: 1,
@@ -210,48 +210,55 @@ var spawnList = {
       sitPOS: { x: 16, y: 8, roomName: "E14N49" },
     },
     {
-      role: "Miner",
-      say: 2,
-      atDest: false,
-      direction: BOTTOM,
-      sourceType: FIND_SOURCES,
+      role: "Builder",
+      task: "MOVIN",
       body: [
-        [WORK, 5],
-        [MOVE, 1],
+        [WORK, 2],
+        [CARRY, 2],
+        [MOVE, 4],
       ],
-      sitPOS: { x: 34, y: 5, roomName: "E14N49" },
+      movePOS: { x: 1, y: 24, roomName: "E14N49" },
     },
     {
       role: "Builder",
       task: "MOVIN",
       body: [
         [WORK, 2],
-        [CARRY, 1],
-        [MOVE, 2],
+        [CARRY, 2],
+        [MOVE, 4],
       ],
-      movePOS: { x: 34, y: 5, roomName: "E14N49" },
-    },
-    {
-      role: "Repair",
-      task: "MOVIN",
-      body: [
-        [WORK, 2],
-        [CARRY, 1],
-        [MOVE, 2],
-      ],
-      movePOS: { x: 34, y: 5, roomName: "E14N49" },
+      movePOS: { x: 1, y: 24, roomName: "E14N49" },
     },
     {
       role: "Upgrader",
       task: "MOVIN",
       direction: BOTTOM_RIGHT,
       body: [
-        [WORK, 4],
+        [WORK, 2],
+        [CARRY, 2],
+        [MOVE, 4],
+      ],
+      iStore: 2,
+      movePOS: { x: 1, y: 24, roomName: "E14N49" },
+    },
+  ],
+  Vat4: [
+    {
+      role: "Carrier",
+      body: [
         [CARRY, 1],
         [MOVE, 1],
       ],
+    },
+    {
+      role: "Upgrader",
+      direction: BOTTOM_RIGHT,
+      body: [
+        [WORK, 2],
+        [CARRY, 1],
+        [MOVE, 3],
+      ],
       iStore: 2,
-      movePOS: { x: 34, y: 5, roomName: "E14N49" },
     },
   ],
 };

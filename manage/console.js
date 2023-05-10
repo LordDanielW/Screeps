@@ -1,7 +1,108 @@
+// Pick Flag function
+//
+//
+global.pF = function (flagName) {
+  if (typeof flagName === "string") {
+    Memory.selectFlag = flagName;
+    // return if flagName is in Game.flags
+    return Game.flags[flagName] != undefined;
+  } else if (typeof flagName === "number") {
+  }
+};
+
+// Pick Creep function
+//
+//
+global.pC = function (creepName) {
+  if (typeof creepName === "string") {
+    Memory.selectCreep = creepName;
+    // return if creepName is in Game.creeps
+    return Game.creeps[creepName] != undefined;
+  } else if (typeof creepName === "number") {
+  }
+};
+exports.pC = pC;
+// End Pick Creep function
+
+// Move Creep function
+//
+//
+global.mC = function (moveString) {
+  Memory.creepMove = moveString;
+};
+exports.mC = mC;
+
+// Move Creep function
+//
+//
+moveCreep = function (creep) {
+  if (Memory.creepMove && Memory.creepMove.length > 0) {
+    // get first charcter of creepMove
+    var move = Memory.creepMove.charAt(0);
+
+    let resp = "none";
+    let moveDir = "";
+    switch (move) {
+      // move creep up
+      case "w":
+        moveDir = TOP;
+        resp = creep.move(TOP);
+        break;
+      // move creep down
+      case "x":
+        moveDir = BOTTOM;
+        resp = creep.move(BOTTOM);
+        break;
+      // move creep left
+      case "a":
+        moveDir = LEFT;
+        resp = creep.move(LEFT);
+        break;
+      // move creep right
+      case "d":
+        moveDir = RIGHT;
+        resp = creep.move(RIGHT);
+        break;
+      // move creep up and left
+      case "q":
+        moveDir = TOP_LEFT;
+        resp = creep.move(TOP_LEFT);
+        break;
+      // move creep up and right
+      case "e":
+        moveDir = TOP_RIGHT;
+        resp = creep.move(TOP_RIGHT);
+        break;
+      // move creep down and left
+      case "z":
+        moveDir = BOTTOM_LEFT;
+
+        break;
+      // move creep down and right
+      case "c":
+        moveDir = BOTTOM_RIGHT;
+        break;
+    }
+    if (moveDir != "") {
+      resp = creep.move(moveDir);
+      // creep.say(resp);
+      // remove first character of creepMove
+      if (resp == OK) {
+        Memory.creepMove = Memory.creepMove.substring(1);
+      }
+    }
+  }
+};
+exports.moveCreep = moveCreep;
+// End Move Creep function
+
+//  Spawn Creep function
+//
+//
 global.sC = function (spawnType) {
   switch (spawnType) {
     case "Signer":
-      Memory.TaskMan.Vat3.spawn.push({
+      Memory.TaskMan.Spawn1.spawn.push({
         role: "Signer",
         task: "MOVIN",
         say: 1,
@@ -14,39 +115,38 @@ global.sC = function (spawnType) {
       });
       break;
     case "Miner":
-      Memory.TaskMan.Vat2.spawn.push({
+      Memory.TaskMan.Vat3.spawn.push({
         role: "Miner",
-        task: "GET",
-        say: 2,
+        say: 1,
         atDest: false,
+        direction: BOTTOM,
         sourceType: FIND_SOURCES,
-        direction: BOTTOM_LEFT,
         body: [
-          [WORK, 2],
+          [WORK, 4],
           [MOVE, 1],
         ],
-        sitPOS: { x: 3, y: 33, roomName: "E11N51" },
+        sitPOS: { x: 28, y: 43, roomName: "E13N49" },
       });
       break;
     case "Carrier":
-      Memory.TaskMan.Vat2.spawn.push({
+      Memory.TaskMan.Vat4.spawn.push({
         role: "Carrier",
         body: [
-          [CARRY, 1],
-          [MOVE, 1],
+          [CARRY, 2],
+          [MOVE, 2],
         ],
       });
       break;
     case "Builder":
-      Memory.TaskMan.Vat2.spawn.push({
+      Memory.TaskMan.Vat3.spawn.push({
         role: "Builder",
         task: "GET",
         body: [
-          [WORK, 3],
+          [WORK, 2],
           [CARRY, 1],
           [MOVE, 3],
         ],
-        movePOS: { x: 36, y: 18, roomName: "E13N49" },
+        movePOS: { x: 8, y: 22, roomName: "E14N49" },
       });
       break;
     case "Upgrader":
@@ -81,32 +181,63 @@ global.sC = function (spawnType) {
       });
       break;
     case "Attacker":
-      Memory.TaskMan.Vat2.spawn.push({
+      Memory.TaskMan.Vat3.spawn.push({
         role: "Attacker",
         body: [
-          [TOUGH, 0],
+          [TOUGH, 3],
           [WORK, 0],
-          [ATTACK, 4],
+          [ATTACK, 1],
           [CARRY, 0],
-          [MOVE, 4],
+          [MOVE, 1],
         ],
-        task: "MOVIN",
-        roomPos: { x: 48, y: 25, roomName: "E9N54" },
-        break: "6453dd062dcf1466c079d6d8",
+        // task: "MOVIN",
+        // roomPos: { x: 48, y: 25, roomName: "E9N54" },
+        // break: "6453dd062dcf1466c079d6d8",
       });
       break;
-    case "Blinker":
+    case "B1":
       Memory.TaskMan.Vat2.spawn.push({
         role: "Breaker",
         body: [
-          [TOUGH, 13],
-          [HEAL, 2],
+          [TOUGH, 6],
+          [WORK, 6],
+          [HEAL, 0],
           [CARRY, 0],
-          [MOVE, 13],
+          [MOVE, 12],
         ],
         task: "MOVIN",
-        roomPos: { x: 49, y: 13, roomName: "E9N54" },
-        break: "6453dd062dcf1466c079d6d8",
+        roomPos: { x: 27, y: 46, roomName: "E9N55" },
+        break: "645726bebc2f4b95ec1a04f1",
+      });
+      break;
+    case "B2":
+      Memory.TaskMan.Vat2.spawn.push({
+        role: "Breaker",
+        body: [
+          [TOUGH, 6],
+          [WORK, 6],
+          [HEAL, 0],
+          [CARRY, 0],
+          [MOVE, 12],
+        ],
+        task: "MOVIN",
+        roomPos: { x: 27, y: 46, roomName: "E9N55" },
+        break: "645726bebc2f4b95ec1a04f1",
+      });
+      break;
+    case "Blinker":
+      Memory.TaskMan.Spawn1.spawn.push({
+        role: "Blinker",
+        body: [
+          [TOUGH, 16],
+          [WORK, 0],
+          [HEAL, 4],
+          [CARRY, 0],
+          [MOVE, 22],
+        ],
+        task: "MOVIN",
+        roomPos: { x: 48, y: 12, roomName: "E9N54" },
+        break: "645a5973456ee54de5e607f3",
       });
       break;
     case "Healer":
@@ -120,7 +251,7 @@ global.sC = function (spawnType) {
           [MOVE, 2],
         ],
         task: "MOVIN",
-        roomPos: { x: 1, y: 12, roomName: "E10N54" },
+        roomPos: { x: 48, y: 25, roomName: "E10N54" },
         break: "6453dd062dcf1466c079d6d8",
       });
       break;
@@ -143,70 +274,4 @@ global.sC = function (spawnType) {
 };
 
 exports.sC = sC;
-
-// Pick Creep function
-global.pC = function (creepName) {
-  if (typeof creepName === "string") {
-    Memory.selectCreep = creepName;
-    // return if creepName is in Game.creeps
-    return Game.creeps[creepName] != undefined;
-  } else if (typeof creepName === "number") {
-  }
-};
-exports.pC = pC;
-
-// Move Creep function
-global.mC = function (moveString) {
-  Memory.creepMove = moveString;
-};
-exports.mC = mC;
-
-// Move Creep function
-moveCreep = function (creep) {
-  if (Memory.creepMove && Memory.creepMove.length > 0) {
-    // get first charcter of creepMove
-    var move = Memory.creepMove.charAt(0);
-
-    let resp = "none";
-    switch (move) {
-      // move creep up
-      case "w":
-        resp = creep.move(TOP);
-        break;
-      // move creep down
-      case "x":
-        resp = creep.move(BOTTOM);
-        break;
-      // move creep left
-      case "a":
-        resp = creep.move(LEFT);
-        break;
-      // move creep right
-      case "d":
-        resp = creep.move(RIGHT);
-        break;
-      // move creep up and left
-      case "q":
-        resp = creep.move(TOP_LEFT);
-        break;
-      // move creep up and right
-      case "e":
-        resp = creep.move(TOP_RIGHT);
-        break;
-      // move creep down and left
-      case "z":
-        resp = creep.move(BOTTOM_LEFT);
-        break;
-      // move creep down and right
-      case "c":
-        resp = creep.move(BOTTOM_RIGHT);
-        break;
-    }
-    // creep.say(resp);
-    // remove first character of creepMove
-    if (resp == OK) {
-      Memory.creepMove = Memory.creepMove.substring(1);
-    }
-  }
-};
-exports.moveCreep = moveCreep;
+// End Spawn Creep function

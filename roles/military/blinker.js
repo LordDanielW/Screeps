@@ -1,6 +1,6 @@
 //
 //
-var roleBreaker = {
+var roleBlinker = {
   /** @param {Creep} creep **/
   run: function (creep) {
     creep.heal(creep);
@@ -38,7 +38,7 @@ var roleBreaker = {
       }
     } else if (creep.memory.task == "BREAK") {
       // Check Creep health, if les than half change task to HEAL
-      if (creep.hits < creep.hitsMax / 2 + 200) {
+      if (creep.hits < creep.hitsMax / 2 + 800) {
         creep.memory.task = "HEAL";
       }
     }
@@ -59,15 +59,4 @@ var roleBreaker = {
   },
 };
 
-module.exports.Breaker = roleBreaker;
-
-// let response = creep.dismantle(breakOBJ);
-// if (response == ERR_NOT_IN_RANGE) {
-//   creep.moveTo(breakOBJ, {
-//     visualizePathStyle: { stroke: "#ffaa00" },
-//   });
-// } else if (response == OK) {
-//   utilities.roleUtilities.sayState(creep, "BREAK", true);
-// } else {
-//   utilities.roleUtilities.sayState(creep, "ERROR", true);
-// }
+module.exports.Blinker = roleBlinker;

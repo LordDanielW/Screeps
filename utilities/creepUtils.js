@@ -52,6 +52,19 @@ var roleUtilities = {
   //
   //  Get
   //
+  getEnergyFromID: function (creep, id) {
+    var source = Game.getObjectById(id);
+    var iState = creep.withdraw(source, RESOURCE_ENERGY);
+    if (iState == ERR_NOT_IN_RANGE) {
+      creep.moveTo(source.pos, this.pathStyle);
+      return true;
+    } else if (iState == OK) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+
   getEnergyLink: function (creep, iNum) {
     var enLink = creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
@@ -276,7 +289,7 @@ var roleUtilities = {
       creep.moveTo(creep.room.controller, this.pathStyle);
       return true;
     } else if (iState == OK) {
-      creep.say("🌟 🔫 🦄", true);
+      // creep.say("🌟 🔫 🦄", true);
       return true;
     } else {
       return false;

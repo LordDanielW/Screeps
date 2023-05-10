@@ -2,14 +2,15 @@
 //
 //
 var doTicks = function () {
-  var ticks = Memory.TaskMan.Tick;
-  Memory.TaskMan.Tick++;
-  if (Memory.TaskMan.Tick >= 1460) {
-    Memory.TaskMan.Tick = 0;
+  Memory.Tick++;
+
+  if (Memory.Tick >= 1460) {
+    Memory.Tick = 0;
     Memory.TaskMan.Spawn1.spawnListNumber = 0;
-  } else if (Memory.TaskMan.Tick == 1000) {
+  } else if (Memory.Tick == 1000) {
     Memory.TaskMan.Vat2.spawnListNumber = 0;
     Memory.TaskMan.Vat3.spawnListNumber = 0;
+    Memory.TaskMan.Vat4.spawnListNumber = 0;
   }
 
   // var roomOne = "E9N52";
