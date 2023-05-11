@@ -105,7 +105,7 @@ module.exports.slowLoop = function () {
 
   //  Towers
   try {
-    runTowers(myRoomOne);
+    runTowers();
   } catch (e) {
     console.log("Tower Fail");
     console.log(e);
@@ -123,7 +123,7 @@ module.exports.slowLoop = function () {
 
   //  run Linker Transfer
   // try {
-  //   manage.runLinkerTransfer(myRoomOne);
+  //   manage.runLinkerTransfer();
   // } catch (e) {
   //   console.log("Linker Transfer Fail");
   //   console.log(e);
@@ -170,16 +170,18 @@ module.exports.slowLoop = function () {
 
 // run Towers
 //
-function runTowers(theRoom) {
-  var towers = theRoom.find(FIND_STRUCTURES, {
-    filter: (structure) => {
-      return structure.structureType == STRUCTURE_TOWER;
-    },
-  });
-  for (var i = 0; i < towers.length; i++) {
-    manage.Tower.run(towers[i]);
-    if (showGraphics) {
-      utilities.displayAttackRings(theRoom, towers[i]);
+function runTowers() {
+  for (room in Game.rooms) {
+    var towers = Game.rooms[room].find(FIND_STRUCTURES, {
+      filter: (structure) => {
+        return structure.structureType == STRUCTURE_TOWER;
+      },
+    });
+    for (var i = 0; i < towers.length; i++) {
+      manage.Tower.run(towers[i]);
+      if (showGraphics) {
+        utilities.displayAttackRings(room, towers[i]);
+      }
     }
   }
 }
