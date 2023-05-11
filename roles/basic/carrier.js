@@ -9,6 +9,7 @@ var roleCarrier = {
     // creep.move(TOP);
     // Check State Of Get / Give
     //
+    // this.findFullSource(creep);
     if (
       (creep.store.getUsedCapacity() == 0 && creep.memory.task == "GIVE") ||
       (creep.memory.task != "GET" && creep.memory.task != "GIVE")
@@ -104,7 +105,7 @@ var roleCarrier = {
       },
     });
     if (fullSource.length > 0) {
-      creep.memory.source = creep.pos.findClosestByPath(fullSource).id;
+      creep.memory.source = creep.pos.findClosestByRange(fullSource).id;
       creep.memory.sourceType = "TOMBSTONES";
       return true;
     }
@@ -115,7 +116,7 @@ var roleCarrier = {
       },
     });
     if (fullSource.length > 0) {
-      creep.memory.source = creep.pos.findClosestByPath(fullSource).id;
+      creep.memory.source = creep.pos.findClosestByRange(fullSource).id;
       creep.memory.sourceType = "DROPPED_RESOURCES";
       return true;
     }
@@ -131,7 +132,7 @@ var roleCarrier = {
       }
     }
     if (fullSource.length > 0) {
-      creep.memory.source = creep.pos.findClosestByPath(fullSource).id;
+      creep.memory.source = creep.pos.findClosestByRange(fullSource).id;
       creep.memory.sourceType = "SOURCES";
       return true;
     }
@@ -172,7 +173,7 @@ var roleCarrier = {
       });
       if (emptyStructure.length > 0) {
         creep.memory.destination =
-          creep.pos.findClosestByPath(emptyStructure).id;
+          creep.pos.findClosestByRange(emptyStructure).id;
         return true;
       }
       // Check Towers
@@ -187,7 +188,7 @@ var roleCarrier = {
       });
       if (emptyStructure.length > 0) {
         creep.memory.destination =
-          creep.pos.findClosestByPath(emptyStructure).id;
+          creep.pos.findClosestByRange(emptyStructure).id;
         return true;
       }
       // Return The Storage
