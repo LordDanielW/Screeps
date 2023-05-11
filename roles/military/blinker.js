@@ -46,7 +46,7 @@ var roleBlinker = {
       // Move to range 6 of SafeFlag
       let safeFlag = Game.flags["SafeFlag"];
 
-      if (!creep.pos.inRangeTo(safeFlag, 6)) {
+      if (!creep.pos.inRangeTo(safeFlag, 4)) {
         creep.moveTo(safeFlag);
       }
       // console.log(

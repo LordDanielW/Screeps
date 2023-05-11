@@ -3,19 +3,19 @@ var roleSigner = {
   /** @param {Creep} creep **/
   run: function (creep) {
     if (creep.memory.atDest) {
-      // if (creep.room.controller) {
-      //   if (
-      //     creep.signController(creep.room.controller, "👽 👾 🤖") ==
-      //     ERR_NOT_IN_RANGE
-      //   ) {
-      //     creep.moveTo(creep.room.controller);
-      //   }
-      // }
       if (creep.room.controller) {
-        if (creep.claimController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+        if (
+          creep.signController(creep.room.controller, "Boop!") ==
+          ERR_NOT_IN_RANGE
+        ) {
           creep.moveTo(creep.room.controller);
         }
       }
+      // if (creep.room.controller) {
+      //   if (creep.claimController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+      //     creep.moveTo(creep.room.controller);
+      //   }
+      // }
       //creep.memory.atDest = false;
       //creep.memory.sitPOS = new RoomPosition(33,14,"E45N33");
       this.sing(creep);

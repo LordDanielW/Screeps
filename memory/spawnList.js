@@ -17,7 +17,7 @@ var spawnList = {
       sourceType: FIND_SOURCES,
       body: [
         [WORK, 5],
-        [MOVE, 2],
+        [MOVE, 1],
       ],
       sitPOS: { x: 15, y: 31, roomName: "E9N52" },
     },
@@ -28,29 +28,38 @@ var spawnList = {
       sourceType: FIND_SOURCES,
       body: [
         [WORK, 5],
-        [MOVE, 2],
+        [MOVE, 1],
       ],
       sitPOS: { x: 23, y: 36, roomName: "E9N52" },
     },
     {
       role: "Repair",
       body: [
-        [WORK, 5],
+        [WORK, 4],
         [CARRY, 2],
-        [MOVE, 5],
+        [MOVE, 3],
       ],
     },
     {
       role: "upCarrier",
       body: [
-        [CARRY, 7],
-        [MOVE, 4],
+        [CARRY, 14],
+        [MOVE, 8],
       ],
     },
     {
       role: "Upgrader",
       body: [
-        [WORK, 15],
+        [WORK, 12],
+        [CARRY, 2],
+        [MOVE, 4],
+      ],
+      iStore: 2,
+    },
+    {
+      role: "Upgrader",
+      body: [
+        [WORK, 12],
         [CARRY, 2],
         [MOVE, 4],
       ],
@@ -81,9 +90,9 @@ var spawnList = {
       role: "Upgrader",
       direction: BOTTOM_RIGHT,
       body: [
-        [WORK, 5],
-        [CARRY, 1],
-        [MOVE, 1],
+        [WORK, 6],
+        [CARRY, 2],
+        [MOVE, 4],
       ],
       iStore: 2,
     },
@@ -139,7 +148,7 @@ var spawnList = {
       role: "Upgrader",
       direction: BOTTOM_RIGHT,
       body: [
-        [WORK, 4],
+        [WORK, 6],
         [CARRY, 1],
         [MOVE, 1],
       ],
@@ -149,17 +158,7 @@ var spawnList = {
       role: "Upgrader",
       direction: BOTTOM_RIGHT,
       body: [
-        [WORK, 4],
-        [CARRY, 1],
-        [MOVE, 1],
-      ],
-      iStore: 2,
-    },
-    {
-      role: "Upgrader",
-      direction: BOTTOM_RIGHT,
-      body: [
-        [WORK, 4],
+        [WORK, 6],
         [CARRY, 1],
         [MOVE, 1],
       ],
@@ -210,26 +209,6 @@ var spawnList = {
       sitPOS: { x: 16, y: 8, roomName: "E14N49" },
     },
     {
-      role: "Builder",
-      task: "MOVIN",
-      body: [
-        [WORK, 2],
-        [CARRY, 2],
-        [MOVE, 4],
-      ],
-      movePOS: { x: 1, y: 24, roomName: "E14N49" },
-    },
-    {
-      role: "Builder",
-      task: "MOVIN",
-      body: [
-        [WORK, 2],
-        [CARRY, 2],
-        [MOVE, 4],
-      ],
-      movePOS: { x: 1, y: 24, roomName: "E14N49" },
-    },
-    {
       role: "Upgrader",
       task: "MOVIN",
       direction: BOTTOM_RIGHT,
@@ -259,6 +238,22 @@ var spawnList = {
         [MOVE, 3],
       ],
       iStore: 2,
+    },
+    {
+      role: "Repair",
+      body: [
+        [WORK, 2],
+        [CARRY, 1],
+        [MOVE, 2],
+      ],
+    },
+    {
+      role: "Builder",
+      body: [
+        [WORK, 2],
+        [CARRY, 2],
+        [MOVE, 4],
+      ],
     },
   ],
 };

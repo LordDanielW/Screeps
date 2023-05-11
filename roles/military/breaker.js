@@ -5,12 +5,12 @@ var roleBreaker = {
   run: function (creep) {
     // creep.memory.task = "BREAK";
     // creep.memory.roomPos = { x: 49, y: 12, roomName: "E9N54" };
-    // creep.memory.break = "645726bebc2f4b95ec1a04f1";
+    creep.memory.break = "6453dd062dcf1466c079d6d8";
 
     creepTasks = ["MOVIN", "BREAK", "SIT"];
 
     if (!creepTasks.includes(creep.memory.task)) {
-      utilities.roleUtilities.sayState(creep, "IDLE", true);
+      creep.memory.task = "MOVIN";
       return;
     }
 
@@ -19,11 +19,12 @@ var roleBreaker = {
     if (creep.memory.task == "MOVIN") {
       let flagPOS = Game.flags[Memory.FlagName].pos;
 
-      if (creep.pos.inRangeTo(flagPOS, 6)) {
+      if (creep.pos.inRangeTo(flagPOS, 2)) {
         creep.memory.task = "SIT";
       } else {
+        creep.heal(creep);
         utilities.roleUtilities.sayState(creep, "MOVE", true);
-        creep.moveTo(flagPOS, (reusePath = 25));
+        creep.moveTo(flagPOS, { reusePath: 4 });
       }
     }
     //  BREAK

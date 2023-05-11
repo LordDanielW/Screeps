@@ -4,7 +4,7 @@ var roleAttacker = {
   /** @param {Creep} creep **/
   run: function (creep) {
     // creep.memory.task = "ATTACK";
-    // creep.memory.roomPos = { x: 48, y: 25, roomName: "E9N54" };
+    creep.memory.roomPos = { x: 29, y: 8, roomName: "E9N54" };
 
     creepTasks = ["MOVIN", "ATTACK"];
 
@@ -31,6 +31,7 @@ var roleAttacker = {
       } else {
         utilities.roleUtilities.sayState(creep, "MOVE", true);
         creep.moveTo(attackRoom, {
+          reusePath: 25,
           visualizePathStyle: { stroke: "#ffaa00" },
         });
       }

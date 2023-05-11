@@ -102,38 +102,36 @@ exports.moveCreep = moveCreep;
 global.sC = function (spawnType) {
   switch (spawnType) {
     case "Signer":
-      Memory.TaskMan.Spawn1.spawn.push({
+      Memory.TaskMan.Vat2.spawn.push({
         role: "Signer",
         task: "MOVIN",
         say: 1,
         atDest: false,
         body: [
-          [CLAIM, 1],
+          [CLAIM, 0],
           [MOVE, 1],
         ],
-        sitPOS: { x: 42, y: 18, roomName: "E14N49" },
+        sitPOS: { x: 15, y: 44, roomName: "E9N54" },
       });
       break;
-    case "Miner":
-      Memory.TaskMan.Vat3.spawn.push({
-        role: "Miner",
-        say: 1,
-        atDest: false,
-        direction: BOTTOM,
-        sourceType: FIND_SOURCES,
+    case "Attacker":
+      Memory.TaskMan.Vat2.spawn.push({
+        role: "Attacker",
+        task: "MOVIN",
         body: [
-          [WORK, 4],
+          [TOUGH, 3],
+          [ATTACK, 1],
           [MOVE, 1],
         ],
-        sitPOS: { x: 28, y: 43, roomName: "E13N49" },
+        sitPOS: { x: 15, y: 44, roomName: "E9N54" },
       });
       break;
     case "Carrier":
-      Memory.TaskMan.Vat4.spawn.push({
+      Memory.TaskMan.Vat3.spawn.push({
         role: "Carrier",
         body: [
-          [CARRY, 2],
-          [MOVE, 2],
+          [CARRY, 4],
+          [MOVE, 4],
         ],
       });
       break;
@@ -186,46 +184,31 @@ global.sC = function (spawnType) {
         body: [
           [TOUGH, 3],
           [WORK, 0],
-          [ATTACK, 1],
+          [ATTACK, 6],
           [CARRY, 0],
-          [MOVE, 1],
+          [MOVE, 9],
         ],
-        // task: "MOVIN",
-        // roomPos: { x: 48, y: 25, roomName: "E9N54" },
+        task: "MOVIN",
+        roomPos: { x: 29, y: 8, roomName: "E9N54" },
         // break: "6453dd062dcf1466c079d6d8",
       });
       break;
+    case "Breaker":
+      Memory.TaskMan.Spawn1.spawn.push({
+        role: "Breaker",
+        body: [
+          [TOUGH, 8],
+          [WORK, 3],
+          [HEAL, 1],
+          [CARRY, 0],
+          [MOVE, 12],
+        ],
+        task: "MOVIN",
+        roomPos: { x: 27, y: 46, roomName: "E9N54" },
+        break: "645726bebc2f4b95ec1a04f1",
+      });
+      break;
     case "B1":
-      Memory.TaskMan.Vat2.spawn.push({
-        role: "Breaker",
-        body: [
-          [TOUGH, 6],
-          [WORK, 6],
-          [HEAL, 0],
-          [CARRY, 0],
-          [MOVE, 12],
-        ],
-        task: "MOVIN",
-        roomPos: { x: 27, y: 46, roomName: "E9N55" },
-        break: "645726bebc2f4b95ec1a04f1",
-      });
-      break;
-    case "B2":
-      Memory.TaskMan.Vat2.spawn.push({
-        role: "Breaker",
-        body: [
-          [TOUGH, 6],
-          [WORK, 6],
-          [HEAL, 0],
-          [CARRY, 0],
-          [MOVE, 12],
-        ],
-        task: "MOVIN",
-        roomPos: { x: 27, y: 46, roomName: "E9N55" },
-        break: "645726bebc2f4b95ec1a04f1",
-      });
-      break;
-    case "Blinker":
       Memory.TaskMan.Spawn1.spawn.push({
         role: "Blinker",
         body: [
@@ -236,7 +219,22 @@ global.sC = function (spawnType) {
           [MOVE, 22],
         ],
         task: "MOVIN",
-        roomPos: { x: 48, y: 12, roomName: "E9N54" },
+        roomPos: { x: 0, y: 15, roomName: "E10N54" },
+        break: "645a5973456ee54de5e607f3",
+      });
+      break;
+    case "B2":
+      Memory.TaskMan.Vat2.spawn.push({
+        role: "Blinker",
+        body: [
+          [TOUGH, 10],
+          [WORK, 0],
+          [HEAL, 1],
+          [CARRY, 0],
+          [MOVE, 11],
+        ],
+        task: "MOVIN",
+        roomPos: { x: 0, y: 13, roomName: "E10N54" },
         break: "645a5973456ee54de5e607f3",
       });
       break;
