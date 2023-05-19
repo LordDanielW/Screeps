@@ -4,7 +4,8 @@ var modTower = {
     var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
       //filter: (creep) => (creep.name.includes("invader"))
     });
-    if (closestHostile && tower.pos.getRangeTo(closestHostile) < 8) {
+    if (closestHostile) {
+      //&& tower.pos.getRangeTo(closestHostile) < 8
       tower.attack(closestHostile);
     } else {
       var closestDamagedStructure = tower.pos.findClosestByRange(
@@ -26,9 +27,9 @@ var modTower = {
         var rampUpgrade = tower.pos.findClosestByRange(FIND_STRUCTURES, {
           filter: (structure) =>
             structure.structureType == STRUCTURE_RAMPART &&
-            structure.hits < 85000,
+            structure.hits < 8500,
         });
-        if (rampUpgrade && tower.pos.getRangeTo(rampUpgrade) < 12) {
+        if (rampUpgrade) {
           tower.repair(rampUpgrade);
         } else {
           // var closestDamagedCreep = tower.pos.findClosestByRange(FIND_CREEPS, {
