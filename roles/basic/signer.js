@@ -1,4 +1,5 @@
-// var utilities.roleUtilities = require("role.Utilities");
+//
+//
 var roleSigner = {
   /** @param {Creep} creep **/
   run: function (creep) {

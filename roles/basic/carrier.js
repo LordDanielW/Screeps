@@ -1,6 +1,4 @@
 //
-//
-//
 var roleCarrier = {
   /** @param {Creep} creep **/
   run: function (creep) {
@@ -9,12 +7,12 @@ var roleCarrier = {
     // creep.move(TOP);
     // Check State Of Get / Give
     //
-    // this.findFullSource(creep);
+    // utilities.role.getResource(creep);
     if (
       (creep.store.getUsedCapacity() == 0 && creep.memory.task == "GIVE") ||
       (creep.memory.task != "GET" && creep.memory.task != "GIVE")
     ) {
-      this.findFullSource(creep);
+      utilities.role.getResource(creep);
     }
     //
     else if (creep.memory.task == "GET" && creep.store.getFreeCapacity() == 0) {
@@ -24,36 +22,9 @@ var roleCarrier = {
     //  Get
     //
     if (creep.memory.task == "GET") {
-      // Selected Destination from Memory
-      let fullSource = Game.getObjectById(creep.memory.source);
-
-      // Move and transfer energy
-      if (fullSource != null) {
-        let response;
-        if (creep.memory.sourceType == "DROPPED_RESOURCES") {
-          response = creep.pickup(fullSource);
-        } else {
-          response = creep.withdraw(fullSource, RESOURCE_ENERGY);
-        }
-        if (response == ERR_NOT_IN_RANGE) {
-          creep.moveTo(fullSource, utilities.roleUtilities.pathStyle);
-          state = "MOVE";
-        } else if (response == OK) {
-          state = "GET";
-        } else {
-          if (!this.findFullSource(creep)) {
-            state = "ERROR";
-          }
-        }
-      } else {
-        if (!this.findFullSource(creep)) {
-          state = "ERROR";
-        }
-      }
-
-      // Report state
-      utilities.roleUtilities.sayState(creep, state, true);
+      utilities.role.getResource(creep);
     }
+
     //  Give
     //
     else if (creep.memory.task == "GIVE") {
@@ -69,7 +40,7 @@ var roleCarrier = {
       if (emptyStructure != null) {
         let response = creep.transfer(emptyStructure, RESOURCE_ENERGY);
         if (response == ERR_NOT_IN_RANGE) {
-          creep.moveTo(emptyStructure, utilities.roleUtilities.pathStyle);
+          creep.moveTo(emptyStructure, utilities.role.pathStyle);
           state = "MOVE";
         } else if (response == OK) {
           creep.memory.destination = null;
@@ -87,71 +58,9 @@ var roleCarrier = {
       }
 
       // Report state
-      utilities.roleUtilities.sayState(creep, state, true);
+      utilities.role.sayState(creep, state, true);
     } else {
-      this.findFullSource(creep);
-    }
-  },
-
-  //  Find Full Source
-  //
-  findFullSource: function (creep) {
-    creep.memory.task = "GET";
-    let fullSource = [];
-    // Check Tombstones
-    fullSource = creep.room.find(FIND_TOMBSTONES, {
-      filter: (tomb) => {
-        return tomb.creep.store >= creep.carryCapacity;
-      },
-    });
-    if (fullSource.length > 0) {
-      creep.memory.source = creep.pos.findClosestByRange(fullSource).id;
-      creep.memory.sourceType = "TOMBSTONES";
-      return true;
-    }
-    // Check Dropped
-    fullSource = creep.room.find(FIND_DROPPED_RESOURCES, {
-      filter: (dropped) => {
-        return dropped.amount >= creep.carryCapacity;
-      },
-    });
-    if (fullSource.length > 0) {
-      creep.memory.source = creep.pos.findClosestByRange(fullSource).id;
-      creep.memory.sourceType = "DROPPED_RESOURCES";
-      return true;
-    }
-    // Check Room Sources
-    let roomSources = Memory.TaskMan[creep.room.name].sourceContainers;
-    // let i = 0;
-    for (let i = 0; i < roomSources.length; i++) {
-      let sourceContainer = Game.getObjectById(roomSources[i]);
-      if (
-        sourceContainer.store.getUsedCapacity() >= creep.store.getFreeCapacity()
-      ) {
-        fullSource.push(sourceContainer);
-      }
-    }
-    if (fullSource.length > 0) {
-      creep.memory.source = creep.pos.findClosestByRange(fullSource).id;
-      creep.memory.sourceType = "SOURCES";
-      return true;
-    }
-
-    // Return The Storage
-    emptyStructure = creep.room.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return structure.structureType == STRUCTURE_STORAGE;
-      },
-    });
-    if (emptyStructure.length > 0) {
-      creep.memory.source = emptyStructure[0].id;
-      creep.memory.sourceType = "STORAGE";
-      return true;
-    }
-    //
-    if (fullSource.length > 0) {
-      creep.memory.task = "IDLE";
-      return false;
+      utilities.role.getResource(creep);
     }
   },
 
@@ -159,10 +68,11 @@ var roleCarrier = {
   //
   findEmptyStructure: function (creep) {
     creep.memory.task = "GIVE";
+    creep.memory.source = null;
     if (creep.store[RESOURCE_ENERGY] != 0) {
-      let emptyStructure = [];
+      let emptyStructure = undefined;
       // Check Spawner Extensions
-      emptyStructure = creep.room.find(FIND_STRUCTURES, {
+      emptyStructure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
         filter: (structure) => {
           return (
             (structure.structureType == STRUCTURE_EXTENSION ||
@@ -171,13 +81,12 @@ var roleCarrier = {
           );
         },
       });
-      if (emptyStructure.length > 0) {
-        creep.memory.destination =
-          creep.pos.findClosestByRange(emptyStructure).id;
+      if (emptyStructure) {
+        creep.memory.destination = emptyStructure.id;
         return true;
       }
       // Check Towers
-      emptyStructure = creep.room.find(FIND_STRUCTURES, {
+      emptyStructure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
         filter: (structure) => {
           return (
             structure.structureType == STRUCTURE_TOWER &&
@@ -186,19 +95,13 @@ var roleCarrier = {
           );
         },
       });
-      if (emptyStructure.length > 0) {
-        creep.memory.destination =
-          creep.pos.findClosestByRange(emptyStructure).id;
+      if (emptyStructure) {
+        creep.memory.destination = emptyStructure.id;
         return true;
       }
       // Return The Storage
-      emptyStructure = creep.room.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-          return structure.structureType == STRUCTURE_STORAGE;
-        },
-      });
-      if (emptyStructure.length > 0) {
-        creep.memory.destination = emptyStructure[0].id;
+      if (creep.room.storage) {
+        creep.memory.destination = creep.room.storage.id;
         return true;
       } else {
         return false;

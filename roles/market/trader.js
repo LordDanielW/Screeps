@@ -32,7 +32,7 @@ var roleTrader = {
         let response = creep.withdraw(fullSource, creep.memory.transferType);
 
         if (response == ERR_NOT_IN_RANGE) {
-          creep.moveTo(fullSource, utilities.roleUtilities.pathStyle);
+          creep.moveTo(fullSource, utilities.role.pathStyle);
           state = "MOVE";
         } else if (response == OK) {
           state = "GET";
@@ -52,7 +52,7 @@ var roleTrader = {
           creep.memory.transferType
         );
         if (response == ERR_NOT_IN_RANGE) {
-          creep.moveTo(emptyStructure, utilities.roleUtilities.pathStyle);
+          creep.moveTo(emptyStructure, utilities.role.pathStyle);
           state = "MOVE";
         } else if (response == OK) {
           state = "GET";
@@ -64,7 +64,7 @@ var roleTrader = {
       }
     }
     // Report state
-    utilities.roleUtilities.sayState(creep, state, true);
+    utilities.role.sayState(creep, state, true);
   },
 };
 

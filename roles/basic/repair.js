@@ -17,6 +17,7 @@ var roleRepair = {
       creep.say("🛠️", true);
     }
 
+    // REPAIR
     if (creep.memory.task == "REPAIR") {
       var closestDamagedStructure = creep.pos.findClosestByRange(
         FIND_STRUCTURES,
@@ -58,10 +59,10 @@ var roleRepair = {
           Memory.TaskMan[creep.pos.roomName].wallHealth = wallHealth + 500;
         }
       }
+      // GET
     } else if (creep.memory.task == "GET") {
-      if (!utilities.roleUtilities.getEnergyStorage(creep)) {
-        utilities.roleUtilities.getEnergyHarvest(creep);
-      }
+      utilities.role.getResource(creep);
+      // MOVIN
     } else if (creep.memory.task == "MOVIN") {
       var mPOS = creep.memory.movePOS;
       var moveTO = new RoomPosition(mPOS.x, mPOS.y, mPOS.roomName);
@@ -71,7 +72,7 @@ var roleRepair = {
       } else {
         //  creep.say(creep.memory.dest.x + ',' + creep.memory.dest.y);
         creep.moveTo(moveTO, { visualizePathStyle: { stroke: "#ffaa00" } });
-        //utilities.roleUtilities.moveRooms(creep);
+        //utilities.role.moveRooms(creep);
       }
     } else {
       creep.memory.task = "GET";

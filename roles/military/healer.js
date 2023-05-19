@@ -10,7 +10,7 @@ var roleHealer = {
     creepTasks = ["MOVIN", "HEAL"];
 
     if (!creepTasks.includes(creep.memory.task)) {
-      utilities.roleUtilities.sayState(creep, "IDLE", true);
+      utilities.role.sayState(creep, "IDLE", true);
       return;
     }
 
@@ -25,10 +25,10 @@ var roleHealer = {
       if (creep.pos.isEqualTo(movePos)) {
         // if (creep.pos.inRangeTo(breakPos, 1)) {
         creep.memory.task = "HEAL";
-        utilities.roleUtilities.sayState(creep, "HEAL", true);
+        utilities.role.sayState(creep, "HEAL", true);
         this.run(creep);
       } else {
-        utilities.roleUtilities.sayState(creep, "MOVE", true);
+        utilities.role.sayState(creep, "MOVE", true);
         creep.heal(creep);
         creep.moveTo(movePos, {
           visualizePathStyle: { stroke: "#ffaa00" },
@@ -42,9 +42,9 @@ var roleHealer = {
           visualizePathStyle: { stroke: "#ffaa00" },
         });
       } else if (response == OK) {
-        utilities.roleUtilities.sayState(creep, "BREAK", true);
+        utilities.role.sayState(creep, "BREAK", true);
       } else {
-        utilities.roleUtilities.sayState(creep, "ERROR", true);
+        utilities.role.sayState(creep, "ERROR", true);
       }
     }
   },

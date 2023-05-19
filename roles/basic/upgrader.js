@@ -4,6 +4,9 @@
 var roleUpgrader = {
   /** @param {Creep} creep **/
   run: function (creep) {
+    // creep.upgradeController(creep.room.controller);
+    // return;
+
     //creep.memory.task = "UPGRADE";
     creepTasks = ["GET", "UPGRADE", "MOVIN"];
 
@@ -13,7 +16,7 @@ var roleUpgrader = {
       (creep.memory.task == "UPGRADE" && creep.carry.energy == 0) ||
       !creepTasks.includes(creep.memory.task)
     ) {
-      utilities.roleUtilities.sayState(creep, "GET", true);
+      utilities.role.sayState(creep, "GET", true);
       creep.memory.task = "GET";
     } else if (
       creep.memory.task == "GET" &&
@@ -25,7 +28,7 @@ var roleUpgrader = {
     //  Do Task
     //
     if (creep.memory.task == "UPGRADE") {
-      utilities.roleUtilities.doUpgrade(creep);
+      utilities.role.doUpgrade(creep);
     } else if (creep.memory.task == "GET") {
       //  Get energy from container
       if (
@@ -47,7 +50,7 @@ var roleUpgrader = {
         }
       } else {
         //  Pickup energy from ground
-        utilities.roleUtilities.getEnergyHarvest(creep);
+        utilities.role.getResource(creep);
       }
     } else if (creep.memory.task == "MOVIN") {
       var mPOS = creep.memory.movePOS;

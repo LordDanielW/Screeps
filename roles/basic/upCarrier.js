@@ -25,8 +25,7 @@ var roleUpCarrier = {
     //
     if (creep.memory.task == "GET") {
       let sourceId = Memory.TaskMan[creep.room.name].upCarryId;
-      utilities.roleUtilities.getEnergyFromID(creep, sourceId);
-      // utilities.roleUtilities.getEnergyStorage(creep);
+      utilities.role.getEnergyFromID(creep, sourceId);
     }
     //  Give
     //
@@ -40,7 +39,7 @@ var roleUpCarrier = {
       creep.memory.containers = containers;
       let response = creep.transfer(containers, RESOURCE_ENERGY);
       if (response == ERR_NOT_IN_RANGE) {
-        creep.moveTo(containers, utilities.roleUtilities.pathStyle);
+        creep.moveTo(containers, utilities.role.pathStyle);
         state = "MOVE";
       } else if (response == OK) {
         state = "GIVE";
@@ -49,7 +48,7 @@ var roleUpCarrier = {
       }
 
       // Report state
-      utilities.roleUtilities.sayState(creep, state, true);
+      utilities.role.sayState(creep, state, true);
     } else {
       creep.memory.task = "GET";
     }
@@ -98,7 +97,7 @@ module.exports.upCarrier = roleUpCarrier;
 //       if (creep.transfer(factory, RESOURCE_LEMERGIUM) == ERR_NOT_IN_RANGE) {
 //         creep.moveTo(factory, { visualizePathStyle: { stroke: "#00ffff" } });
 //       }
-//       //utilities.roleUtilities.emptyCarry(creep);
+//       //utilities.role.emptyCarry(creep);
 //     }
 //   },
 // };
