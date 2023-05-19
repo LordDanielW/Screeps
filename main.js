@@ -51,10 +51,10 @@ module.exports.fastLoop = function () {
   //  remove dead creeps from memory
   garbageCollect();
 
-  //  Towers
-  //  check repair, heal, and attack
-  //  show attack rings
-  runTowers(myRoomOne);
+  //  Rooms
+  //
+  //
+  runRooms(myRoomOne);
 
   //  Screep Run Loop
   //
@@ -105,7 +105,7 @@ module.exports.slowLoop = function () {
 
   //  Towers
   try {
-    runTowers();
+    runRooms();
   } catch (e) {
     console.log("Tower Fail");
     console.log(e);
@@ -168,10 +168,15 @@ module.exports.slowLoop = function () {
 };
 // End Slow Loop
 
-// run Towers
+// run Rooms
 //
-function runTowers() {
+function runRooms() {
   for (room in Game.rooms) {
+    manage.runRoom(room);
+
+    //  Run Towers
+    //  check repair, heal, and attack
+    //  show attack rings
     var towers = Game.rooms[room].find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType == STRUCTURE_TOWER;
@@ -192,7 +197,9 @@ function runTowers() {
 function runScreeps() {
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
-    roles[creep.memory.role].run(creep);
+    if (!creep.spawning) {
+      roles[creep.memory.role].run(creep);
+    }
   }
 }
 // End Run Screeps
