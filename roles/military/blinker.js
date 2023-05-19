@@ -11,7 +11,7 @@ var roleBlinker = {
     creepTasks = ["MOVIN", "BREAK", "HEAL"];
 
     if (!creepTasks.includes(creep.memory.task)) {
-      utilities.role.sayState(creep, "IDLE", true);
+      utils.role.sayState(creep, "IDLE", true);
       return;
     }
 
@@ -28,10 +28,10 @@ var roleBlinker = {
       if (creep.pos.isEqualTo(breakPos)) {
         // if (creep.pos.inRangeTo(breakPos, 1)) {
         creep.memory.task = "BREAK";
-        utilities.role.sayState(creep, "BREAK", true);
+        utils.role.sayState(creep, "BREAK", true);
         this.run(creep);
       } else {
-        utilities.role.sayState(creep, "MOVE", true);
+        utils.role.sayState(creep, "MOVE", true);
         creep.moveTo(breakPos, {
           visualizePathStyle: { stroke: "#ffaa00" },
         });

@@ -3,7 +3,7 @@
 var roles = require("roles.all");
 var manage = require("manage.all");
 var myMemory = require("memory.all");
-var utilities = require("utilities.all");
+var utils = require("utils.all");
 
 //  Variables
 var myRoomOne = Game.rooms.E9N52;
@@ -180,7 +180,7 @@ function runTowers() {
     for (var i = 0; i < towers.length; i++) {
       manage.Tower.run(towers[i]);
       if (showGraphics) {
-        utilities.displayAttackRings(room, towers[i]);
+        utils.displayAttackRings(room, towers[i]);
       }
     }
   }

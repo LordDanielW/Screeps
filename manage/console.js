@@ -130,18 +130,18 @@ global.sC = function (spawnType) {
       Memory.TaskMan.Vat3.spawn.push({
         role: "Carrier",
         body: [
-          [CARRY, 4],
-          [MOVE, 4],
+          [CARRY, 3],
+          [MOVE, 3],
         ],
       });
       break;
     case "Builder":
       Memory.TaskMan.Vat3.spawn.push({
         role: "Builder",
-        task: "GET",
+        task: "MOVIN",
         body: [
-          [WORK, 2],
-          [CARRY, 1],
+          [WORK, 3],
+          [CARRY, 3],
           [MOVE, 3],
         ],
         movePOS: { x: 8, y: 22, roomName: "E14N49" },

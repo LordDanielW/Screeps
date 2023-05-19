@@ -23,7 +23,7 @@ var roleBreaker = {
         creep.memory.task = "SIT";
       } else {
         creep.heal(creep);
-        utilities.role.sayState(creep, "MOVE", true);
+        utils.role.sayState(creep, "MOVE", true);
         creep.moveTo(flagPOS, { reusePath: 4 });
       }
     }
@@ -37,9 +37,9 @@ var roleBreaker = {
       if (response == ERR_NOT_IN_RANGE) {
         creep.moveTo(breakOBJ);
       } else if (response == OK) {
-        utilities.role.sayState(creep, "BREAK", true);
+        utils.role.sayState(creep, "BREAK", true);
       } else {
-        utilities.role.sayState(creep, "ERROR", true);
+        utils.role.sayState(creep, "ERROR", true);
       }
     }
     // SIT

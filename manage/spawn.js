@@ -25,7 +25,7 @@ spawnCreeps = function (spawnName) {
   }
   // If Spawning, Display it
   if (spawn.spawning) {
-    utilities.structureMessage(spawn.id, "🛠️" + spawn.spawning.name);
+    utils.structureMessage(spawn.id, "🛠️" + spawn.spawning.name);
   }
   // Else Check Spawn Que
   else if (Memory.TaskMan[spawnName].spawn.length != 0) {
@@ -62,7 +62,7 @@ spawnCreeps = function (spawnName) {
     if (response == OK) {
       Memory.TaskMan[spawnName].spawn.shift();
     } else {
-      utilities.structureMessage(spawn.id, "🎊 " + response);
+      utils.structureMessage(spawn.id, "🎊 " + response);
       // console.log("Error " + response + ". Spawning:" + spawnMemory.role);
     }
   }

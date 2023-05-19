@@ -61,7 +61,7 @@ var roleRepair = {
       }
       // GET
     } else if (creep.memory.task == "GET") {
-      utilities.role.getResource(creep);
+      utils.role.getResource(creep);
       // MOVIN
     } else if (creep.memory.task == "MOVIN") {
       var mPOS = creep.memory.movePOS;
@@ -72,7 +72,7 @@ var roleRepair = {
       } else {
         //  creep.say(creep.memory.dest.x + ',' + creep.memory.dest.y);
         creep.moveTo(moveTO, { visualizePathStyle: { stroke: "#ffaa00" } });
-        //utilities.role.moveRooms(creep);
+        //utils.role.moveRooms(creep);
       }
     } else {
       creep.memory.task = "GET";

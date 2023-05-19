@@ -1,2 +1,2 @@
-var utilities = require("utilities.all");
+var utils = require("utils.all");
 var myMemory = require("memory.all");

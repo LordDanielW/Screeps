@@ -41,7 +41,7 @@ var roleBuilder = {
 
       // GET
     } else if (creep.memory.task == "GET") {
-      utilities.role.getResource(creep);
+      utils.role.getResource(creep);
     }
   },
 };
