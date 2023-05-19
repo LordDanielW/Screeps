@@ -40,7 +40,7 @@ var roleCarrier = {
       if (emptyStructure != null) {
         let response = creep.transfer(emptyStructure, RESOURCE_ENERGY);
         if (response == ERR_NOT_IN_RANGE) {
-          creep.moveTo(emptyStructure, utils.role.pathStyle);
+          utils.role.moveTo(creep, emptyStructure);
           state = "MOVE";
         } else if (response == OK) {
           creep.memory.destination = null;

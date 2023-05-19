@@ -30,25 +30,13 @@ var roleUpCarrier = {
     //  Give
     //
     else if (creep.memory.task == "GIVE") {
-      let containers = creep.room.find(FIND_STRUCTURES, {
-        filter: (structure) => {
-          return structure.structureType == STRUCTURE_CONTAINER;
-        },
-      })[2];
+      let giveId = Memory.TaskMan[creep.room.name].upgradeContainer;
+      let giveOBJ = Game.getObjectById(giveId);
 
-      creep.memory.containers = containers;
-      let response = creep.transfer(containers, RESOURCE_ENERGY);
+      let response = creep.transfer(giveOBJ, RESOURCE_ENERGY);
       if (response == ERR_NOT_IN_RANGE) {
-        creep.moveTo(containers, utils.role.pathStyle);
-        state = "MOVE";
-      } else if (response == OK) {
-        state = "GIVE";
-      } else {
-        state = "ERROR";
+        utils.role.moveTo(creep, giveOBJ);
       }
-
-      // Report state
-      utils.role.sayState(creep, state, true);
     } else {
       creep.memory.task = "GET";
     }

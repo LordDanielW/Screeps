@@ -41,7 +41,7 @@ var roleUpgrader = {
 
         var iState = creep.withdraw(upSource, RESOURCE_ENERGY);
         if (iState == ERR_NOT_IN_RANGE) {
-          creep.moveTo(upSource.pos, this.pathStyle);
+          utils.role.moveTo(creep, upSource);
           return true;
         } else if (iState == OK) {
           return true;
@@ -58,7 +58,7 @@ var roleUpgrader = {
       if (creep.pos.isEqualTo(moveTO)) {
         creep.memory.task = "GET";
       } else {
-        creep.moveTo(moveTO, { visualizePathStyle: { stroke: "#ffaa00" } });
+        utils.role.moveTo(creep, moveTO);
       }
     } else {
       return false;

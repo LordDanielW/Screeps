@@ -24,7 +24,7 @@ var roleBuilder = {
       if (targets.length) {
         var target = creep.pos.findClosestByPath(targets);
         if (creep.build(target) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(target, { visualizePathStyle: { stroke: "#ffffff" } });
+          utils.role.moveTo(creep, target);
         }
       }
 
@@ -36,7 +36,7 @@ var roleBuilder = {
         creep.memory.task = "BUILD";
         creep.say("🚧 build", true);
       } else {
-        creep.moveTo(moveTO, { visualizePathStyle: { stroke: "#ffaa00" } });
+        utils.role.moveTo(creep, moveTO);
       }
 
       // GET

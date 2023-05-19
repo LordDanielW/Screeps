@@ -1,7 +1,9 @@
 var roleMiner = {
   /** @param {Creep} creep **/
   run: function (creep) {
-    // creep.memory.sourceType = FIND_SOURCES;
+    if (!creep.memory.sourceType) {
+      creep.memory.sourceType = FIND_SOURCES;
+    }
     //creep.memory.sitPOS = new RoomPosition(37, 36, "E46N33");
     if (creep.memory.atDest) {
       var source = Game.getObjectById(creep.memory.source);
@@ -25,7 +27,7 @@ var roleMiner = {
           creep.memory.source = SourceID.id;
         }
       } else {
-        creep.moveTo(sitPOS, { visualizePathStyle: { stroke: "#ffaa00" } });
+        utils.role.moveTo(creep, sitPOS);
       }
     }
   },

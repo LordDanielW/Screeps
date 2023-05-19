@@ -31,9 +31,7 @@ var roleRepair = {
       if (closestDamagedStructure) {
         var rtnMsg = creep.repair(closestDamagedStructure);
         if (rtnMsg == ERR_NOT_IN_RANGE) {
-          creep.moveTo(closestDamagedStructure, {
-            visualizePathStyle: { stroke: "#00cc00" },
-          });
+          utils.role.moveTo(creep, closestDamagedStructure);
         } else if (rtnMsg == OK) {
           creep.say("🧙 PEW ✨", true);
         }
@@ -49,9 +47,7 @@ var roleRepair = {
         if (wallUpgrade) {
           var rtnMsg = creep.repair(wallUpgrade);
           if (rtnMsg == ERR_NOT_IN_RANGE) {
-            creep.moveTo(wallUpgrade, {
-              visualizePathStyle: { stroke: "#00cc00" },
-            });
+            utils.role.moveTo(creep, wallUpgrade);
           } else if (rtnMsg == OK) {
             creep.say("🧙 PEW ✨", true);
           }
@@ -71,7 +67,7 @@ var roleRepair = {
         creep.memory.task = "REPAIR";
       } else {
         //  creep.say(creep.memory.dest.x + ',' + creep.memory.dest.y);
-        creep.moveTo(moveTO, { visualizePathStyle: { stroke: "#ffaa00" } });
+        utils.role.moveTo(creep, moveTO);
         //utils.role.moveRooms(creep);
       }
     } else {
