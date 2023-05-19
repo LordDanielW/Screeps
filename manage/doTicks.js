@@ -6,7 +6,7 @@ var doTicks = function () {
 
   if (Memory.Tick >= 1460) {
     Memory.Tick = 0;
-    Memory.TaskMan.Spawn.spawn = [];
+    Memory.TaskMan.Spawn1.spawn = [];
     Memory.TaskMan.Spawn1.spawnListNumber = 0;
     Memory.TaskMan.Vat2.spawn = [];
     Memory.TaskMan.Vat2.spawnListNumber = 0;

@@ -43,23 +43,14 @@ var spawnList = {
     {
       role: "upCarrier",
       body: [
-        [CARRY, 14],
-        [MOVE, 8],
-      ],
-    },
-    {
-      role: "Upgrader",
-      body: [
-        [WORK, 12],
-        [CARRY, 2],
+        [CARRY, 8],
         [MOVE, 4],
       ],
-      iStore: 2,
     },
     {
       role: "Upgrader",
       body: [
-        [WORK, 12],
+        [WORK, 14],
         [CARRY, 2],
         [MOVE, 4],
       ],
@@ -91,10 +82,18 @@ var spawnList = {
       direction: BOTTOM_RIGHT,
       body: [
         [WORK, 6],
-        [CARRY, 2],
-        [MOVE, 4],
+        [CARRY, 4],
+        [MOVE, 5],
       ],
-      iStore: 2,
+    },
+    {
+      role: "Upgrader",
+      direction: BOTTOM_RIGHT,
+      body: [
+        [WORK, 6],
+        [CARRY, 4],
+        [MOVE, 5],
+      ],
     },
     {
       role: "Repair",
@@ -138,64 +137,73 @@ var spawnList = {
       sitPOS: { x: 28, y: 43, roomName: "E13N49" },
     },
     {
-      role: "Carrier",
+      role: "Upgrader",
+      direction: BOTTOM_RIGHT,
       body: [
-        [CARRY, 3],
+        [WORK, 7],
+        [CARRY, 1],
+        [MOVE, 1],
+      ],
+      iStore: 2,
+    },
+    {
+      role: "Upgrader",
+      direction: BOTTOM_RIGHT,
+      body: [
+        [WORK, 7],
+        [CARRY, 1],
+        [MOVE, 1],
+      ],
+      iStore: 2,
+    },
+    {
+      role: "Upgrader",
+      direction: BOTTOM_RIGHT,
+      body: [
+        [WORK, 7],
+        [CARRY, 1],
+        [MOVE, 1],
+      ],
+      iStore: 2,
+    },
+    {
+      role: "upCarrier",
+      body: [
+        [CARRY, 6],
         [MOVE, 3],
       ],
     },
     {
-      role: "Upgrader",
-      direction: BOTTOM_RIGHT,
+      role: "Linker",
       body: [
-        [WORK, 4],
         [CARRY, 1],
         [MOVE, 1],
-      ],
-      iStore: 2,
-    },
-    {
-      role: "Upgrader",
-      direction: BOTTOM_RIGHT,
-      body: [
-        [WORK, 4],
-        [CARRY, 1],
-        [MOVE, 1],
-      ],
-      iStore: 2,
-    },
-    {
-      role: "upCarrier",
-      body: [
-        [CARRY, 5],
-        [MOVE, 5],
-      ],
-    },
-    {
-      role: "upCarrier",
-      body: [
-        [CARRY, 5],
-        [MOVE, 5],
       ],
     },
     {
       role: "Repair",
       body: [
-        [WORK, 2],
-        [CARRY, 1],
+        [WORK, 6],
+        [CARRY, 4],
+        [MOVE, 5],
+      ],
+    },
+  ],
+  Vat4: [
+    {
+      role: "Carrier",
+      body: [
+        [CARRY, 4],
         [MOVE, 2],
       ],
     },
     {
-      role: "Repair",
+      role: "Carrier",
       body: [
-        [WORK, 2],
-        [CARRY, 1],
+        [CARRY, 4],
         [MOVE, 2],
       ],
     },
-    // Remote Room E14N49
-    //
     {
       role: "Miner",
       say: 1,
@@ -209,52 +217,72 @@ var spawnList = {
       sitPOS: { x: 16, y: 8, roomName: "E14N49" },
     },
     {
-      role: "Upgrader",
-      task: "MOVIN",
-      direction: BOTTOM_RIGHT,
+      role: "Miner",
+      say: 1,
+      atDest: false,
+      direction: BOTTOM,
+      sourceType: FIND_SOURCES,
       body: [
-        [WORK, 2],
-        [CARRY, 2],
-        [MOVE, 2],
-      ],
-      iStore: 2,
-      movePOS: { x: 1, y: 24, roomName: "E14N49" },
-    },
-  ],
-  Vat4: [
-    {
-      role: "Carrier",
-      body: [
-        [CARRY, 1],
+        [WORK, 5],
         [MOVE, 1],
       ],
+      sitPOS: { x: 34, y: 5, roomName: "E14N49" },
     },
     {
       role: "Upgrader",
       direction: BOTTOM_RIGHT,
       body: [
-        [WORK, 1],
+        [WORK, 5],
         [CARRY, 1],
         [MOVE, 2],
       ],
-      iStore: 2,
+    },
+    {
+      role: "Upgrader",
+      direction: BOTTOM_RIGHT,
+      body: [
+        [WORK, 5],
+        [CARRY, 1],
+        [MOVE, 2],
+      ],
+    },
+    {
+      role: "upCarrier",
+      body: [
+        [CARRY, 6],
+        [MOVE, 3],
+      ],
+    },
+    {
+      role: "upCarrier",
+      body: [
+        [CARRY, 6],
+        [MOVE, 3],
+      ],
+    },
+    {
+      role: "upCarrier",
+      body: [
+        [CARRY, 6],
+        [MOVE, 3],
+      ],
     },
     {
       role: "Repair",
       body: [
         [WORK, 2],
-        [CARRY, 1],
+        [CARRY, 2],
         [MOVE, 2],
       ],
     },
-    {
-      role: "Builder",
-      body: [
-        [WORK, 1],
-        [CARRY, 1],
-        [MOVE, 2],
-      ],
-    },
+    // {
+    //   role: "Builder",
+    //   body: [
+    //     [WORK, 2],
+    //     [CARRY, 2],
+    //     [MOVE, 2],
+    //   ],
+    // },
   ],
 };
 

@@ -101,17 +101,16 @@ exports.moveCreep = moveCreep;
 //
 global.sC = function (spawnType) {
   switch (spawnType) {
-    case "Signer":
-      Memory.TaskMan.Vat2.spawn.push({
-        role: "Signer",
-        task: "MOVIN",
+    case "Miner":
+      Memory.TaskMan.Vat4.spawn.push({
+        role: "Miner",
         say: 1,
         atDest: false,
         body: [
-          [CLAIM, 0],
+          [WORK, 4],
           [MOVE, 1],
         ],
-        sitPOS: { x: 15, y: 44, roomName: "E9N54" },
+        sitPOS: { x: 16, y: 8, roomName: "E14N49" },
       });
       break;
     case "Attacker":
@@ -126,11 +125,19 @@ global.sC = function (spawnType) {
         sitPOS: { x: 15, y: 44, roomName: "E9N54" },
       });
       break;
-    case "Carrier":
+    case "Linker":
       Memory.TaskMan.Vat3.spawn.push({
-        role: "Carrier",
+        role: "Linker",
         body: [
           [CARRY, 3],
+          [MOVE, 3],
+        ],
+      });
+    case "Carrier":
+      Memory.TaskMan.Vat4.spawn.push({
+        role: "Carrier",
+        body: [
+          [CARRY, 6],
           [MOVE, 3],
         ],
       });
@@ -148,15 +155,13 @@ global.sC = function (spawnType) {
       });
       break;
     case "Upgrader":
-      Memory.TaskMan.Vat2.spawn.push({
+      Memory.TaskMan.Vat3.spawn.push({
         role: "Upgrader",
-        task: "MOVIN",
         body: [
-          [WORK, 1],
+          [WORK, 7],
           [CARRY, 1],
-          [MOVE, 2],
+          [MOVE, 1],
         ],
-        movePOS: { x: 36, y: 18, roomName: "E13N49" },
       });
       break;
     case "Repair":
@@ -173,8 +178,8 @@ global.sC = function (spawnType) {
       Memory.TaskMan.Vat3.spawn.push({
         role: "upCarrier",
         body: [
-          [CARRY, 5],
-          [MOVE, 5],
+          [CARRY, 6],
+          [MOVE, 3],
         ],
       });
       break;

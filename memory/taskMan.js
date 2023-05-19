@@ -20,14 +20,18 @@ TaskMan = {
   },
   E13N49: {
     sourceContainers: ["6458d5472769d02e084590b8", "645857ed3179443e184087a1"],
-    upgradeContainer: "64591a8f096532ca2ac38fbb",
-    upCarryId: "6458d5472769d02e084590b8",
+    upgradeContainer: "646130ecb7fc7d8c29dad341",
+    upCarryId: "645d5229570b26188ea4fefa",
+    linkSource: "6458d5472769d02e084590b8",
+    linkFrom: "6461541914993306306fe956",
+    linkTo: "646130ecb7fc7d8c29dad341",
     wallHealth: 200,
   },
   E14N49: {
     sourceContainers: ["645a9e31ef98aee67a520eaf", "645af349d8be3e1cbf35c6d5"],
-    upgradeContainer: "",
-    upCarryId: "",
+    upgradeContainer: "64676ee012da93911b16deb9",
+    upCarryId: "645af349d8be3e1cbf35c6d5",
+
     wallHealth: 10,
   },
   Spawn1: {
@@ -67,7 +71,7 @@ TaskMan = {
 
 // Buy
 
-//Game.market.deal('5e3de0140b8ac40851953ac8', 6000, "E46N33");
+//Game.market.deal('5e3de0140b8ac40851953ac8', 6000, "E9N52");
 
 // Game.rooms['E46N33'].terminal.send(RESOURCE_LEMERGIUM_BAR, 1000, 'E44N31',
 //     'PEN15');
