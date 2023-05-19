@@ -53,6 +53,10 @@ var role = {
   //  Move to
   //
   moveTo: function (creep, target) {
+    if (creep.fatigue > 0) {
+      return ERR_TIRED;
+    }
+
     var response = creep.moveTo(target, {
       visualizePathStyle: { stroke: "#ffffff" },
       ignoreCreeps: false,
@@ -64,6 +68,7 @@ var role = {
         ignoreCreeps: true,
       });
     }
+    return response;
   },
 
   //
@@ -131,6 +136,12 @@ var role = {
     // Move to Resource
     if (response == ERR_NOT_IN_RANGE) {
       this.moveTo(creep, fullSource);
+    } else if (response == OK) {
+      // Do nothing
+    } else if (response == ERR_NOT_ENOUGH_RESOURCES) {
+      this.findFullSource(creep, resourceType);
+    } else {
+      // console.log(creep.role + " Get ERROR: " + response);
     }
 
     // if showgraphics, saystate response
@@ -203,13 +214,17 @@ var role = {
     }
 
     // Return The Storage
-    if (creep.room.storage) {
+    if (
+      creep.room.storage &&
+      creep.room.storage.store.getUsedCapacity() > creep.store.getFreeCapacity()
+    ) {
       creep.memory.source = creep.room.storage.id;
       creep.memory.sourceType = "STORAGE";
       return true;
     }
 
     //
+    creep.memory.source = null;
     return false;
   },
 
