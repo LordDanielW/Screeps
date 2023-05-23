@@ -146,6 +146,28 @@ conditionalSpawnQue = function (spawnName) {
           },
         }).length > 0
       ) {
+        let mineralType = Game.spawns[spawnName].room.find(FIND_MINERALS)[0];
+
+        let ePos = Game.spawns[spawnName].room.find(FIND_STRUCTURES, {
+          filter: (structure) => {
+            return (
+              structure.structureType == STRUCTURE_EXTRACTOR &&
+              structure.isActive()
+            );
+          },
+        })[0].pos;
+
+        // Find closest container by range
+        let closestContainer = ePos.findClosestByRange(FIND_STRUCTURES, {
+          filter: (structure) => {
+            return structure.structureType == STRUCTURE_CONTAINER;
+          },
+        });
+        if (closestContainer == null || closestContainer.pos.isNearTo()) {
+          return;
+        }
+        let cPOS = closestContainer.pos;
+
         Memory.TaskMan[spawnName].spawn.push({
           role: "Miner",
           say: 1,
@@ -155,7 +177,18 @@ conditionalSpawnQue = function (spawnName) {
             [WORK, 15],
             [MOVE, 5],
           ],
-          sitPOS: { x: 42, y: 39, roomName: "E9N52" },
+          sitPOS: { x: cPOS.x, y: cPOS.y, roomName: cPOS.roomName },
+        });
+
+        Memory.TaskMan[spawnName].spawn.push({
+          role: "Linker",
+          resourceType: mineralType,
+          source: closestContainer.id,
+          destination: Game.spawns[spawnName].room.terminal.id,
+          body: [
+            [CARRY, 8],
+            [MOVE, 8],
+          ],
         });
       }
       break;
