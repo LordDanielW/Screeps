@@ -99,6 +99,18 @@ var roleCarrier = {
         creep.memory.destination = emptyStructure.id;
         return true;
       }
+
+      // Return The Terminal
+      if (
+        creep.room.terminal &&
+        creep.room.terminal.store[RESOURCE_ENERGY] < 50000 &&
+        creep.room.terminal.store.getFreeCapacity() >
+          creep.store.getUsedCapacity()
+      ) {
+        creep.memory.destination = creep.room.terminal.id;
+        return true;
+      }
+
       // Return The Storage
       if (creep.room.storage) {
         creep.memory.destination = creep.room.storage.id;
