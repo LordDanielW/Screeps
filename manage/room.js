@@ -4,6 +4,9 @@ runRoom = function (theRoom) {
   let linkFrom = null;
   let linkTo = null;
 
+  if (!Memory.TaskMan[theRoom]) {
+    return;
+  }
   if (Memory.TaskMan[theRoom].linkFrom) {
     linkFrom = Game.getObjectById(Memory.TaskMan[theRoom].linkFrom);
   }
