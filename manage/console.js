@@ -106,11 +106,13 @@ global.sC = function (spawnType) {
         role: "Miner",
         say: 1,
         atDest: false,
+        direction: BOTTOM,
+        sourceType: FIND_SOURCES,
         body: [
-          [WORK, 4],
+          [WORK, 5],
           [MOVE, 1],
         ],
-        sitPOS: { x: 16, y: 8, roomName: "E14N49" },
+        sitPOS: { x: 34, y: 5, roomName: "E14N49" },
       });
       break;
     case "Attacker":
@@ -126,11 +128,11 @@ global.sC = function (spawnType) {
       });
       break;
     case "Linker":
-      Memory.TaskMan.Vat3.spawn.push({
+      Memory.TaskMan.Vat4.spawn.push({
         role: "Linker",
         body: [
-          [CARRY, 3],
-          [MOVE, 3],
+          [CARRY, 1],
+          [MOVE, 1],
         ],
       });
     case "Carrier":
