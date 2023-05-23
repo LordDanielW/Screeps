@@ -7,6 +7,18 @@ var roleLinker = {
     //  Variables
     let state = "NONE";
 
+    // If Creep source and destination are not set, set them
+    if (creep.memory.source == null) {
+      creep.memory.source = Memory.TaskMan[creep.room.name].linkSource;
+    }
+    if (creep.memory.destination == null) {
+      creep.memory.destination = Memory.TaskMan[creep.room.name].linkFrom;
+    }
+    // If creep resource is not set, set it
+    if (creep.memory.resource == null) {
+      creep.memory.resource = RESOURCE_ENERGY;
+    }
+
     // Check State Of Get / Give
     //
     if (creep.carry.energy == 0 && creep.memory.task == "GIVE") {
@@ -24,17 +36,17 @@ var roleLinker = {
     //  Get
     //
     if (creep.memory.task == "GET") {
-      let sourceId = Memory.TaskMan[creep.room.name].linkSource;
+      let sourceId = creep.memory.source;
 
       utils.role.getEnergyFromID(creep, sourceId);
     }
     //  Give
     //
     else if (creep.memory.task == "GIVE") {
-      let giveId = Memory.TaskMan[creep.room.name].linkFrom;
+      let giveId = creep.memory.destination;
       let giveOBJ = Game.getObjectById(giveId);
 
-      let response = creep.transfer(giveOBJ, RESOURCE_ENERGY);
+      let response = creep.transfer(giveOBJ, creep.memory.resource);
       if (response == ERR_NOT_IN_RANGE) {
         utils.role.moveTo(creep, giveOBJ);
         state = "MOVE";
