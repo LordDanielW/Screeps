@@ -182,7 +182,7 @@ conditionalSpawnQue = function (spawnName) {
 
         Memory.TaskMan[spawnName].spawn.push({
           role: "Linker",
-          resourceType: mineralType,
+          resource: mineralType.mineralType,
           source: closestContainer.id,
           destination: Game.spawns[spawnName].room.terminal.id,
           body: [

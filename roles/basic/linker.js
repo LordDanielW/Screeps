@@ -21,11 +21,11 @@ var roleLinker = {
 
     // Check State Of Get / Give
     //
-    if (creep.carry.energy == 0 && creep.memory.task == "GIVE") {
+    if (creep.store.getUsedCapacity() == 0 && creep.memory.task == "GIVE") {
       creep.memory.task = "GET";
     } else if (
       creep.memory.task == "GET" &&
-      creep.carry.energy == creep.carryCapacity
+      creep.store.getFreeCapacity() == 0
     ) {
       creep.memory.task = "GIVE";
       creep.say("🦑", true);
@@ -38,7 +38,7 @@ var roleLinker = {
     if (creep.memory.task == "GET") {
       let sourceId = creep.memory.source;
 
-      utils.role.getEnergyFromID(creep, sourceId);
+      utils.role.getEnergyFromID(creep, sourceId, creep.memory.resource);
     }
     //  Give
     //
