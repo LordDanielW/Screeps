@@ -43,14 +43,14 @@ var spawnList = {
     {
       role: "upCarrier",
       body: [
-        [CARRY, 8],
-        [MOVE, 4],
+        [CARRY, 10],
+        [MOVE, 5],
       ],
     },
     {
       role: "Upgrader",
       body: [
-        [WORK, 14],
+        [WORK, 16],
         [CARRY, 2],
         [MOVE, 4],
       ],
@@ -86,15 +86,15 @@ var spawnList = {
         [MOVE, 5],
       ],
     },
-    {
-      role: "Upgrader",
-      direction: BOTTOM_RIGHT,
-      body: [
-        [WORK, 6],
-        [CARRY, 4],
-        [MOVE, 5],
-      ],
-    },
+    // {
+    //   role: "Upgrader",
+    //   direction: BOTTOM_RIGHT,
+    //   body: [
+    //     [WORK, 6],
+    //     [CARRY, 4],
+    //     [MOVE, 5],
+    //   ],
+    // },
     {
       role: "Repair",
       body: [
@@ -115,8 +115,8 @@ var spawnList = {
     {
       role: "Carrier",
       body: [
-        [CARRY, 4],
-        [MOVE, 2],
+        [CARRY, 8],
+        [MOVE, 4],
       ],
     },
     {
@@ -139,7 +139,7 @@ var spawnList = {
       sourceType: FIND_SOURCES,
       body: [
         [WORK, 5],
-        [MOVE, 1],
+        [MOVE, 3],
       ],
       sitPOS: { x: 28, y: 43, roomName: "E13N49" },
     },
@@ -147,7 +147,7 @@ var spawnList = {
       role: "Upgrader",
       direction: BOTTOM_RIGHT,
       body: [
-        [WORK, 6],
+        [WORK, 7],
         [CARRY, 1],
         [MOVE, 1],
       ],
@@ -156,7 +156,16 @@ var spawnList = {
       role: "Upgrader",
       direction: BOTTOM_RIGHT,
       body: [
-        [WORK, 6],
+        [WORK, 7],
+        [CARRY, 1],
+        [MOVE, 1],
+      ],
+    },
+    {
+      role: "Upgrader",
+      direction: BOTTOM_RIGHT,
+      body: [
+        [WORK, 7],
         [CARRY, 1],
         [MOVE, 1],
       ],
@@ -166,6 +175,13 @@ var spawnList = {
       body: [
         [CARRY, 1],
         [MOVE, 1],
+      ],
+    },
+    {
+      role: "upCarrier",
+      body: [
+        [CARRY, 8],
+        [MOVE, 4],
       ],
     },
     {
@@ -188,8 +204,8 @@ var spawnList = {
     {
       role: "Carrier",
       body: [
-        [CARRY, 4],
-        [MOVE, 2],
+        [CARRY, 8],
+        [MOVE, 4],
       ],
     },
     {
@@ -235,6 +251,15 @@ var spawnList = {
       ],
     },
     {
+      role: "Upgrader",
+      direction: BOTTOM_RIGHT,
+      body: [
+        [WORK, 6],
+        [CARRY, 1],
+        [MOVE, 2],
+      ],
+    },
+    {
       role: "Linker",
       body: [
         [CARRY, 1],
@@ -247,6 +272,13 @@ var spawnList = {
         [WORK, 2],
         [CARRY, 2],
         [MOVE, 2],
+      ],
+    },
+    {
+      role: "upCarrier",
+      body: [
+        [CARRY, 6],
+        [MOVE, 3],
       ],
     },
     // {

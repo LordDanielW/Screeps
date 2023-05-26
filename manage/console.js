@@ -177,7 +177,7 @@ global.sC = function (spawnType) {
       });
       break;
     case "upCarrier":
-      Memory.TaskMan.Vat3.spawn.push({
+      Memory.TaskMan.Vat4.spawn.push({
         role: "upCarrier",
         body: [
           [CARRY, 6],

@@ -132,7 +132,7 @@ module.exports.addSpawnQue = addSpawnQue;
 //  more Creeps
 conditionalSpawnQue = function (spawnName) {
   switch (Memory.TaskMan[spawnName].spawnExtrasNumber) {
-    case 0:
+    case 5:
       //  Check for Minerals
       if (
         Game.spawns[spawnName].room.find(FIND_MINERALS).length > 0 &&
@@ -192,7 +192,7 @@ conditionalSpawnQue = function (spawnName) {
         });
       }
       break;
-    case 1:
+    case 0:
       //  Check for Construction Sites
       let roomConstructionSites = false;
       Object.keys(Game.constructionSites).forEach((x) => {
