@@ -17,6 +17,11 @@ spawnCreeps = function (spawnName) {
   let spawn = Game.spawns[spawnName];
   let roomName = spawn.room.name;
 
+  if (!Memory.TaskMan[spawnName]) {
+    // console.log("Spawn: " + spawnName + " not found in Memory.TaskMan");
+    return;
+  }
+
   // If Spawn que overloaded, clear and make a Carrier
   if (Memory.TaskMan[spawnName].spawn.length > 5) {
     Memory.TaskMan[spawnName].spawn = [];
