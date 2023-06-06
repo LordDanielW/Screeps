@@ -4,10 +4,10 @@ var roleCarrier = {
   run: function (creep) {
     //  Variables
     let state = "NONE";
-    // creep.move(TOP);
+
     // Check State Of Get / Give
     //
-    // utils.role.getResource(creep);
+
     if (
       (creep.store.getUsedCapacity() == 0 && creep.memory.task == "GIVE") ||
       (creep.memory.task != "GET" && creep.memory.task != "GIVE")
@@ -47,7 +47,10 @@ var roleCarrier = {
 
           state = "GIVE";
         } else if (response == ERR_NOT_ENOUGH_RESOURCES) {
-          response = creep.transfer(emptyStructure, RESOURCE_OXYGEN);
+          // find what resource the creep is carrying and transfer it
+          let resourceType = Object.keys(creep.store)[0];
+          response = creep.transfer(emptyStructure, resourceType);
+          // response = creep.transfer(emptyStructure, RESOURCE_OXYGEN);
         } else {
           state = "ERROR";
           this.findEmptyStructure(creep);

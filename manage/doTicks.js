@@ -14,6 +14,8 @@ var doTicks = function () {
     Memory.TaskMan.Vat3.spawnListNumber = 0;
     Memory.TaskMan.Vat4.spawn = [];
     Memory.TaskMan.Vat4.spawnListNumber = 0;
+    Memory.TaskMan.Vat5.spawn = [];
+    Memory.TaskMan.Vat5.spawnListNumber = 0;
   }
 
   // var roomOne = "E9N52";

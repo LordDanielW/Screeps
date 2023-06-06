@@ -147,25 +147,7 @@ var spawnList = {
       role: "Upgrader",
       direction: BOTTOM_RIGHT,
       body: [
-        [WORK, 9],
-        [CARRY, 1],
-        [MOVE, 1],
-      ],
-    },
-    {
-      role: "Upgrader",
-      direction: BOTTOM_RIGHT,
-      body: [
-        [WORK, 9],
-        [CARRY, 1],
-        [MOVE, 1],
-      ],
-    },
-    {
-      role: "Upgrader",
-      direction: BOTTOM_RIGHT,
-      body: [
-        [WORK, 9],
+        [WORK, 14],
         [CARRY, 1],
         [MOVE, 1],
       ],
@@ -175,13 +157,6 @@ var spawnList = {
       body: [
         [CARRY, 1],
         [MOVE, 1],
-      ],
-    },
-    {
-      role: "upCarrier",
-      body: [
-        [CARRY, 8],
-        [MOVE, 4],
       ],
     },
     {

@@ -102,17 +102,17 @@ exports.moveCreep = moveCreep;
 global.sC = function (spawnType) {
   switch (spawnType) {
     case "Miner":
-      Memory.TaskMan.Vat4.spawn.push({
+      Memory.TaskMan.Vat3.spawn.push({
         role: "Miner",
         say: 1,
         atDest: false,
         direction: BOTTOM,
         sourceType: FIND_SOURCES,
         body: [
-          [WORK, 5],
+          [WORK, 1],
           [MOVE, 1],
         ],
-        sitPOS: { x: 34, y: 5, roomName: "E14N49" },
+        sitPOS: { x: 38, y: 27, roomName: "E13N49" },
       });
       break;
     case "Attacker":
@@ -136,11 +136,11 @@ global.sC = function (spawnType) {
         ],
       });
     case "Carrier":
-      Memory.TaskMan.Vat4.spawn.push({
+      Memory.TaskMan.Vat3.spawn.push({
         role: "Carrier",
         body: [
-          [CARRY, 6],
-          [MOVE, 3],
+          [CARRY, 1],
+          [MOVE, 1],
         ],
       });
       break;

@@ -19,7 +19,7 @@ TaskMan = {
     wallHealth: 20000,
   },
   E13N49: {
-    sourceContainers: ["6458d5472769d02e084590b8", "645857ed3179443e184087a1"],
+    sourceContainers: ["645857ed3179443e184087a1"],
     upgradeContainer: "646130ecb7fc7d8c29dad341",
     upCarryId: "645d5229570b26188ea4fefa",
     linkSource: "6458d5472769d02e084590b8",
