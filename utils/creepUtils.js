@@ -163,7 +163,7 @@ var role = {
       if (
         creep.room.storage &&
         creep.room.storage.store.getUsedCapacity([resourceType]) >=
-          creep.carryCapacity
+          creep.store.getFreeCapacity([resourceType])
       ) {
         fullSource = creep.room.storage;
         creep.memory.source = fullSource.id;
@@ -175,7 +175,7 @@ var role = {
     // Check Tombstones
     fullSource = creep.pos.findClosestByRange(FIND_TOMBSTONES, {
       filter: (tomb) => {
-        return tomb.creep.store >= creep.carryCapacity;
+        return tomb.creep.store[resourceType] >= creep.store.getFreeCapacity();
       },
     });
     if (fullSource) {
@@ -187,7 +187,7 @@ var role = {
     // Check Dropped
     fullSource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
       filter: (dropped) => {
-        return dropped.amount >= creep.carryCapacity;
+        return dropped.amount >= creep.store.getFreeCapacity();
       },
     });
     if (fullSource) {
@@ -202,7 +202,7 @@ var role = {
     for (let i = 0; i < t.length; i++) {
       let sourceContainer = Game.getObjectById(t[i]);
       if (
-        sourceContainer.store.getUsedCapacity() >= creep.store.getFreeCapacity()
+        sourceContainer.store[resourceType] >= creep.store.getFreeCapacity()
       ) {
         roomSources.push(sourceContainer);
       }
