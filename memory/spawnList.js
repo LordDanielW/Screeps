@@ -108,16 +108,13 @@ var spawnList = {
     {
       role: "Carrier",
       body: [
-        [CARRY, 6],
-        [MOVE, 3],
+        [CARRY, 2],
+        [MOVE, 1],
       ],
     },
     {
       role: "Carrier",
-      body: [
-        [CARRY, 8],
-        [MOVE, 4],
-      ],
+      body: [[(CARRY, 8)], [MOVE, 4]],
     },
     {
       role: "Miner",
@@ -130,18 +127,6 @@ var spawnList = {
         [MOVE, 1],
       ],
       sitPOS: { x: 38, y: 27, roomName: "E13N49" },
-    },
-    {
-      role: "Miner",
-      say: 2,
-      atDest: false,
-      direction: BOTTOM,
-      sourceType: FIND_SOURCES,
-      body: [
-        [WORK, 5],
-        [MOVE, 3],
-      ],
-      sitPOS: { x: 28, y: 43, roomName: "E13N49" },
     },
     {
       role: "Upgrader",
@@ -264,6 +249,20 @@ var spawnList = {
     //     [MOVE, 2],
     //   ],
     // },
+  ],
+  Vat5: [
+    {
+      role: "Miner",
+      say: 2,
+      atDest: false,
+      direction: BOTTOM,
+      sourceType: FIND_SOURCES,
+      body: [
+        [WORK, 5],
+        [MOVE, 3],
+      ],
+      sitPOS: { x: 28, y: 43, roomName: "E13N49" },
+    },
   ],
 };
 
