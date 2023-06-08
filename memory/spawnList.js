@@ -138,13 +138,6 @@ var spawnList = {
       ],
     },
     {
-      role: "Linker",
-      body: [
-        [CARRY, 1],
-        [MOVE, 1],
-      ],
-    },
-    {
       role: "Repair",
       body: [
         [WORK, 6],
@@ -262,6 +255,13 @@ var spawnList = {
         [MOVE, 3],
       ],
       sitPOS: { x: 28, y: 43, roomName: "E13N49" },
+    },
+    {
+      role: "Linker",
+      body: [
+        [CARRY, 1],
+        [MOVE, 1],
+      ],
     },
   ],
 };

@@ -74,8 +74,9 @@ var role = {
   //
   //  Get
   //
-  getEnergyFromID: function (creep, id, resourceType) {
+  getResourceById: function (creep, id, resourceType) {
     resourceType = resourceType || RESOURCE_ENERGY;
+    creep.say(id);
     var source = Game.getObjectById(id);
     var iState = creep.withdraw(source, resourceType);
     if (iState == ERR_NOT_IN_RANGE) {
@@ -84,7 +85,15 @@ var role = {
     } else if (iState == OK) {
       return true;
     } else {
-      return false;
+      iState = creep.pickup(source);
+      if (iState == ERR_NOT_IN_RANGE) {
+        this.moveTo(creep, source.pos);
+        return true;
+      } else if (iState == OK) {
+        return true;
+      } else {
+        return false;
+      }
     }
   },
 

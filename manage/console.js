@@ -128,7 +128,7 @@ global.sC = function (spawnType) {
       });
       break;
     case "Linker":
-      Memory.TaskMan.Vat4.spawn.push({
+      Memory.TaskMan.Vat5.spawn.push({
         role: "Linker",
         body: [
           [CARRY, 1],
@@ -139,8 +139,8 @@ global.sC = function (spawnType) {
       Memory.TaskMan.Vat3.spawn.push({
         role: "Carrier",
         body: [
-          [CARRY, 1],
-          [MOVE, 1],
+          [CARRY, 8],
+          [MOVE, 4],
         ],
       });
       break;

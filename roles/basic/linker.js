@@ -37,8 +37,7 @@ var roleLinker = {
     //
     if (creep.memory.task == "GET") {
       let sourceId = creep.memory.source;
-
-      utils.role.getEnergyFromID(creep, sourceId, creep.memory.resource);
+      utils.role.getResourceById(creep, sourceId, creep.memory.resource);
     }
     //  Give
     //
