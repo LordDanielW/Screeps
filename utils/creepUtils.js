@@ -76,7 +76,6 @@ var role = {
   //
   getResourceById: function (creep, id, resourceType) {
     resourceType = resourceType || RESOURCE_ENERGY;
-    creep.say(id);
     var source = Game.getObjectById(id);
     var iState = creep.withdraw(source, resourceType);
     if (iState == ERR_NOT_IN_RANGE) {

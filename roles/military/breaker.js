@@ -17,7 +17,7 @@ var roleBreaker = {
     // MOVIN
     //
     if (creep.memory.task == "MOVIN") {
-      let flagPOS = Game.flags[Memory.FlagName].pos;
+      let flagPOS = Game.flags["Flag1"].pos;
 
       if (creep.pos.inRangeTo(flagPOS, 2)) {
         creep.memory.task = "SIT";
@@ -32,6 +32,11 @@ var roleBreaker = {
     else if (creep.memory.task == "BREAK") {
       // Selected Destination from Memory
       let breakOBJ = Game.getObjectById(creep.memory.break);
+
+      // If no BreakOBJ, find the closest enemy structure
+      if (breakOBJ == null) {
+        breakOBJ = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES);
+      }
 
       let response = creep.dismantle(breakOBJ);
       if (response == ERR_NOT_IN_RANGE) {

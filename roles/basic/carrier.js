@@ -8,10 +8,14 @@ var roleCarrier = {
     // Check State Of Get / Give
     //
 
-    if (
-      (creep.store.getUsedCapacity() == 0 && creep.memory.task == "GIVE") ||
-      (creep.memory.task != "GET" && creep.memory.task != "GIVE")
-    ) {
+    creepTasks = ["MOVIN", "GET", "GIVE"];
+
+    if (!creepTasks.includes(creep.memory.task)) {
+      creep.memory.task = "GET";
+      return;
+    }
+
+    if (creep.store.getUsedCapacity() == 0 && creep.memory.task == "GIVE") {
       utils.role.getResource(creep);
     }
     //
