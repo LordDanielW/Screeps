@@ -37,7 +37,11 @@ spawnCreeps = function (spawnName) {
     var spawnMemory = Memory.TaskMan[spawnName].spawn[0];
 
     // Generate Unique Name
-    let newCreepName = spawnMemory.role + Memory.TaskMan.NameNum;
+    let tName = spawnMemory.role;
+    if (tName == "Signer") {
+      tName = "👽 👾 🤖";
+    }
+    let newCreepName = tName + Memory.TaskMan.NameNum;
 
     // Build Body
     let creepBody = spawnMemory.body;

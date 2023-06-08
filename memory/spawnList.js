@@ -145,6 +145,46 @@ var spawnList = {
         [MOVE, 5],
       ],
     },
+    {
+      role: "Miner",
+      say: 1,
+      atDest: false,
+      body: [
+        [WORK, 5],
+        [MOVE, 5],
+      ],
+      sitPOS: { x: 39, y: 25, roomName: "E12N51" },
+    },
+    {
+      role: "Builder",
+      task: "MOVIN",
+      body: [
+        [WORK, 6],
+        [CARRY, 6],
+        [MOVE, 12],
+      ],
+      movePOS: { x: 27, y: 45, roomName: "E12N51" },
+    },
+    {
+      role: "Repair",
+      task: "MOVIN",
+      body: [
+        [WORK, 4],
+        [CARRY, 3],
+        [MOVE, 7],
+      ],
+      movePOS: { x: 27, y: 45, roomName: "E12N51" },
+    },
+    {
+      role: "Upgrader",
+      task: "MOVIN",
+      body: [
+        [WORK, 6],
+        [CARRY, 4],
+        [MOVE, 10],
+      ],
+      movePOS: { x: 27, y: 45, roomName: "E12N51" },
+    },
   ],
   Vat4: [
     {
