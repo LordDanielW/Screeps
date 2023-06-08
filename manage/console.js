@@ -115,16 +115,15 @@ global.sC = function (spawnType) {
         sitPOS: { x: 38, y: 27, roomName: "E13N49" },
       });
       break;
-    case "Attacker":
-      Memory.TaskMan.Vat2.spawn.push({
-        role: "Attacker",
+    case "Signer":
+      Memory.TaskMan.Vat3.spawn.push({
+        role: "Signer",
         task: "MOVIN",
         body: [
-          [TOUGH, 3],
-          [ATTACK, 1],
+          [CLAIM, 1],
           [MOVE, 1],
         ],
-        sitPOS: { x: 15, y: 44, roomName: "E9N54" },
+        movePOS: { x: 26, y: 48, roomName: "E12N51" },
       });
       break;
     case "Linker":
@@ -149,21 +148,22 @@ global.sC = function (spawnType) {
         role: "Builder",
         task: "MOVIN",
         body: [
-          [WORK, 3],
-          [CARRY, 3],
-          [MOVE, 3],
+          [WORK, 6],
+          [CARRY, 6],
+          [MOVE, 12],
         ],
-        movePOS: { x: 8, y: 22, roomName: "E14N49" },
+        movePOS: { x: 27, y: 45, roomName: "E12N51" },
       });
       break;
     case "Upgrader":
       Memory.TaskMan.Vat3.spawn.push({
         role: "Upgrader",
         body: [
-          [WORK, 7],
-          [CARRY, 1],
-          [MOVE, 1],
+          [WORK, 10],
+          [CARRY, 10],
+          [MOVE, 20],
         ],
+        movePOS: { x: 27, y: 45, roomName: "E12N51" },
       });
       break;
     case "Repair":
@@ -201,22 +201,19 @@ global.sC = function (spawnType) {
       });
       break;
     case "Breaker":
-      Memory.TaskMan.Spawn1.spawn.push({
+      Memory.TaskMan.Vat3.spawn.push({
         role: "Breaker",
         body: [
-          [TOUGH, 8],
-          [WORK, 3],
-          [HEAL, 1],
-          [CARRY, 0],
-          [MOVE, 12],
+          [WORK, 10],
+          [MOVE, 10],
         ],
         task: "MOVIN",
-        roomPos: { x: 27, y: 46, roomName: "E9N54" },
-        break: "645726bebc2f4b95ec1a04f1",
+        roomPos: { x: 31, y: 45, roomName: "E12N51" },
+        break: "643d3f7ea9d40144c4aca0c8",
       });
       break;
     case "B1":
-      Memory.TaskMan.Spawn1.spawn.push({
+      Memory.TaskMan.Vat3.spawn.push({
         role: "Blinker",
         body: [
           [TOUGH, 16],
@@ -226,7 +223,7 @@ global.sC = function (spawnType) {
           [MOVE, 22],
         ],
         task: "MOVIN",
-        roomPos: { x: 0, y: 15, roomName: "E10N54" },
+        roomPos: { x: 24, y: 48, roomName: "E12N51" },
         break: "645a5973456ee54de5e607f3",
       });
       break;
