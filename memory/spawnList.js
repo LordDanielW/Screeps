@@ -114,7 +114,10 @@ var spawnList = {
     },
     {
       role: "Carrier",
-      body: [[(CARRY, 8)], [MOVE, 4]],
+      body: [
+        [CARRY, 8],
+        [MOVE, 4],
+      ],
     },
     {
       role: "Miner",
@@ -301,6 +304,31 @@ var spawnList = {
       body: [
         [CARRY, 1],
         [MOVE, 1],
+      ],
+    },
+  ],
+  Vat6: [
+    {
+      role: "Carrier",
+      body: [
+        [CARRY, 2],
+        [MOVE, 1],
+      ],
+    },
+    {
+      role: "Repair",
+      body: [
+        [WORK, 2],
+        [CARRY, 2],
+        [MOVE, 2],
+      ],
+    },
+    {
+      role: "Upgrader",
+      body: [
+        [WORK, 3],
+        [CARRY, 3],
+        [MOVE, 3],
       ],
     },
   ],
