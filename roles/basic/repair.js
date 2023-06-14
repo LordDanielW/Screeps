@@ -36,6 +36,12 @@ var roleRepair = {
           creep.say("🧙 PEW ✨", true);
         }
       } else {
+        if (!Memory.TaskMan[creep.pos.roomName]) {
+          Memory.TaskMan[creep.pos.roomName] = { wallHealth: 500 };
+        } else if (!Memory.TaskMan[creep.pos.roomName].wallHealth) {
+          Memory.TaskMan[creep.pos.roomName].wallHealth = 500;
+        }
+
         var wallHealth = Memory.TaskMan[creep.pos.roomName].wallHealth;
         var wallUpgrade = creep.pos.findClosestByRange(FIND_STRUCTURES, {
           filter: (structure) =>

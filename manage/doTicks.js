@@ -4,18 +4,19 @@
 var doTicks = function () {
   Memory.Tick++;
 
+  var allSpawns = ["Spawn1", "Vat2", "Vat3", "Vat4", "Vat5", "Vat6"];
+
   if (Memory.Tick >= 1460) {
     Memory.Tick = 0;
-    Memory.TaskMan.Spawn1.spawn = [];
-    Memory.TaskMan.Spawn1.spawnListNumber = 0;
-    Memory.TaskMan.Vat2.spawn = [];
-    Memory.TaskMan.Vat2.spawnListNumber = 0;
-    Memory.TaskMan.Vat3.spawn = [];
-    Memory.TaskMan.Vat3.spawnListNumber = 0;
-    Memory.TaskMan.Vat4.spawn = [];
-    Memory.TaskMan.Vat4.spawnListNumber = 0;
-    Memory.TaskMan.Vat5.spawn = [];
-    Memory.TaskMan.Vat5.spawnListNumber = 0;
+
+    for (var spawn in allSpawns) {
+      if (!Memory.TaskMan[allSpawns[spawn]]) {
+        Memory.TaskMan[allSpawns[spawn]] = {};
+      }
+
+      Memory.TaskMan[allSpawns[spawn]].spawn = [];
+      Memory.TaskMan[allSpawns[spawn]].spawnListNumber = 0;
+    }
   }
 
   // var roomOne = "E9N52";
