@@ -207,7 +207,7 @@ var role = {
     // Check Room Sources
     let t = Memory.TaskMan[creep.room.name].sourceContainers;
     let roomSources = [];
-    for (let i = 0; i < t.length; i++) {
+    for (let i = 0; t && i < t.length; i++) {
       let sourceContainer = Game.getObjectById(t[i]);
       if (
         sourceContainer.store[resourceType] >= creep.store.getFreeCapacity()

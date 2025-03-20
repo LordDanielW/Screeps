@@ -4,6 +4,7 @@ var roles = require("roles.all");
 var manage = require("manage.all");
 var myMemory = require("memory.all");
 var utils = require("utils.all");
+var memInit = require("memory.init");
 
 //  Variables
 var myRoomOne = Game.rooms.E9N52;
@@ -24,6 +25,9 @@ module.exports.loop = function () {
   //  if the last loop failed, try catch everything
   let lastLoopFailed = Memory.lastLoopFailed;
   Memory.lastLoopFailed = true;
+
+  // Initialize memory to ensure TaskMan is properly populated
+  memInit.initMemory();
 
   if (lastLoopFailed) {
     //  Slow Loop
@@ -54,7 +58,9 @@ module.exports.fastLoop = function () {
   //  Rooms
   //
   //
-  runRooms(myRoomOne);
+  for (let roomName in Game.rooms) {
+    runRooms(Game.rooms[roomName]);
+  }
 
   //  Screep Run Loop
   //
@@ -71,6 +77,9 @@ module.exports.fastLoop = function () {
   // run Factory
   //
   // manage.runFatcory(myRoomOne);
+
+  // Check for emergency spawn situations
+  memInit.generateEmergencySpawnQueue();
 
   // run Spawn
   //
@@ -103,11 +112,13 @@ module.exports.slowLoop = function () {
     stillFailing = true;
   }
 
-  //  Towers
+  //  Rooms
   try {
-    runRooms();
+    for (let roomName in Game.rooms) {
+      runRooms(Game.rooms[roomName]);
+    }
   } catch (e) {
-    console.log("Tower Fail");
+    console.log("Room Processing Fail");
     console.log(e);
     stillFailing = true;
   }
@@ -139,6 +150,24 @@ module.exports.slowLoop = function () {
   //   stillFailing = true;
   // }
 
+  // Memory initialization in slow loop too
+  try {
+    memInit.initMemory();
+  } catch (e) {
+    console.log("Memory Init Fail");
+    console.log(e);
+    stillFailing = true;
+  }
+
+  // Generate emergency spawn queue if needed
+  try {
+    memInit.generateEmergencySpawnQueue();
+  } catch (e) {
+    console.log("Emergency Spawn Queue Fail");
+    console.log(e);
+    stillFailing = true;
+  }
+
   // run Spawn
   try {
     for (const spawnName in Game.spawns) {
@@ -148,19 +177,16 @@ module.exports.slowLoop = function () {
     console.log("Spawn Fail");
     console.log(e);
 
-    Memory.TaskMan.Spawn1.spawn = [];
-    Memory.TaskMan.Spawn1.spawnListNumber = -1;
-    Memory.TaskMan.Spawn1.spawnExtrasNumber = -1;
+    // Reset spawn queues to prevent getting stuck
+    for (const spawnName in Game.spawns) {
+      if (!Memory.TaskMan[spawnName]) {
+        Memory.TaskMan[spawnName] = {};
+      }
 
-    // Memory.TaskMan.Vat2 = {};
-    Memory.TaskMan.Vat2.spawn = [];
-    Memory.TaskMan.Vat2.spawnListNumber = -1;
-    Memory.TaskMan.Vat2.spawnExtrasNumber = -1;
-
-    // Memory.TaskMan.Vat3 = {};
-    Memory.TaskMan.Vat3.spawn = [];
-    Memory.TaskMan.Vat3.spawnListNumber = -1;
-    Memory.TaskMan.Vat3.spawnExtrasNumber = -1;
+      Memory.TaskMan[spawnName].spawn = [];
+      Memory.TaskMan[spawnName].spawnListNumber = -1;
+      Memory.TaskMan[spawnName].spawnExtrasNumber = -1;
+    }
     stillFailing = true;
   }
 
@@ -170,27 +196,25 @@ module.exports.slowLoop = function () {
 
 // run Rooms
 //
-function runRooms() {
-  for (room in Game.rooms) {
-    manage.runRoom(room);
+function runRooms(room) {
+  manage.runRoom(room.name);
 
-    //  Run Towers
-    //  check repair, heal, and attack
-    //  show attack rings
-    var towers = Game.rooms[room].find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return structure.structureType == STRUCTURE_TOWER;
-      },
-    });
-    for (var i = 0; i < towers.length; i++) {
-      manage.Tower.run(towers[i]);
-      if (showGraphics) {
-        utils.displayAttackRings(room, towers[i]);
-      }
+  //  Run Towers
+  //  check repair, heal, and attack
+  //  show attack rings
+  var towers = room.find(FIND_STRUCTURES, {
+    filter: (structure) => {
+      return structure.structureType == STRUCTURE_TOWER;
+    },
+  });
+  for (var i = 0; i < towers.length; i++) {
+    manage.Tower.run(towers[i]);
+    if (showGraphics) {
+      utils.displayAttackRings(room.name, towers[i]);
     }
   }
 }
-// End Towers
+// End Rooms
 
 // Run Screeps
 //
@@ -239,6 +263,37 @@ function garbageCollect() {
   for (var name in Memory.creeps) {
     if (!Game.creeps[name]) {
       delete Memory.creeps[name];
+    }
+  }
+
+  // Clean up invalid memory entries in TaskMan
+  for (let roomName in Memory.TaskMan) {
+    // Skip if it's a spawn name
+    if (Game.spawns[roomName]) continue;
+
+    // Skip if it's a valid room we have visibility in
+    if (Game.rooms[roomName]) continue;
+
+    // Keep some required global properties
+    if (["Tick", "NameNum", "breakList"].includes(roomName)) continue;
+
+    // Otherwise, check if it's a stale reference
+    if (Memory.TaskMan[roomName].sourceContainers) {
+      // Verify container existence
+      let validContainers = [];
+      for (let id of Memory.TaskMan[roomName].sourceContainers) {
+        if (Game.getObjectById(id)) {
+          validContainers.push(id);
+        }
+      }
+      Memory.TaskMan[roomName].sourceContainers = validContainers;
+    }
+
+    // Verify upgrade container existence
+    if (Memory.TaskMan[roomName].upgradeContainer) {
+      if (!Game.getObjectById(Memory.TaskMan[roomName].upgradeContainer)) {
+        Memory.TaskMan[roomName].upgradeContainer = null;
+      }
     }
   }
 }
