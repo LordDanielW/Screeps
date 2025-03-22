@@ -44,6 +44,10 @@ module.exports = function (grunt) {
       roles: {
         src: ["source/roles/**/*.js"],
         dest: "build/roles.all.js",
+        options: {
+          banner: "var Roles = {}; (function(){\n",
+          footer: "\n})(); module.exports = Roles;",
+        },
       },
       utils: {
         src: ["source/utils/*.js"],

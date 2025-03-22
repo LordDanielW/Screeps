@@ -1,3 +1,12 @@
+#   test/math.py   
+
+# #################################################################################################
+#   
+#   
+#   Summary: This script is for calculating the math behind screeps to develop efficient methods
+#       of gameplay.
+# #################################################################################################
+
 # Reinitialize constants after execution state reset
 CREEP_LIFETIME = 1500  # ticks
 BODY_PART_COST = 50  # energy per part

@@ -1,13 +1,13 @@
 //  Import Modules
 //
-var roles = require("roles.all");
+var Roles = require("roles.all");
 var manage = require("manage.all");
 var myMemory = require("memory.all");
 var utils = require("utils.all");
 var memInit = require("memory.init");
 
 //  Variables
-var myRoomOne = Game.rooms.E9N52;
+// var myRoomOne = Game.rooms.E9N52;
 //var myRoomTwo = Game.rooms.W16N39;
 
 global.showGraphics = false;
@@ -222,7 +222,7 @@ function runScreeps() {
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
     if (!creep.spawning) {
-      roles[creep.memory.role].run(creep);
+      Roles[creep.memory.role].run(creep);
     }
   }
 }
@@ -234,7 +234,7 @@ function runTryScreeps() {
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
     try {
-      roles[creep.memory.role].run(creep);
+      Roles[creep.memory.role].run(creep);
     } catch (e) {
       console.log("Creep Fail");
       console.log(creep.name);
@@ -249,7 +249,7 @@ function runMoveScreeps() {
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
     if (name != Memory.selectCreep) {
-      roles[creep.memory.role].run(creep);
+      Roles[creep.memory.role].run(creep);
     } else {
       manage.moveCreep(creep);
     }
