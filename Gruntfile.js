@@ -6,22 +6,28 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-contrib-copy");
 
-  grunt.registerTask("speak", function () {
-    console.log("I'm Speaking");
+  //  How to Grunt
+  //    terminal: grunt both
+  grunt.registerTask("foo", function () {
+    console.log("Hello ");
   });
-  grunt.registerTask("yell", function () {
-    console.log("I'm YELLING");
+  grunt.registerTask("bar", function () {
+    console.log("World!");
   });
-  grunt.registerTask("both", ["speak", "concat"]);
+  grunt.registerTask("both", ["foo", "bar"]);
+
+  // Grunt commands:
+  //    default, fast, screeps
   grunt.registerTask("default", ["eslint", "concat", "screeps", "watch"]);
   grunt.registerTask("fast", ["concat", "screeps"]);
 
   // ****   Init Config   **** //
+  //
   grunt.initConfig({
     screeps: {
       options: {
-        email: "process.env.SCREEPS_EMAIL",
-        token: "process.env.SCREEPS_TOKEN",
+        email: "process.env.SCREEPS_EMAIL", // stored in git secrets
+        token: "process.env.SCREEPS_TOKEN", // stored in git secrets
         branch: "default",
         //server: 'season'
       },
@@ -29,9 +35,11 @@ module.exports = function (grunt) {
         src: ["build/*.js"],
       },
     },
+    // ESLINT
     eslint: {
       target: ["source/**/*.js"],
     },
+    // CONCAT
     concat: {
       manage: {
         src: ["source/manage/*.js"],
@@ -58,6 +66,7 @@ module.exports = function (grunt) {
         dest: "build/main.js",
       },
     },
+    // WATCH
     watch: {
       manage: {
         files: ["source/manage/*.js"],
