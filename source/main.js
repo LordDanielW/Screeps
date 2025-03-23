@@ -23,6 +23,25 @@ if (!Memory.speedRun) {
       completed: {},
     },
   };
+
+  // Register any custom variants here
+  CreepFactory.registerCustomVariant(
+    "minerSpecial", // variant name
+    "miner", // role
+    { work: 8, carry: 2, move: 0 }, // body
+    { special: true }, // additional memory
+    900, // minimum energy
+    5 // maximum RCL
+  );
+
+  CreepFactory.registerCustomVariant(
+    "upgradeSpecial", // variant name
+    "upgrade", // role
+    { work: 10, carry: 4, move: 0 }, // body
+    { special: true }, // additional memory
+    1200, // minimum energy
+    5 // maximum RCL
+  );
 }
 
 module.exports.loop = function () {

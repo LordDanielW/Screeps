@@ -39,33 +39,16 @@ module.exports = function (grunt) {
     eslint: {
       target: ["source/**/*.js"],
     },
-    // CONCAT
-    concat: {
-      manage: {
-        src: ["source/manage/*.js"],
-        dest: "build/manage.all.js",
-      },
-      memory: {
-        src: ["source/memory/*.js"],
-        dest: "build/memory.all.js",
-      },
-      roles: {
-        src: ["source/roles/**/*.js"],
-        dest: "build/roles.all.js",
-        options: {
-          banner: "var Roles = {}; (function(){\n",
-          footer: "\n})(); module.exports = Roles;",
-        },
-      },
-      utils: {
-        src: ["source/utils/*.js"],
-        dest: "build/utils.all.js",
-      },
-      main: {
-        src: ["source/main.js"],
-        dest: "build/main.js",
-      },
-    },
+    // Copy and flatten
+    copy: {
+      flatten_all: {
+        expand: true,
+        cwd: 'src/',             // your nested source directory
+        src: ['**/*.*'],         // match all files recursively
+        dest: 'build/',          // output directory
+        flatten: true            // removes path nesting
+      }
+    }    
     // WATCH
     watch: {
       manage: {
