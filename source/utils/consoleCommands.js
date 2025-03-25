@@ -1,4 +1,5 @@
 // utils/consoleCommands.js
+
 const consoleCommands = {
   /**
    * Restart the game by killing all creeps and resetting stats
