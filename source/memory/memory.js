@@ -9,8 +9,8 @@ module.exports = {
   },
 
   // Initialize memory structure
-  initialize: function () {
-    if (!Memory.speedRun) {
+  initialize: function (force) {
+    if (!Memory.speedRun || force) {
       Memory.speedRun = {
         startTick: Game.time,
         cyclePhase: 0,

@@ -3,45 +3,34 @@ const StatsManager = require("statsMan");
 const SpawnManager = require("spawnMan");
 const BuildManager = require("buildMan");
 const Visualizer = require("visualizer");
-const CreepFactory = require("factory");
-const roleRunner = require("runner");
-const consoleCommands = require("consoleCommands");
-const Memory = require("memory");
-consoleCommands.registerGlobals();
+const RoleRunner = require("runner");
+const MemoryMain = require("memory");
+
+const ConsoleCommands = require("consoleCommands");
+ConsoleCommands.registerGlobals();
 
 // Initialize memory structure
-Memory.initialize();
-
-// Register any custom variants here
-CreepFactory.registerCustomVariant(
-  "minerSpecial", // variant name
-  "miner", // role
-  { work: 8, carry: 2, move: 0 }, // body
-  { special: true }, // additional memory
-  900, // minimum energy
-  5 // maximum RCL
-);
-
-CreepFactory.registerCustomVariant(
-  "upgradeSpecial", // variant name
-  "upgrade", // role
-  { work: 10, carry: 4, move: 0 }, // body
-  { special: true }, // additional memory
-  1200, // minimum energy
-  5 // maximum RCL
-);
+MemoryMain.initialize();
 
 // Simple main module that spawns miners
 module.exports.loop = function () {
   // Clean memory of dead creeps
-  Memory.cleanup();
+  MemoryMain.cleanup();
 
-  // Handle spawn logic for all spawns
+  // Initialize cycle manager if needed
+  if (!Memory.cycle) {
+    CycleManager.initialize();
+  }
+
+  // Update the cycle manager
+  CycleManager.update();
+
+  // Run the spawn manager
   SpawnManager.run();
 
   // Run creep logic
   for (const name in Game.creeps) {
-    roleRunner.run(Game.creeps[name]);
+    RoleRunner.run(Game.creeps[name]);
   }
 
   // Render visualizations

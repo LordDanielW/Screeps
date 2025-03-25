@@ -36,16 +36,13 @@ interface CycleMemory {
 // Creep memory
 interface CreepMemory {
   role: string; // miner, mover, carry, upgrade, build
-  variant: string; // minerTiny, minerSmall, etc.
+  variant: string; // minerTiny, minerSmall, mostly size etc.
   idle: boolean; // Is creep idle?
   positioned: boolean; // Is creep in position? (for stationary creeps)
   sourceId?: string; // ID of assigned energy source
   targetId?: string; // ID of current target
   task?: string; // Current task (harvest, deliver, build, etc.)
   destinationId?: string; // ID of destination (for movers)
-  delivering?: boolean; // Is creep delivering? (for carriers)
-  building?: boolean; // Is creep building? (for builders)
-  repairing?: boolean; // Is creep repairing? (for builders)
   path?: {
     // Path data
     waypoints: RoomPosition[];
@@ -53,10 +50,6 @@ interface CreepMemory {
   };
   stats: {
     // Creep performance stats
-    energyHarvested: number;
-    energyDelivered: number;
-    controllerUpgraded: number;
-    buildProgress: number;
     idleTicks: number;
   };
 }

@@ -1,91 +1,167 @@
-const cycleManager = require("cycle");
+const cycleManager = require("cycleMan");
+const memoryCreep = require("memoryCreep");
 
+/**
+ * CreepFactory - Handles the spawning of creeps based on cycle manager data
+ */
 module.exports = {
+  /**
+   * Run the factory for a given room
+   * @param {Room} room - The room to spawn in
+   */
   run: function (room) {
     const spawn = room.find(FIND_MY_SPAWNS)[0];
-    if (!spawn || spawn.spawning) return;
+    if (!spawn || spawn.spawning) {
+      return;
+    }
 
     // Ask the cycle manager what to spawn next
     const variantToSpawn = cycleManager.getNextCreepToSpawn(room);
 
     if (variantToSpawn) {
-      this.spawnCreep(spawn, variantToSpawn, room);
+      const result = this.spawnCreep(spawn, variantToSpawn, room);
+
+      if (result === OK) {
+        // Mark as spawned in the cycle manager
+        cycleManager.markSpawned(variantToSpawn);
+        console.log(`Spawning ${variantToSpawn} in ${room.name}`);
+      } else {
+        console.log(
+          `Failed to spawn ${variantToSpawn} in ${room.name}: ${result}`
+        );
+      }
     }
   },
 
+  /**
+   * Spawn a creep with the specified variant
+   * @param {StructureSpawn} spawn - The spawn to use
+   * @param {string} variant - The variant name to spawn
+   * @param {Room} room - The room to spawn in
+   * @returns {number} - Spawn result code (OK or error code)
+   */
   spawnCreep: function (spawn, variant, room) {
     // Get the creep configuration from the cycle manager
     const creepInfo = cycleManager.getCreepConfig(variant);
-    if (!creepInfo) return;
+    if (!creepInfo) {
+      console.log(`ERROR: No configuration found for variant ${variant}`);
+      return ERR_INVALID_ARGS;
+    }
 
     const config = creepInfo.config;
     const role = creepInfo.role;
 
     // Check if we have enough energy
-    if (room.energyAvailable < config.minEnergy) return;
-
-    // Check if RCL is high enough
-    if (room.controller.level > config.maxRcl) return;
-
-    // Build the body array
-    const body = [];
-    for (const part in config.body) {
-      for (let i = 0; i < config.body[part]; i++) {
-        body.push(part);
-      }
+    if (room.energyAvailable < config.minEnergy) {
+      return ERR_NOT_ENOUGH_ENERGY;
     }
 
-    // Create a copy of the memory object
-    const memory = Object.assign({}, config.memory);
-
-    // Set up specialized memory properties based on role
-    if (role === "miner") {
-      // Assign to a source
-      const sources = spawn.room.find(FIND_SOURCES);
-      const miners = _.filter(Game.creeps, (c) => c.memory.role === "miner");
-      const sourceIds = miners.map((m) => m.memory.sourceId);
-
-      for (const source of sources) {
-        if (!sourceIds.includes(source.id)) {
-          memory.sourceId = source.id;
-          break;
-        }
-      }
-
-      // If all sources have miners, distribute evenly
-      if (!memory.sourceId) {
-        const sourceIndex = miners.length % sources.length;
-        memory.sourceId = sources[sourceIndex].id;
-      }
-    }
+    // Convert body parts object to array
+    const body = cycleManager.bodyPartsToArray(config.body);
 
     // Generate a unique name
-    const name = variant + Game.time;
+    const name = `${variant}_${Game.time}`;
 
-    // Spawn the creep
-    return spawn.spawnCreep(body, name, { memory: memory });
-  },
-
-  // Add a method to create custom variants
-  registerCustomVariant: function (
-    variantName,
-    role,
-    bodyConfig,
-    memoryConfig,
-    minEnergy,
-    maxRcl
-  ) {
-    if (!cycleManager.creepVariants[role]) {
-      cycleManager.creepVariants[role] = {};
-    }
-
-    cycleManager.creepVariants[role][variantName] = {
-      body: bodyConfig,
-      memory: Object.assign({ role: role, variant: variantName }, memoryConfig),
-      minEnergy: minEnergy,
-      maxRcl: maxRcl,
+    // Prepare base memory
+    const baseMemory = {
+      role: role,
+      variant: variant,
+      homeRoom: room.name,
     };
 
-    console.log(`Registered custom variant: ${variantName}`);
+    // Merge with additional memory from config
+    const memory = Object.assign({}, baseMemory, config.memory || {});
+
+    // We can choose preferred spawn directions based on role
+    let directions = [
+      TOP,
+      TOP_RIGHT,
+      RIGHT,
+      BOTTOM_RIGHT,
+      BOTTOM,
+      BOTTOM_LEFT,
+      LEFT,
+      TOP_LEFT,
+    ];
+
+    // For miners, try to spawn toward their likely destination
+    if (role === "miner" && !room.memory.minerDirections) {
+      // Initialize miner directions if not set
+      this.initMinerDirections(room);
+    }
+
+    if (role === "miner" && room.memory.minerDirections) {
+      const minerCount = memoryCreep.countByRole("miner", room.name);
+      if (room.memory.minerDirections[minerCount]) {
+        directions = [room.memory.minerDirections[minerCount]];
+      }
+    }
+
+    // Spawn the creep
+    const result = spawn.spawnCreep(body, name, {
+      memory: memory,
+      directions: directions,
+    });
+
+    // Initialize memory if spawn is successful
+    if (result === OK) {
+      memoryCreep.initialize(Game.creeps[name], role, variant, memory);
+    }
+
+    return result;
+  },
+
+  /**
+   * Initialize miner directions based on source positions
+   * @param {Room} room - The room to initialize
+   */
+  initMinerDirections: function (room) {
+    if (!room.memory.minerDirections) {
+      room.memory.minerDirections = {};
+    }
+
+    const spawn = room.find(FIND_MY_SPAWNS)[0];
+    if (!spawn) return;
+
+    const sources = room.find(FIND_SOURCES);
+    sources.sort((a, b) => {
+      return (
+        this.getDistance(spawn.pos, a.pos) - this.getDistance(spawn.pos, b.pos)
+      );
+    });
+
+    for (let i = 0; i < sources.length; i++) {
+      const source = sources[i];
+      // Determine rough direction from spawn to source
+      const dx = source.pos.x - spawn.pos.x;
+      const dy = source.pos.y - spawn.pos.y;
+
+      let direction;
+      if (Math.abs(dx) > Math.abs(dy) * 2) {
+        // Primarily east/west
+        direction = dx > 0 ? RIGHT : LEFT;
+      } else if (Math.abs(dy) > Math.abs(dx) * 2) {
+        // Primarily north/south
+        direction = dy > 0 ? BOTTOM : TOP;
+      } else {
+        // Diagonal
+        if (dx > 0 && dy > 0) direction = BOTTOM_RIGHT;
+        else if (dx > 0 && dy < 0) direction = TOP_RIGHT;
+        else if (dx < 0 && dy > 0) direction = BOTTOM_LEFT;
+        else direction = TOP_LEFT;
+      }
+
+      room.memory.minerDirections[i] = direction;
+    }
+  },
+
+  /**
+   * Simple distance calculation
+   * @param {RoomPosition} pos1 - First position
+   * @param {RoomPosition} pos2 - Second position
+   * @returns {number} - Manhattan distance
+   */
+  getDistance: function (pos1, pos2) {
+    return Math.abs(pos1.x - pos2.x) + Math.abs(pos1.y - pos2.y);
   },
 };
