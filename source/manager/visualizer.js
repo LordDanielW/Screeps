@@ -1,12 +1,38 @@
 module.exports = {
   render: function () {
+    this.intitMemory();
     for (const roomName in Game.rooms) {
       const room = Game.rooms[roomName];
       if (room.controller && room.controller.my) {
+        // new RoomVisual(roomName).line(10, 15, 20, 20);
         this.renderRoomStats(room);
         this.renderCreepStats(room);
         this.renderEnergyFlow(room);
       }
+    }
+  },
+
+  intitMemory: function () {
+    // Initialize memory structure on first run
+    if (!Memory.speedRun) {
+      Memory.speedRun = {
+        startTick: Game.time,
+        cyclePhase: 0,
+        lastPhaseChange: Game.time,
+        stats: {
+          energyMined: 0,
+          energyUsed: 0,
+          idleTicks: {
+            byCreep: {},
+            spawn: 0,
+          },
+        },
+        construction: {
+          completed: {},
+        },
+      };
+    } else {
+      // console.log(JSON.stringify(Memory.speedRun, null, 2));
     }
   },
 
@@ -152,6 +178,7 @@ module.exports = {
   },
 
   renderEnergyFlow: function (room) {
+    const visual = room.visual;
     const sources = room.find(FIND_SOURCES);
     const spawn = room.find(FIND_MY_SPAWNS)[0];
     const controller = room.controller;

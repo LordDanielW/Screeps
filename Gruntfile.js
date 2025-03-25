@@ -18,8 +18,8 @@ module.exports = function (grunt) {
 
   // Grunt commands:
   //    default, fast, screeps
-  grunt.registerTask("default", ["eslint", "concat", "screeps", "watch"]);
-  grunt.registerTask("fast", ["concat", "screeps"]);
+  grunt.registerTask("full", ["eslint", "concat", "screeps", "watch"]);
+  grunt.registerTask("default", ["copy"]); // local
 
   // ****   Init Config   **** //
   //
@@ -43,12 +43,15 @@ module.exports = function (grunt) {
     copy: {
       flatten_all: {
         expand: true,
-        cwd: 'src/',             // your nested source directory
-        src: ['**/*.*'],         // match all files recursively
-        dest: 'build/',          // output directory
-        flatten: true            // removes path nesting
-      }
-    }    
+        cwd: "source/", // your nested source directory
+        src: ["**/*.*"], // match all files recursively
+        // dest: "build/", // output directory
+        dest:
+          process.env.USERPROFILE +
+          "/AppData/Local/Screeps/scripts/127_0_0_1___21025/default",
+        flatten: true, // removes path nesting
+      },
+    },
     // WATCH
     watch: {
       manage: {

@@ -1,9 +1,10 @@
 const roles = {
-  miner: require("./roles/miner"),
-  mover: require("./roles/mover"),
-  carry: require("./roles/carry"),
-  upgrade: require("./roles/upgrade"),
-  build: require("./roles/build"),
+  miner: require("miner"),
+  minerStart: require("minerStart"),
+  // mover: require("mover"),
+  // carry: require("carry"),
+  // upgrade: require("upgrade"),
+  // build: require("build"),
 };
 
 module.exports = {

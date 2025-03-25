@@ -1,3 +1,4 @@
+// role.miner.js
 module.exports = {
   run: function (creep) {
     // Miners stay in one place and mine

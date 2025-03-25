@@ -1,4 +1,4 @@
-const cycleManager = require("manager.cycle");
+const cycleManager = require("cycle");
 
 module.exports = {
   run: function (room) {
