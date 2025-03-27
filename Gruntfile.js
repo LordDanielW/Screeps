@@ -6,6 +6,13 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-contrib-copy");
 
+  // Debug task to see what files are being found
+  grunt.registerTask("debug", "Debug task", function () {
+    const glob = require("glob");
+    const files = glob.sync("source/**/*.*");
+    console.log("Files found:", files);
+  });
+
   //  How to Grunt
   //    terminal: grunt both
   grunt.registerTask("foo", function () {
@@ -43,24 +50,20 @@ module.exports = function (grunt) {
     // COPY
     copy: {
       copy_local: {
-        flatten_all: {
-          expand: true,
-          cwd: "source/", // your nested source directory
-          src: ["**/*.*"], // match all files recursively
-          dest:
-            process.env.USERPROFILE +
-            "/AppData/Local/Screeps/scripts/127_0_0_1___21025/default",
-          flatten: true, // removes path nesting
-        },
+        expand: true,
+        cwd: "source/",
+        src: ["**/*.*"],
+        dest:
+          process.env.USERPROFILE +
+          "/AppData/Local/Screeps/scripts/127_0_0_1___21025/default",
+        flatten: true,
       },
       copy_build: {
-        flatten_all: {
-          expand: true,
-          cwd: "source/",
-          src: ["**/*.*"],
-          dest: "build/",
-          flatten: true,
-        },
+        expand: true,
+        cwd: "source/",
+        src: ["**/*.*"],
+        dest: "build/",
+        flatten: true,
       },
     },
     // WATCH
