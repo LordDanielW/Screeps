@@ -1,11 +1,9 @@
-const SpawnSchedule = require("spawnScheduleRoomW7N3");
+// const SpawnSchedule = require("spawnScheduleRoomW7N3");
+const SpawnSchedule = require("dynamicSpawnSchedule");
 /**
  * CycleManager - Manages the game's spawn cycle based on a predefined schedule
  */
 module.exports = {
-  // The spawn schedule will be loaded from JSON
-  // SpawnSchedule: null,
-
   /**
    * Initialize the cycle manager
    * Must be called once at the start of the game
@@ -20,23 +18,7 @@ module.exports = {
         scheduledSpawns: {},
       };
     }
-
-    // Load the spawn schedule data
-    // this.loadSchedule();
   },
-
-  /**
-   * Load the spawn schedule from the JSON data
-   */
-  // loadSchedule: function () {
-  //   try {
-  //     // In actual Screeps, this would use require() to load the JSON file
-  //     SpawnSchedule = require("SpawnSchedule");
-  //     console.log("Spawn schedule loaded successfully");
-  //   } catch (e) {
-  //     console.log("ERROR: Failed to load spawn schedule:", e);
-  //   }
-  // },
 
   /**
    * Update the cycle manager state
@@ -57,8 +39,6 @@ module.exports = {
    * Update the current phase based on elapsed ticks
    */
   updateCurrentPhase: function () {
-    // if (!SpawnSchedule) return;
-
     const elapsedTicks = Memory.cycle.elapsedTicks;
 
     // Find the correct phase for the current tick
@@ -77,8 +57,6 @@ module.exports = {
    * Schedule creeps that need to be spawned on the current tick
    */
   scheduleCreepsForCurrentTick: function () {
-    // if (!SpawnSchedule) return;
-
     const elapsedTicks = Memory.cycle.elapsedTicks;
     const phase = this.getCurrentPhaseData();
 
@@ -126,8 +104,6 @@ module.exports = {
    * @returns {Object|null} The current phase data or null
    */
   getCurrentPhaseData: function () {
-    if (!SpawnSchedule) return null;
-
     const currentPhaseId = Memory.cycle.currentPhase;
     return SpawnSchedule.phases.find((phase) => phase.id === currentPhaseId);
   },
@@ -163,8 +139,6 @@ module.exports = {
    * @returns {Object|null} The creep configuration or null
    */
   getCreepConfig: function (variant) {
-    if (!SpawnSchedule) return null;
-
     // Get from scheduled spawns first
     if (Memory.cycle.scheduledSpawns[variant]) {
       const spawnData = Memory.cycle.scheduledSpawns[variant];
@@ -234,7 +208,7 @@ module.exports = {
    * @returns {Object|null} - The body parts configuration
    */
   getVariantBody: function (variant) {
-    if (!SpawnSchedule || !SpawnSchedule.variants[variant]) {
+    if (!SpawnSchedule.variants[variant]) {
       return null;
     }
 
