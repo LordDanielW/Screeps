@@ -1,13 +1,19 @@
-// const SpawnSchedule = require("spawnScheduleRoomW7N3");
-const SpawnSchedule = require("dynamicSpawnSchedule");
+// Modify the require to conditionally load the right schedule
+const gameMode = "worldplay"; // or 'speedrun'
+
+const getSpawnSchedule = function () {
+  // Check game mode from memory
+  if (gameMode === "speedrun") {
+    return require("spawnScheduleRoomW7N3");
+  } else {
+    return require("spawnScheduleDynamic");
+  }
+};
+
 /**
- * CycleManager - Manages the game's spawn cycle based on a predefined schedule
+ * CycleManager - Manages the game's spawn cycle
  */
 module.exports = {
-  /**
-   * Initialize the cycle manager
-   * Must be called once at the start of the game
-   */
   initialize: function () {
     if (!Memory.cycle) {
       Memory.cycle = {
@@ -18,31 +24,28 @@ module.exports = {
         scheduledSpawns: {},
       };
     }
+
+    // Cache the chosen schedule
+    this.spawnSchedule = getSpawnSchedule();
   },
 
-  /**
-   * Update the cycle manager state
-   * Should be called every tick in the main loop
-   */
   update: function () {
     // Update elapsed ticks
     Memory.cycle.elapsedTicks = Game.time - Memory.cycle.startTick;
-
-    // Determine current phase based on elapsed ticks
     this.updateCurrentPhase();
 
-    // Schedule any creeps that need to be spawned on this tick
-    this.scheduleCreepsForCurrentTick();
+    // Different scheduling based on game mode
+    if (gameMode === "speedrun") {
+      this.scheduleCreepsForCurrentTick();
+    } else {
+      this.scheduleDynamicCreeps();
+    }
   },
 
-  /**
-   * Update the current phase based on elapsed ticks
-   */
   updateCurrentPhase: function () {
     const elapsedTicks = Memory.cycle.elapsedTicks;
 
-    // Find the correct phase for the current tick
-    for (const phase of SpawnSchedule.phases) {
+    for (const phase of this.spawnSchedule.phases) {
       if (elapsedTicks >= phase.startTick && elapsedTicks <= phase.endTick) {
         if (Memory.cycle.currentPhase !== phase.id) {
           console.log(`Transitioning to phase ${phase.id}: ${phase.name}`);
@@ -53,9 +56,7 @@ module.exports = {
     }
   },
 
-  /**
-   * Schedule creeps that need to be spawned on the current tick
-   */
+  // Keep the original method for speed runs
   scheduleCreepsForCurrentTick: function () {
     const elapsedTicks = Memory.cycle.elapsedTicks;
     const phase = this.getCurrentPhaseData();
@@ -71,7 +72,7 @@ module.exports = {
         const variant = spawn.variant;
 
         // Get the body and role from our variant definitions
-        const variantInfo = SpawnSchedule.variants[variant];
+        const variantInfo = this.spawnSchedule.variants[variant];
         if (!variantInfo) {
           console.log(`WARNING: No variant info found for ${variant}`);
           continue;
@@ -92,20 +93,134 @@ module.exports = {
     }
 
     // Check for any events that should happen at this tick
-    for (const event of SpawnSchedule.events || []) {
+    for (const event of this.spawnSchedule.events || []) {
       if (event.tick === elapsedTicks) {
         console.log(`EVENT: ${event.type} - ${event.notes}`);
       }
     }
   },
 
+  // New method for dynamic spawning
+  scheduleDynamicCreeps: function () {
+    const phase = this.getCurrentPhaseData();
+    if (!phase || !phase.targets) return;
+
+    // Clear the scheduled spawns each tick
+    Memory.cycle.scheduledSpawns = {};
+
+    // Get all rooms we control
+    const myRooms = Object.values(Game.rooms).filter(
+      (r) => r.controller && r.controller.my
+    );
+
+    // For each room, analyze needs
+    for (const room of myRooms) {
+      this.analyzeDynamicNeeds(room, phase);
+    }
+  },
+
+  analyzeDynamicNeeds: function (room, phase) {
+    // Count existing creeps by role
+    const counts = {};
+    for (const role in phase.targets) {
+      counts[role] = _.filter(
+        Game.creeps,
+        (c) =>
+          c.memory.role === role &&
+          (c.memory.homeRoom === room.name || !c.memory.homeRoom)
+      ).length;
+    }
+
+    // Sort targets by priority
+    const targets = Object.entries(phase.targets).sort(
+      (a, b) => b[1].priority - a[1].priority
+    );
+
+    // Check each target role
+    for (const [role, target] of targets) {
+      // Skip if we have enough
+      if (counts[role] >= target.minCount) continue;
+
+      // Determine which variant to use based on conditions
+      let selectedVariant = null;
+
+      // Check all conditions
+      if (target.conditions) {
+        // Energy-based variant selection
+        if (target.conditions.energyCheck) {
+          selectedVariant = target.conditions.energyCheck(room);
+        }
+
+        // Skip if other conditions aren't met
+        if (
+          target.conditions.constructionCheck &&
+          !target.conditions.constructionCheck(room)
+        ) {
+          continue;
+        }
+
+        if (
+          target.conditions.storageCheck &&
+          !target.conditions.storageCheck(room)
+        ) {
+          // If storage check fails, use minimum count instead of max
+          if (counts[role] >= target.minCount) continue;
+        }
+
+        if (
+          target.conditions.needsReserving &&
+          !target.conditions.needsReserving(room)
+        ) {
+          continue;
+        }
+      }
+
+      // If no variant was selected by conditions, use the first one
+      if (!selectedVariant && target.variants && target.variants.length > 0) {
+        selectedVariant = target.variants[0];
+      }
+
+      // Skip if no valid variant
+      if (!selectedVariant) continue;
+
+      // Get variant info
+      const variantInfo = this.spawnSchedule.variants[selectedVariant];
+      if (!variantInfo) {
+        console.log(`WARNING: No variant info found for ${selectedVariant}`);
+        continue;
+      }
+
+      // Schedule this spawn
+      Memory.cycle.scheduledSpawns[selectedVariant] = {
+        variant: selectedVariant,
+        role: variantInfo.role,
+        body: variantInfo.body,
+        energy: variantInfo.energy,
+        quantity: 1,
+        memory: {
+          role: variantInfo.role,
+          variant: selectedVariant,
+          homeRoom: room.name,
+        },
+      };
+
+      console.log(`Scheduled 1x ${selectedVariant} for ${room.name}`);
+
+      // Only schedule one creep at a time
+      break;
+    }
+  },
+
+  // The rest of your methods remain the same
   /**
    * Get the current phase data
    * @returns {Object|null} The current phase data or null
    */
   getCurrentPhaseData: function () {
     const currentPhaseId = Memory.cycle.currentPhase;
-    return SpawnSchedule.phases.find((phase) => phase.id === currentPhaseId);
+    return this.spawnSchedule.phases.find(
+      (phase) => phase.id === currentPhaseId
+    );
   },
 
   /**
@@ -153,7 +268,7 @@ module.exports = {
     }
 
     // Fall back to variant definition
-    const variantInfo = SpawnSchedule.variants[variant];
+    const variantInfo = this.spawnSchedule.variants[variant];
     if (variantInfo) {
       return {
         role: variantInfo.role,
@@ -208,11 +323,11 @@ module.exports = {
    * @returns {Object|null} - The body parts configuration
    */
   getVariantBody: function (variant) {
-    if (!SpawnSchedule.variants[variant]) {
+    if (!this.spawnSchedule.variants[variant]) {
       return null;
     }
 
-    return SpawnSchedule.variants[variant].body;
+    return this.spawnSchedule.variants[variant].body;
   },
 
   /**
@@ -243,5 +358,10 @@ module.exports = {
     }
 
     return result;
+  },
+
+  // Helper to get the current schedule
+  getSpawnSchedule: function () {
+    return this.spawnSchedule;
   },
 };
