@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 module.exports = function (grunt) {
   // ****   Load Tasks  **** //
   grunt.loadNpmTasks("grunt-screeps");
@@ -21,14 +23,28 @@ module.exports = function (grunt) {
   grunt.registerTask("default", ["eslint", "concat", "screeps", "watch"]);
   grunt.registerTask("fast", ["concat", "screeps"]);
 
+  grunt.registerTask("checkSecrets", function () {
+    const email = process.env.SCREEPS_EMAIL;
+    const token = process.env.SCREEPS_TOKEN;
+
+    if (!email || !token) {
+      grunt.log.error("❌ Missing SCREEPS_EMAIL or SCREEPS_TOKEN");
+      return false;
+    } else {
+      grunt.log.writeln("✅ Screeps secrets are defined. Lengths:");
+      grunt.log.writeln("Email length:", email.length);
+      grunt.log.writeln("Token length:", token.length);
+    }
+  });
+
   // ****   Init Config   **** //
   //
   grunt.initConfig({
     screeps: {
       options: {
-        email: "process.env.SCREEPS_EMAIL", // stored in git secrets
-        token: "process.env.SCREEPS_TOKEN", // stored in git secrets
-        branch: "default",
+        email: process.env.SCREEPS_EMAIL, // stored in git secrets
+        token: process.env.SCREEPS_TOKEN, // stored in git secrets
+        branch: "world",
         //server: 'season'
       },
       dist: {

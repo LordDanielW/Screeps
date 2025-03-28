@@ -2,10 +2,10 @@
  * Memory Initializer Module
  * Handles dynamic initialization of memory structures
  */
+if (!module.exports) module.exports = {};
 
-/**
- * Initialize memory structures that don't exist yet
- */
+// Initialize Memory
+//
 function initMemory() {
   // Base memory initialization
   if (!Memory.TaskMan) Memory.TaskMan = {};
@@ -13,11 +13,9 @@ function initMemory() {
   if (!Memory.lastLoopFailed) Memory.lastLoopFailed = false;
   if (!Memory.TaskMan.NameNum) Memory.TaskMan.NameNum = 1;
 
-  // Initialize for each room
+  // Initialize for each room we control
   for (let roomName in Game.rooms) {
     const room = Game.rooms[roomName];
-
-    // Skip rooms we don't own/control
     if (!room.controller || !room.controller.my) continue;
 
     // Initialize basic room memory in TaskMan
@@ -285,7 +283,7 @@ function findMiningPosition(source) {
   return { x: source.pos.x, y: source.pos.y, roomName: source.room.name };
 }
 
-module.exports = {
+Object.assign(module.exports, {
   initMemory,
   generateEmergencySpawnQueue,
-};
+});

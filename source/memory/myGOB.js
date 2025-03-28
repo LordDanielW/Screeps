@@ -1,3 +1,5 @@
+if (!module.exports) module.exports = {};
+
 var memGOB = {
   /** @param {Creep} creep **/
   getMyGOB: function () {
@@ -46,7 +48,7 @@ var memGOB = {
   },
 };
 
-module.exports = memGOB;
+// module.exports = memGOB;
 
 //  Extra Code
 //
@@ -134,3 +136,8 @@ function genUtils() {
 
 //  Add construction
 //  var path = room.findPath(srcs[i].pos,targPos, {ignoreCreeps: true, range: 1});
+
+// Object.assign(module.exports, {
+//   getMyGOB,
+//   genUtils,
+// });

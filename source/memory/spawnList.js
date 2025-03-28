@@ -1,3 +1,5 @@
+if (!module.exports) module.exports = {};
+
 //
 //
 //
@@ -334,4 +336,4 @@ var spawnList = {
   ],
 };
 
-module.exports.spawnList = spawnList;
+Object.assign(module.exports, spawnList);
