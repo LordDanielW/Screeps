@@ -262,6 +262,18 @@ exports.generateEmergencySpawnQueue = generateEmergencySpawnQueue;
 function findMiningPosition(source) {
   const terrain = new Room.Terrain(source.room.name);
 
+  // If source container exists, use its position
+  const containers = source.pos.findInRange(FIND_STRUCTURES, 1, {
+    filter: (s) => s.structureType === STRUCTURE_CONTAINER,
+  });
+  if (containers.length > 0) {
+    return {
+      x: containers[0].pos.x,
+      y: containers[0].pos.y,
+      roomName: source.room.name,
+    };
+  }
+
   // Check all positions around the source
   for (let dx = -1; dx <= 1; dx++) {
     for (let dy = -1; dy <= 1; dy++) {

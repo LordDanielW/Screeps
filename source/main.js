@@ -48,18 +48,18 @@ module.exports.loop = function () {
   //
   // manage.runLinkerTransfer(myRoomOne);
 
-  // run Factory
+  // run Factoryk
   //
   // manage.runFatcory(myRoomOne);
 
   // Check for emergency spawn situations
-  // memInit.generateEmergencySpawnQueue();
+  myMemory.generateEmergencySpawnQueue();
 
   // run Spawn
   //
-  // for (const spawnName in Game.spawns) {
-  //   manage.spawnCreeps(spawnName);
-  // }
+  for (const spawnName in Game.spawns) {
+    manage.spawnCreeps(spawnName);
+  }
 };
 // End Loop
 

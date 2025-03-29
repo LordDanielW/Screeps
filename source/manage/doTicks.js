@@ -1,22 +1,26 @@
+var myMemory = require("memory.all");
+
 //  Do Ticks
-//
 //
 var doTicks = function () {
   Memory.Tick++;
 
-  var allSpawns = ["Spawn1", "Vat2", "Vat3", "Vat4", "Vat5", "Vat6"];
-
   if (Memory.Tick >= 1460) {
     Memory.Tick = 0;
 
-    for (var spawn in allSpawns) {
-      if (!Memory.TaskMan[allSpawns[spawn]]) {
-        Memory.TaskMan[allSpawns[spawn]] = {};
+    // Process each spawn in the game
+    for (const spawnName in Game.spawns) {
+      const spawn = Game.spawns[spawnName];
+      if (!Memory.TaskMan[spawnName]) {
+        Memory.TaskMan[spawnName] = {};
       }
 
-      Memory.TaskMan[allSpawns[spawn]].spawn = [];
-      Memory.TaskMan[allSpawns[spawn]].spawnListNumber = 0;
+      Memory.TaskMan[spawnName].spawn = [];
+      Memory.TaskMan[spawnName].spawnListNumber = 0;
     }
+
+    // Check for Phase 2 spawn situations
+    myMemory.generatePhase2SpawnQueue();
   }
 
   // var roomOne = "E9N52";
