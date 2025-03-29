@@ -69,8 +69,9 @@ module.exports = function (grunt) {
         src: ["source/roles/**/*.js"],
         dest: "build/roles.all.js",
         options: {
-          banner: "var Roles = {}; (function(){\n",
-          footer: "\n})(); module.exports = Roles;",
+          banner:
+            "var utils = require('utils.all');" +
+            "if (!module.exports) module.exports = {};",
         },
       },
       utils: {

@@ -68,7 +68,7 @@ function initMemory() {
     }
   }
 }
-
+module.exports.initMemory = initMemory;
 /**
  * Find containers near sources and add them to memory
  * @param {Room} room - The room to analyze
@@ -252,6 +252,7 @@ function generateEmergencySpawnQueue() {
     }
   }
 }
+exports.generateEmergencySpawnQueue = generateEmergencySpawnQueue;
 
 /**
  * Find a valid mining position near a source
@@ -282,8 +283,3 @@ function findMiningPosition(source) {
   // Fallback to source position if nothing else found
   return { x: source.pos.x, y: source.pos.y, roomName: source.room.name };
 }
-
-Object.assign(module.exports, {
-  initMemory,
-  generateEmergencySpawnQueue,
-});

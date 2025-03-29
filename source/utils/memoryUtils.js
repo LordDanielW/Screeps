@@ -235,8 +235,3 @@ function findMiningPosition(source) {
   // Fallback to source position if nothing else found
   return { x: source.pos.x, y: source.pos.y, roomName: source.room.name };
 }
-
-// Export the module
-module.exports = {
-  // No exports needed as these are attached to global
-};

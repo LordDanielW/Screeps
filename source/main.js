@@ -29,7 +29,7 @@ module.exports.loop = function () {
 
   //  Garbage Collect
   //
-  // garbageCollect();
+  garbageCollect();
 
   //  Rooms
   //
@@ -39,10 +39,9 @@ module.exports.loop = function () {
 
   //  Screep Run Loop
   //
-  if (Memory.creepMove && Memory.creepMove.length > 0) {
-    runMoveScreeps();
-  } else {
-    runScreeps();
+  // Run creep logic
+  for (const name in Game.creeps) {
+    runScreep(Game.creeps[name]);
   }
 
   //  run Linker Transfer
@@ -88,43 +87,71 @@ function runRooms(room) {
 
 // Run Screeps
 //
-function runScreeps() {
-  for (var name in Game.creeps) {
-    var creep = Game.creeps[name];
-    if (!creep.spawning) {
-      Roles[creep.memory.role].run(creep);
-    }
+function runScreep(creep) {
+  // If the creep is still spawning, ignore it
+  if (creep.spawning) return;
+
+  // Get the creep's role
+  const role = creep.memory.role;
+
+  if (creep.name == Memory.selectCreep) {
+    manage.moveCreep(creep);
+  } else if (Roles[role]) {
+    Roles[role].run(creep);
+  } else if (!fixCreep(creep)) {
+    console.log(`Unknown role: ${role} for creep: ${creep.name}`);
+
+    console.log("Available roles:", Object.keys(Roles));
   }
 }
 // End Run Screeps
 
-// run try Screeps
+// Fix Creep
 //
-function runTryScreeps() {
-  for (var name in Game.creeps) {
-    var creep = Game.creeps[name];
-    try {
-      Roles[creep.memory.role].run(creep);
-    } catch (e) {
-      console.log("Creep Fail");
-      console.log(creep.name);
-      console.log(e);
+function fixCreep(creep) {
+  // Check if the creep's role is undefined or not set
+  if (!creep.memory.role) {
+    // Check if the creep's name contains a role and assign it
+    for (const role in Roles) {
+      if (creep.name.toLowerCase().includes(role.toLowerCase())) {
+        creep.memory.role = role;
+        return true;
+      }
     }
-  }
-}
 
-// Run move Screeps
-//
-function runMoveScreeps() {
-  for (var name in Game.creeps) {
-    var creep = Game.creeps[name];
-    if (name != Memory.selectCreep) {
-      Roles[creep.memory.role].run(creep);
+    // If no role is found in the name, assign based on body type
+    const bodyParts = _.countBy(creep.body, (part) => part.type);
+    if (bodyParts[WORK] && bodyParts[CARRY] && bodyParts[MOVE]) {
+      creep.memory.role = "Builder";
+    } else if (bodyParts[WORK] && bodyParts[MOVE]) {
+      creep.memory.role = "Miner";
+    } else if (bodyParts[CARRY] && bodyParts[MOVE]) {
+      creep.memory.role = "Carrier";
     } else {
-      manage.moveCreep(creep);
+      return false; // No valid role found
+    }
+    return true; // Indicate that the creep was fixed
+  } else {
+    switch (creep.memory.role) {
+      case "harvester":
+        creep.memory.role = "Carrier";
+        break;
+      case "miner":
+        creep.memory.role = "Miner";
+        break;
+      case "upgrader":
+        creep.memory.role = "Upgrader";
+        break;
+      case "builder":
+        creep.memory.role = "Builder";
+        break;
+      default:
+        return false;
     }
   }
+  return true; // Catches all switch cases
 }
+// End Fix Creep
 
 //  Garbage Collect
 //
