@@ -338,21 +338,31 @@ global.reset = function () {
 /**
  * Print out Memory as JSON, and all creeps memory
  */
-global.printMem = function () {
+global.printMem = function (stringMemPiece) {
   console.log("===== MEMORY DUMP =====");
 
   // Print global Memory object
-  console.log("Global Memory:");
-  console.log(JSON.stringify(Memory, null, 2));
-
-  // Print specific creep memory
-  console.log("\nCreep Memory:");
-  for (const name in Game.creeps) {
-    const creep = Game.creeps[name];
-    console.log(`${name} (${creep.memory.role}):`);
-    console.log(JSON.stringify(creep.memory, null, 2));
+  if (stringMemPiece.length == 0) {
+    console.log("Global Memory:");
+    console.log(JSON.stringify(Memory, null, 2));
+  } else if (stringMemPiece == "creep") {
+    // Print all creep memory
+    console.log("\nCreep Memory:");
+    for (const name in Game.creeps) {
+      const creep = Game.creeps[name];
+      console.log(`${name} (${creep.memory.role}):`);
+      console.log(JSON.stringify(creep.memory, null, 2));
+    }
+  } else {
+    // Print specific memory piece
+    const memoryPiece = Memory[stringMemPiece];
+    if (memoryPiece) {
+      console.log(`\nMemory[${stringMemPiece}]:`);
+      console.log(JSON.stringify(memoryPiece, null, 2));
+    } else {
+      console.log(`No memory found for ${stringMemPiece}`);
+    }
   }
-
   console.log("===== END MEMORY DUMP =====");
   return "OK";
 };

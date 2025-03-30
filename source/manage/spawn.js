@@ -68,7 +68,7 @@ spawnCreeps = function (spawnName) {
     });
 
     if (response == OK) {
-      Memory.TaskMan[spawnName].spawn.shift();
+      Memory.TaskMan[spawnName].spawnList.shift();
     } else {
       utils.structureMessage(spawn.id, "🎊 " + response);
       // console.log("Error " + response + ". Spawning:" + spawnMemory.role);

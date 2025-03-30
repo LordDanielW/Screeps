@@ -7,6 +7,7 @@ if (!module.exports) module.exports = {};
 // Initialize Memory
 //
 function initMemory() {
+  console.log("Initializing Memory...");
   // Base memory initialization
   if (!Memory.TaskMan) Memory.TaskMan = {};
   if (!Memory.Tick) Memory.Tick = 0;

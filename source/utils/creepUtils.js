@@ -249,7 +249,7 @@ var role = {
     }
 
     // If no source found, return false
-    console.log(creep.name + " - No Source Found. Type: " + resourceType);
+    // console.log(creep.name + " - No Source Found. Type: " + resourceType);
     creep.memory.source = null;
     return false;
   },
