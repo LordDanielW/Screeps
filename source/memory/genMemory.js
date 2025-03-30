@@ -234,8 +234,6 @@ function generateEmergencySpawnQueue() {
         ],
         sitPOS: pos,
       });
-
-      continue;
     }
 
     // Make sure we have at least 1 carrier
@@ -247,8 +245,42 @@ function generateEmergencySpawnQueue() {
           [MOVE, 1],
         ],
       });
+    }
 
-      continue;
+    // Make sure we have at least 1 upgrader
+    if (!counts.Upgrader || counts.Upgrader < 1) {
+      Memory.TaskMan[spawnName].spawn.push({
+        role: "Upgrader",
+        body: [
+          [WORK, 2],
+          [CARRY, 1],
+          [MOVE, 1],
+        ],
+      });
+    }
+
+    // Make sure we have at least 1 builder
+    if (!counts.Builder || counts.Builder < 1) {
+      Memory.TaskMan[spawnName].spawn.push({
+        role: "Builder",
+        body: [
+          [WORK, 2],
+          [CARRY, 1],
+          [MOVE, 1],
+        ],
+      });
+    }
+
+    // Make sure we have at least 1 repairer
+    if (!counts.Repairer || counts.Repairer < 1) {
+      Memory.TaskMan[spawnName].spawn.push({
+        role: "Repair",
+        body: [
+          [WORK, 2],
+          [CARRY, 1],
+          [MOVE, 1],
+        ],
+      });
     }
   }
 }
