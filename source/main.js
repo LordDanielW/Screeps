@@ -25,7 +25,7 @@ myMemory.initMemory();
 module.exports.loop = function () {
   //  Manage Ticks
   //
-  doTicks();
+  runTicks();
 
   //  Garbage Collect
   //
@@ -195,9 +195,9 @@ function garbageCollect() {
   }
 } // End Garbage Collect
 
-//  Do Ticks
+//  Run Ticks
 //
-var doTicks = function () {
+var runTicks = function () {
   Memory.Tick++;
 
   if (Memory.Tick >= 1460) {

@@ -142,7 +142,7 @@ global.addCreep = function (spawnName, role) {
       const source = sources[0];
       const pos = findMiningPosition(source);
 
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Miner",
         say: 1,
         atDest: false,
@@ -157,7 +157,7 @@ global.addCreep = function (spawnName, role) {
         [CARRY, 2],
         [MOVE, 1],
       ];
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Carrier",
         body: body,
       });
@@ -169,7 +169,7 @@ global.addCreep = function (spawnName, role) {
         [CARRY, 1],
         [MOVE, 1],
       ];
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Upgrader",
         body: body,
       });
@@ -181,7 +181,7 @@ global.addCreep = function (spawnName, role) {
         [CARRY, 1],
         [MOVE, 1],
       ];
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Builder",
         body: body,
       });
@@ -193,7 +193,7 @@ global.addCreep = function (spawnName, role) {
         [CARRY, 1],
         [MOVE, 1],
       ];
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Repair",
         body: body,
       });

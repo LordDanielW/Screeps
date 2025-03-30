@@ -45,7 +45,7 @@ function initMemory() {
   for (let spawnName in Game.spawns) {
     if (!Memory.TaskMan[spawnName]) {
       Memory.TaskMan[spawnName] = {
-        spawn: [],
+        spawnList: [],
         spawnListNumber: -1,
         spawnExtrasNumber: -1,
       };
@@ -56,8 +56,8 @@ function initMemory() {
   for (let spawnName in Memory.TaskMan) {
     // If it's a spawn
     if (Game.spawns[spawnName]) {
-      if (!Memory.TaskMan[spawnName].spawn) {
-        Memory.TaskMan[spawnName].spawn = [];
+      if (!Memory.TaskMan[spawnName].spawnList) {
+        Memory.TaskMan[spawnName].spawnList = [];
       }
       if (Memory.TaskMan[spawnName].spawnListNumber === undefined) {
         Memory.TaskMan[spawnName].spawnListNumber = -1;
@@ -162,7 +162,8 @@ function generateEmergencySpawnQueue() {
     const room = spawn.room;
 
     // Skip if spawn is busy or queue isn't empty
-    if (spawn.spawning || Memory.TaskMan[spawnName].spawn.length > 0) continue;
+    if (spawn.spawning || Memory.TaskMan[spawnName].spawnList.length > 0)
+      continue;
 
     // Count creeps in this room
     const creepsInRoom = _.filter(
@@ -191,7 +192,7 @@ function generateEmergencySpawnQueue() {
       const pos = findMiningPosition(source);
 
       // Add a simple miner first
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Miner",
         say: 1,
         atDest: false,
@@ -204,7 +205,7 @@ function generateEmergencySpawnQueue() {
       });
 
       // Add a simple carrier
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Carrier",
         body: [
           [CARRY, 1],
@@ -223,7 +224,7 @@ function generateEmergencySpawnQueue() {
       const source = sources[0];
       const pos = findMiningPosition(source);
 
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Miner",
         say: 1,
         atDest: false,
@@ -238,7 +239,7 @@ function generateEmergencySpawnQueue() {
 
     // Make sure we have at least 1 carrier
     if (!counts.Carrier || counts.Carrier < 1) {
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Carrier",
         body: [
           [CARRY, 2],
@@ -249,7 +250,7 @@ function generateEmergencySpawnQueue() {
 
     // Make sure we have at least 1 upgrader
     if (!counts.Upgrader || counts.Upgrader < 1) {
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Upgrader",
         body: [
           [WORK, 2],
@@ -261,7 +262,7 @@ function generateEmergencySpawnQueue() {
 
     // Make sure we have at least 1 builder
     if (!counts.Builder || counts.Builder < 1) {
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Builder",
         body: [
           [WORK, 2],
@@ -273,7 +274,7 @@ function generateEmergencySpawnQueue() {
 
     // Make sure we have at least 1 repairer
     if (!counts.Repair || counts.Repair < 1) {
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Repair",
         body: [
           [WORK, 2],

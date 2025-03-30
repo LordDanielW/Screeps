@@ -1,6 +1,8 @@
 var roleMiner = {
   /** @param {Creep} creep **/
   run: function (creep) {
+    // creep.memory.atDest = true;
+    // creep.memory.source = "5982fdb5b097071b4adbfbbf";
     if (!creep.memory.sourceType) {
       creep.memory.sourceType = FIND_SOURCES;
     }

@@ -22,9 +22,9 @@ spawnCreeps = function (spawnName) {
   }
 
   // If Spawn que overloaded, clear and make a Carrier
-  if (Memory.TaskMan[spawnName].spawn.length > 5) {
-    Memory.TaskMan[spawnName].spawn = [];
-    Memory.TaskMan[spawnName].spawn.push({ role: "Carrier" });
+  if (Memory.TaskMan[spawnName].spawnList.length > 5) {
+    Memory.TaskMan[spawnName].spawnList = [];
+    Memory.TaskMan[spawnName].spawnList.push({ role: "Carrier" });
     Memory.TaskMan[spawnName].spawnListNumber = 0;
   }
   // If Spawning, Display it
@@ -32,8 +32,8 @@ spawnCreeps = function (spawnName) {
     utils.structureMessage(spawn.id, "🛠️" + spawn.spawning.name);
   }
   // Else Check Spawn Que
-  else if (Memory.TaskMan[spawnName].spawn.length != 0) {
-    var spawnMemory = Memory.TaskMan[spawnName].spawn[0];
+  else if (Memory.TaskMan[spawnName].spawnList.length != 0) {
+    var spawnMemory = Memory.TaskMan[spawnName].spawnList[0];
 
     // Generate Unique Name
     let tName = spawnMemory.role;
@@ -92,11 +92,11 @@ spawnCreeps = function (spawnName) {
     // }
     // // Check Carriers
     // if (countRoles.Carrier == undefined || countRoles.Carrier < 1) {
-    //   Memory.TaskMan[spawnName].spawn.push({ role: "Carrier" });
+    //   Memory.TaskMan[spawnName].spawnList.push({ role: "Carrier" });
     // }
     // // Check Miners
     // else if (countRoles.Miner == undefined || countRoles.Miner < 1) {
-    //   Memory.TaskMan[spawnName].spawn.push({ role: "Miner" });
+    //   Memory.TaskMan[spawnName].spawnList.push({ role: "Miner" });
     // }
   }
 };
@@ -122,7 +122,7 @@ addSpawnQue = function (spawnName) {
     }
     // Add routine creeps to spawn que
     else if (Memory.TaskMan[spawnName].spawn.length == 0) {
-      Memory.TaskMan[spawnName].spawn.push(
+      Memory.TaskMan[spawnName].spawnList.push(
         myMemory.spawnList[spawnName][spawnListNumber]
       );
       Memory.TaskMan[spawnName].spawnListNumber++;
@@ -175,7 +175,7 @@ conditionalSpawnQue = function (spawnName) {
         }
         let cPOS = closestContainer.pos;
 
-        Memory.TaskMan[spawnName].spawn.push({
+        Memory.TaskMan[spawnName].spawnList.push({
           role: "Miner",
           say: 1,
           atDest: false,
@@ -187,7 +187,7 @@ conditionalSpawnQue = function (spawnName) {
           sitPOS: { x: cPOS.x, y: cPOS.y, roomName: cPOS.roomName },
         });
 
-        Memory.TaskMan[spawnName].spawn.push({
+        Memory.TaskMan[spawnName].spawnList.push({
           role: "Linker",
           resource: mineralType.mineralType,
           source: closestContainer.id,
@@ -224,7 +224,7 @@ conditionalSpawnQue = function (spawnName) {
           ];
         }
 
-        Memory.TaskMan[spawnName].spawn.push({
+        Memory.TaskMan[spawnName].spawnList.push({
           role: "Builder",
           body: myBody,
         });
@@ -236,7 +236,7 @@ conditionalSpawnQue = function (spawnName) {
         Game.spawns[spawnName].room.storage != undefined &&
         Game.spawns[spawnName].room.storage.store[RESOURCE_ENERGY] > 400000
       ) {
-        Memory.TaskMan[spawnName].spawn.push({
+        Memory.TaskMan[spawnName].spawnList.push({
           role: "upCarrier",
           body: [
             [CARRY, 8],
@@ -244,7 +244,7 @@ conditionalSpawnQue = function (spawnName) {
           ],
         });
 
-        Memory.TaskMan[spawnName].spawn.push({
+        Memory.TaskMan[spawnName].spawnList.push({
           role: "Upgrader",
           body: [
             [WORK, 7],
@@ -328,7 +328,7 @@ function generatePhase1Queue(spawn, spawnName, counts, sources) {
       const source = sources[sourceIndex];
       const pos = findMiningPosition(source);
 
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Miner",
         say: 1,
         atDest: false,
@@ -347,7 +347,7 @@ function generatePhase1Queue(spawn, spawnName, counts, sources) {
   // Carriers: 1 per source
   const carriersNeeded = sources.length;
   if (!counts.Carrier || counts.Carrier < carriersNeeded) {
-    Memory.TaskMan[spawnName].spawn.push({
+    Memory.TaskMan[spawnName].spawnList.push({
       role: "Carrier",
       body: [
         [CARRY, 2],
@@ -359,7 +359,7 @@ function generatePhase1Queue(spawn, spawnName, counts, sources) {
 
   // Basic upgrader
   if (!counts.Upgrader || counts.Upgrader < 1) {
-    Memory.TaskMan[spawnName].spawn.push({
+    Memory.TaskMan[spawnName].spawnList.push({
       role: "Upgrader",
       body: [
         [WORK, 1],
@@ -372,7 +372,7 @@ function generatePhase1Queue(spawn, spawnName, counts, sources) {
 
   // Basic builder
   if (!counts.Builder || counts.Builder < 1) {
-    Memory.TaskMan[spawnName].spawn.push({
+    Memory.TaskMan[spawnName].spawnList.push({
       role: "Builder",
       body: [
         [WORK, 1],
@@ -399,7 +399,7 @@ function generatePhase2Queue(spawn, spawnName, counts, sources) {
       const source = sources[sourceIndex];
       const pos = findMiningPosition(source);
 
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Miner",
         say: 1,
         atDest: false,
@@ -418,7 +418,7 @@ function generatePhase2Queue(spawn, spawnName, counts, sources) {
   // Carriers: 2 per source
   const carriersNeeded = sources.length * 2;
   if (!counts.Carrier || counts.Carrier < carriersNeeded) {
-    Memory.TaskMan[spawnName].spawn.push({
+    Memory.TaskMan[spawnName].spawnList.push({
       role: "Carrier",
       body: [
         [CARRY, 3],
@@ -431,7 +431,7 @@ function generatePhase2Queue(spawn, spawnName, counts, sources) {
   // Upgraders: 2
   const upgradersNeeded = 2;
   if (!counts.Upgrader || counts.Upgrader < upgradersNeeded) {
-    Memory.TaskMan[spawnName].spawn.push({
+    Memory.TaskMan[spawnName].spawnList.push({
       role: "Upgrader",
       body: [
         [WORK, 2],
@@ -450,7 +450,7 @@ function generatePhase2Queue(spawn, spawnName, counts, sources) {
   }
 
   if (!counts.Builder || counts.Builder < buildersNeeded) {
-    Memory.TaskMan[spawnName].spawn.push({
+    Memory.TaskMan[spawnName].spawnList.push({
       role: "Builder",
       body: [
         [WORK, 2],
@@ -463,7 +463,7 @@ function generatePhase2Queue(spawn, spawnName, counts, sources) {
 
   // Repairer: 1
   if (!counts.Repairer || counts.Repairer < 1) {
-    Memory.TaskMan[spawnName].spawn.push({
+    Memory.TaskMan[spawnName].spawnList.push({
       role: "Repairer",
       body: [
         [WORK, 1],
@@ -490,7 +490,7 @@ function generatePhase3Queue(spawn, spawnName, counts, sources) {
       const source = sources[sourceIndex];
       const pos = findMiningPosition(source);
 
-      Memory.TaskMan[spawnName].spawn.push({
+      Memory.TaskMan[spawnName].spawnList.push({
         role: "Miner",
         say: 1,
         atDest: false,
@@ -509,7 +509,7 @@ function generatePhase3Queue(spawn, spawnName, counts, sources) {
   // Carriers: 2 per source with higher capacity
   const carriersNeeded = sources.length * 2;
   if (!counts.Carrier || counts.Carrier < carriersNeeded) {
-    Memory.TaskMan[spawnName].spawn.push({
+    Memory.TaskMan[spawnName].spawnList.push({
       role: "Carrier",
       body: [
         [CARRY, 6],
@@ -522,7 +522,7 @@ function generatePhase3Queue(spawn, spawnName, counts, sources) {
   // Upgraders: 2-3 with high WORK
   const upgradersNeeded = room.controller.level >= 4 ? 3 : 2;
   if (!counts.Upgrader || counts.Upgrader < upgradersNeeded) {
-    Memory.TaskMan[spawnName].spawn.push({
+    Memory.TaskMan[spawnName].spawnList.push({
       role: "Upgrader",
       body: [
         [WORK, 4],
@@ -543,7 +543,7 @@ function generatePhase3Queue(spawn, spawnName, counts, sources) {
   }
 
   if (!counts.Builder || counts.Builder < buildersNeeded) {
-    Memory.TaskMan[spawnName].spawn.push({
+    Memory.TaskMan[spawnName].spawnList.push({
       role: "Builder",
       body: [
         [WORK, 3],
@@ -557,7 +557,7 @@ function generatePhase3Queue(spawn, spawnName, counts, sources) {
   // Repairer: 1-2
   const repairersNeeded = 2;
   if (!counts.Repairer || counts.Repairer < repairersNeeded) {
-    Memory.TaskMan[spawnName].spawn.push({
+    Memory.TaskMan[spawnName].spawnList.push({
       role: "Repairer",
       body: [
         [WORK, 2],
@@ -571,7 +571,7 @@ function generatePhase3Queue(spawn, spawnName, counts, sources) {
   // Special roles for Phase 3
   // Defender
   if ((!counts.Defender || counts.Defender < 1) && room.controller.level >= 3) {
-    Memory.TaskMan[spawnName].spawn.push({
+    Memory.TaskMan[spawnName].spawnList.push({
       role: "Defender",
       body: [
         [ATTACK, 3],
@@ -588,7 +588,7 @@ function generatePhase3Queue(spawn, spawnName, counts, sources) {
     room.storage &&
     room.storage.store[RESOURCE_ENERGY] > 10000
   ) {
-    Memory.TaskMan[spawnName].spawn.push({
+    Memory.TaskMan[spawnName].spawnList.push({
       role: "upCarrier",
       body: [
         [CARRY, 6],

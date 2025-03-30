@@ -210,6 +210,7 @@ var role = {
     for (let i = 0; t && i < t.length; i++) {
       let sourceContainer = Game.getObjectById(t[i]);
       if (
+        sourceContainer &&
         sourceContainer.store[resourceType] >= creep.store.getFreeCapacity()
       ) {
         roomSources.push(sourceContainer);
@@ -232,7 +233,23 @@ var role = {
       return true;
     }
 
-    //
+    // Check Any Container
+    fullSource = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+      filter: (structure) => {
+        return (
+          structure.structureType == STRUCTURE_CONTAINER &&
+          structure.store[resourceType] >= creep.store.getFreeCapacity()
+        );
+      },
+    });
+    if (fullSource) {
+      creep.memory.source = fullSource.id;
+      creep.memory.sourceType = "CONTAINER";
+      return true;
+    }
+
+    // If no source found, return false
+    console.log(creep.name + " - No Source Found. Type: " + resourceType);
     creep.memory.source = null;
     return false;
   },
