@@ -60,6 +60,12 @@ module.exports = function (grunt) {
       manage: {
         src: ["source/manage/*.js"],
         dest: "build/manage.all.js",
+        options: {
+          banner:
+            "var utils = require('utils.all');" +
+            "var myMemory = require('memory.all');" +
+            "if (!module.exports) module.exports = {};",
+        },
       },
       memory: {
         src: ["source/memory/*.js"],
