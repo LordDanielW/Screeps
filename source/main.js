@@ -25,7 +25,7 @@ myMemory.initMemory();
 module.exports.loop = function () {
   //  Manage Ticks
   //
-  manage.doTicks();
+  doTicks();
 
   //  Garbage Collect
   //
@@ -133,8 +133,8 @@ function fixCreep(creep) {
     return true; // Indicate that the creep was fixed
   } else {
     switch (creep.memory.role) {
-      case "harvester":
-        creep.memory.role = "Carrier";
+      case "Repairer":
+        creep.memory.role = "Repair";
         break;
       case "miner":
         creep.memory.role = "Miner";
@@ -193,4 +193,28 @@ function garbageCollect() {
       }
     }
   }
-}
+} // End Garbage Collect
+
+//  Do Ticks
+//
+var doTicks = function () {
+  Memory.Tick++;
+
+  if (Memory.Tick >= 1460) {
+    Memory.Tick = 0;
+
+    // Process each spawn in the game
+    for (const spawnName in Game.spawns) {
+      const spawn = Game.spawns[spawnName];
+      if (!Memory.TaskMan[spawnName]) {
+        Memory.TaskMan[spawnName] = {};
+      }
+
+      Memory.TaskMan[spawnName].spawn = [];
+      Memory.TaskMan[spawnName].spawnListNumber = 0;
+    }
+
+    // Use the new phase-based spawn queue system
+    manage.generatePhaseBasedSpawnQueue();
+  }
+};
