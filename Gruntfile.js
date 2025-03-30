@@ -44,7 +44,8 @@ module.exports = function (grunt) {
       options: {
         email: process.env.SCREEPS_EMAIL, // stored in git secrets
         token: process.env.SCREEPS_TOKEN, // stored in git secrets
-        branch: "world",
+        // branch: "world",
+        branch: "default",
         //server: 'season'
       },
       dist: {

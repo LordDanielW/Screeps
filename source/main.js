@@ -33,9 +33,9 @@ module.exports.loop = function () {
 
   //  Rooms
   //
-  // for (let roomName in Game.rooms) {
-  //   runRooms(Game.rooms[roomName]);
-  // }
+  for (let roomName in Game.rooms) {
+    manage.runRoom(roomName);
+  }
 
   //  Screep Run Loop
   //
@@ -43,47 +43,8 @@ module.exports.loop = function () {
   for (const name in Game.creeps) {
     runScreep(Game.creeps[name]);
   }
-
-  //  run Linker Transfer
-  //
-  // manage.runLinkerTransfer(myRoomOne);
-
-  // run Factoryk
-  //
-  // manage.runFatcory(myRoomOne);
-
-  // Check for emergency spawn situations
-  myMemory.generateEmergencySpawnQueue();
-
-  // run Spawn
-  //
-  for (const spawnName in Game.spawns) {
-    manage.spawnCreeps(spawnName);
-  }
 };
 // End Loop
-
-// Run Rooms
-//
-function runRooms(room) {
-  manage.runRoom(room.name);
-
-  //  Run Towers
-  //  check repair, heal, and attack
-  //  show attack rings
-  var towers = room.find(FIND_STRUCTURES, {
-    filter: (structure) => {
-      return structure.structureType == STRUCTURE_TOWER;
-    },
-  });
-  for (var i = 0; i < towers.length; i++) {
-    manage.Tower.run(towers[i]);
-    if (showGraphics) {
-      utils.displayAttackRings(room.name, towers[i]);
-    }
-  }
-}
-// End Rooms
 
 // Run Screeps
 //

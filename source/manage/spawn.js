@@ -76,8 +76,7 @@ spawnCreeps = function (spawnName) {
   }
   //  Else add to Que
   else {
-    this.addSpawnQue(spawnName);
-
+    // this.addSpawnQue(spawnName);
     // TODO: Add Back Later
     // // Count Miners and Carriers
     // // ToDo add for multi Rooms

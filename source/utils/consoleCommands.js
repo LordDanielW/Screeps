@@ -342,9 +342,17 @@ global.printMem = function (stringMemPiece) {
   console.log("===== MEMORY DUMP =====");
 
   // Print global Memory object
-  if (stringMemPiece.length == 0) {
+  if (!stringMemPiece) {
     console.log("Global Memory:");
-    console.log(JSON.stringify(Memory, null, 2));
+    // Grab all but key creeps and TaskMan
+    const filteredMemory = Object.keys(Memory).reduce((acc, key) => {
+      if (key !== "creeps" && key !== "TaskMan") {
+        acc[key] = Memory[key];
+      }
+      return acc;
+    }, {});
+    console.log(JSON.stringify(filteredMemory, null, 2));
+    // console.log(JSON.stringify(Memory, null, 2));
   } else if (stringMemPiece == "creep") {
     // Print all creep memory
     console.log("\nCreep Memory:");

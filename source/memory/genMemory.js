@@ -261,17 +261,17 @@ function generateEmergencySpawnQueue() {
       });
     }
 
-    // Make sure we have at least 1 builder
-    if (!counts.Builder || counts.Builder < 1) {
-      Memory.TaskMan[spawnName].spawnList.push({
-        role: "Builder",
-        body: [
-          [WORK, 2],
-          [CARRY, 1],
-          [MOVE, 1],
-        ],
-      });
-    }
+    // // Make sure we have at least 1 builder
+    // if (!counts.Builder || counts.Builder < 1) {
+    //   Memory.TaskMan[spawnName].spawnList.push({
+    //     role: "Builder",
+    //     body: [
+    //       [WORK, 2],
+    //       [CARRY, 1],
+    //       [MOVE, 1],
+    //     ],
+    //   });
+    // }
 
     // Make sure we have at least 1 repairer
     if (!counts.Repair || counts.Repair < 1) {

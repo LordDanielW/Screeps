@@ -25,11 +25,13 @@ var roleMiner = {
       var mPOS = creep.memory.sitPOS;
       var sitPOS = new RoomPosition(mPOS.x, mPOS.y, mPOS.roomName);
       if (creep.pos.isEqualTo(sitPOS)) {
-        var SourceID = creep.pos.findClosestByRange(creep.memory.sourceType);
-        //, {filter: (source) => source.energy > 0 });
-        if (SourceID) {
+        // First parameter to findClosestByRange needs to be an array of objects
+        var source = creep.pos.findClosestByRange(
+          creep.room.find(creep.memory.sourceType)
+        );
+        if (source) {
           creep.memory.atDest = true;
-          creep.memory.source = SourceID.id;
+          creep.memory.source = source.id;
         }
       } else {
         utils.role.moveTo(creep, sitPOS);
