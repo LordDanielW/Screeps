@@ -272,7 +272,7 @@ function generateEmergencySpawnQueue() {
     }
 
     // Make sure we have at least 1 repairer
-    if (!counts.Repairer || counts.Repairer < 1) {
+    if (!counts.Repair || counts.Repair < 1) {
       Memory.TaskMan[spawnName].spawn.push({
         role: "Repair",
         body: [
