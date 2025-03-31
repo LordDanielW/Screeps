@@ -47,25 +47,7 @@ function initMemory() {
     if (!Memory.TaskMan[spawnName]) {
       Memory.TaskMan[spawnName] = {
         spawnList: [],
-        spawnListNumber: -1,
-        spawnExtrasNumber: -1,
       };
-    }
-  }
-
-  // Verify the spawn memory queue exists
-  for (let spawnName in Memory.TaskMan) {
-    // If it's a spawn
-    if (Game.spawns[spawnName]) {
-      if (!Memory.TaskMan[spawnName].spawnList) {
-        Memory.TaskMan[spawnName].spawnList = [];
-      }
-      if (Memory.TaskMan[spawnName].spawnListNumber === undefined) {
-        Memory.TaskMan[spawnName].spawnListNumber = -1;
-      }
-      if (Memory.TaskMan[spawnName].spawnExtrasNumber === undefined) {
-        Memory.TaskMan[spawnName].spawnExtrasNumber = -1;
-      }
     }
   }
 }

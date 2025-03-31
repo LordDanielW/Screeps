@@ -55,7 +55,7 @@ function generatePhase1Queue(spawn) {
         role: "Miner",
         say: 1,
         atDest: false,
-        sourceType: RESOURCE_ENERGY,
+        sourceType: FIND_SOURCES,
         body: [
           [WORK, 2],
           [MOVE, 1],
@@ -127,7 +127,7 @@ function generatePhase2Queue(spawn, spawnName, counts, sources) {
         role: "Miner",
         say: 1,
         atDest: false,
-        sourceType: RESOURCE_ENERGY,
+        sourceType: FIND_SOURCES,
         body: [
           [WORK, 3],
           [MOVE, 2],
@@ -219,7 +219,7 @@ function generatePhase3Queue(spawn, spawnName, counts, sources) {
         role: "Miner",
         say: 1,
         atDest: false,
-        sourceType: RESOURCE_ENERGY,
+        sourceType: FIND_SOURCES,
         body: [
           [WORK, 5],
           [MOVE, 3],

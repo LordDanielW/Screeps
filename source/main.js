@@ -6,7 +6,7 @@ var myMemory = require("memory.all");
 var utils = require("utils.all");
 
 //  Globals
-global.showGraphics = false;
+global.showGraphics = true;
 
 // This is a function accessible to all modules and the console
 global.helloWorld = () => {
@@ -174,8 +174,5 @@ var runTicks = function () {
       Memory.TaskMan[spawnName].spawn = [];
       Memory.TaskMan[spawnName].spawnListNumber = 0;
     }
-
-    // Use the new phase-based spawn queue system
-    manage.generatePhaseBasedSpawnQueue();
   }
 };
