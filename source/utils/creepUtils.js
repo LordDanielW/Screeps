@@ -1,4 +1,4 @@
-var role = {
+var creepAction = {
   //
   //
   //
@@ -304,6 +304,67 @@ var role = {
       }
     }
   },
+
+  findOptimalMiningPosition: function (creep) {
+    if (!creep.memory.sourceType) {
+      creep.memory.sourceType = FIND_SOURCES;
+    }
+    const sources = creep.room.find(creep.memory.sourceType);
+    if (!sources.length) return;
+
+    // Try to find sources with containers nearby
+    for (let source of sources) {
+      // Find containers within 1 tile of the source
+      const containers = source.pos.findInRange(FIND_STRUCTURES, 1, {
+        filter: (s) => s.structureType === STRUCTURE_CONTAINER,
+      });
+
+      // Check if any container positions are available (not occupied by other miners)
+      for (let container of containers) {
+        // Check if position is occupied
+        const creepsAtPos = container.pos.lookFor(LOOK_CREEPS);
+        if (creepsAtPos.length === 0 || creepsAtPos[0].id === creep.id) {
+          // Found an available container position
+          creep.memory.sitPOS = {
+            x: container.pos.x,
+            y: container.pos.y,
+            roomName: container.pos.roomName,
+          };
+          return;
+        }
+      }
+    }
+
+    // If no containers found or all occupied, find an available position adjacent to a source
+    for (let source of sources) {
+      const terrain = Game.map.getRoomTerrain(source.room.name);
+
+      // Check the 8 surrounding tiles
+      for (let dx = -1; dx <= 1; dx++) {
+        for (let dy = -1; dy <= 1; dy++) {
+          if (dx === 0 && dy === 0) continue; // Skip the source's own position
+
+          const x = source.pos.x + dx;
+          const y = source.pos.y + dy;
+
+          // Check if the position is walkable and not occupied
+          if (terrain.get(x, y) !== TERRAIN_MASK_WALL) {
+            const pos = new RoomPosition(x, y, source.room.name);
+            const creepsAtPos = pos.lookFor(LOOK_CREEPS);
+
+            if (creepsAtPos.length === 0 || creepsAtPos[0].id === creep.id) {
+              creep.memory.sitPOS = {
+                x: x,
+                y: y,
+                roomName: source.room.name,
+              };
+              return;
+            }
+          }
+        }
+      }
+    }
+  },
 };
 
-module.exports.role = role;
+module.exports.action = creepAction;

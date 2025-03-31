@@ -24,7 +24,7 @@ var roleBuilder = {
       if (targets.length) {
         var target = creep.pos.findClosestByPath(targets);
         if (creep.build(target) == ERR_NOT_IN_RANGE) {
-          utils.role.moveTo(creep, target);
+          utils.action.moveTo(creep, target);
         }
       }
 
@@ -36,12 +36,12 @@ var roleBuilder = {
         creep.memory.task = "BUILD";
         creep.say("🚧 build", true);
       } else {
-        utils.role.moveTo(creep, moveTO);
+        utils.action.moveTo(creep, moveTO);
       }
 
       // GET
     } else if (creep.memory.task == "GET") {
-      utils.role.getResource(creep);
+      utils.action.getResource(creep);
     }
   },
 };

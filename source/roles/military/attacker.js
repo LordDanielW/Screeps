@@ -14,7 +14,7 @@ var roleAttacker = {
     }
 
     if (creep.memory.task != "MOVIN" && creep.memory.task != "ATTACK") {
-      utils.role.sayState(creep, "IDLE", true);
+      utils.action.sayState(creep, "IDLE", true);
       return;
     }
 
@@ -26,10 +26,10 @@ var roleAttacker = {
       );
       if (creep.pos.inRangeTo(attackRoom, 1)) {
         creep.memory.task = "ATTACK";
-        utils.role.sayState(creep, "ATTACK", true);
+        utils.action.sayState(creep, "ATTACK", true);
         this.run(creep);
       } else {
-        utils.role.sayState(creep, "MOVE", true);
+        utils.action.sayState(creep, "MOVE", true);
         creep.moveTo(attackRoom, {
           reusePath: 25,
           visualizePathStyle: { stroke: "#ffaa00" },

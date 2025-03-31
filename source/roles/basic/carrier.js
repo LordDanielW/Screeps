@@ -16,7 +16,7 @@ var roleCarrier = {
     }
 
     if (creep.store.getUsedCapacity() == 0 && creep.memory.task == "GIVE") {
-      utils.role.getResource(creep);
+      utils.action.getResource(creep);
     }
     //
     else if (creep.memory.task == "GET" && creep.store.getFreeCapacity() == 0) {
@@ -26,7 +26,7 @@ var roleCarrier = {
     //  Get
     //
     if (creep.memory.task == "GET") {
-      utils.role.getResource(creep);
+      utils.action.getResource(creep);
     }
 
     //  Give
@@ -44,7 +44,7 @@ var roleCarrier = {
       if (emptyStructure != null) {
         let response = creep.transfer(emptyStructure, RESOURCE_ENERGY);
         if (response == ERR_NOT_IN_RANGE) {
-          utils.role.moveTo(creep, emptyStructure);
+          utils.action.moveTo(creep, emptyStructure);
           state = "MOVE";
         } else if (response == OK) {
           creep.memory.destination = null;
@@ -65,9 +65,9 @@ var roleCarrier = {
       }
 
       // Report state
-      utils.role.sayState(creep, state, true);
+      utils.action.sayState(creep, state, true);
     } else {
-      utils.role.getResource(creep);
+      utils.action.getResource(creep);
     }
   },
 

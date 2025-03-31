@@ -31,7 +31,7 @@ var roleRepair = {
       if (closestDamagedStructure) {
         var rtnMsg = creep.repair(closestDamagedStructure);
         if (rtnMsg == ERR_NOT_IN_RANGE) {
-          utils.role.moveTo(creep, closestDamagedStructure);
+          utils.action.moveTo(creep, closestDamagedStructure);
         } else if (rtnMsg == OK) {
           creep.say("🧙 PEW ✨", true);
         }
@@ -53,7 +53,7 @@ var roleRepair = {
         if (wallUpgrade) {
           var rtnMsg = creep.repair(wallUpgrade);
           if (rtnMsg == ERR_NOT_IN_RANGE) {
-            utils.role.moveTo(creep, wallUpgrade);
+            utils.action.moveTo(creep, wallUpgrade);
           } else if (rtnMsg == OK) {
             creep.say("🧙 PEW ✨", true);
           }
@@ -63,7 +63,7 @@ var roleRepair = {
       }
       // GET
     } else if (creep.memory.task == "GET") {
-      utils.role.getResource(creep);
+      utils.action.getResource(creep);
       // MOVIN
     } else if (creep.memory.task == "MOVIN") {
       var mPOS = creep.memory.movePOS;
@@ -73,8 +73,8 @@ var roleRepair = {
         creep.memory.task = "REPAIR";
       } else {
         //  creep.say(creep.memory.dest.x + ',' + creep.memory.dest.y);
-        utils.role.moveTo(creep, moveTO);
-        //utils.role.moveRooms(creep);
+        utils.action.moveTo(creep, moveTO);
+        //utils.action.moveRooms(creep);
       }
     } else {
       creep.memory.task = "GET";
