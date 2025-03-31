@@ -7,26 +7,28 @@ runRoom = function (theRoom) {
   // }
 
   Memory.Tick;
-  // if (Memory.Tick && Memory.Tick == 1) {
-  //   // generate spawn queue
-  //   Memory.TaskMan[theRoom].spawnQueue = manage.generateSpawnQueue(theRoom);
-  // }
+  if (Memory.Tick && Memory.Tick == 1) {
+    // generate spawn queue
+    runSpawnQueue(theRoom);
+    // Memory.TaskMan[theRoom].spawnQueue = manage.generateSpawnQueue(theRoom);
+  }
 
   //  run Linker Transfer
   //
   // manage.runLinkerTransfer(myRoomOne);
 
-  // run Factoryk
+  // run Factory
   //
-  // manage.runFatcory(myRoomOne);
-
-  // Check for emergency spawn situations
-  myMemory.generateEmergencySpawnQueue();
+  // manage.runFactory(myRoomOne);
 
   // run Spawn
   //
-  for (const spawnName in Game.spawns) {
-    spawnCreeps(spawnName);
+  const spawns = Game.rooms[theRoom].find(FIND_MY_STRUCTURES, {
+    filter: { structureType: STRUCTURE_SPAWN },
+  });
+
+  for (const spawn of spawns) {
+    runSpawner(spawn);
   }
 
   // //  Run Towers
