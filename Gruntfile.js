@@ -21,7 +21,7 @@ module.exports = function (grunt) {
   // Grunt commands:
   //    default, fast, screeps
   grunt.registerTask("default", ["eslint", "concat", "screeps", "watch"]);
-  grunt.registerTask("fast", ["concat", "screeps"]);
+  grunt.registerTask("fast", ["concat", "screeps:dist"]);
   grunt.registerTask("world", ["concat", "screeps:world"]);
 
   grunt.registerTask("checkSecrets", function () {
