@@ -22,6 +22,7 @@ module.exports = function (grunt) {
   //    default, fast, screeps
   grunt.registerTask("default", ["eslint", "concat", "screeps", "watch"]);
   grunt.registerTask("fast", ["concat", "screeps"]);
+  grunt.registerTask("world", ["concat", "screeps:world"]);
 
   grunt.registerTask("checkSecrets", function () {
     const email = process.env.SCREEPS_EMAIL;
@@ -44,11 +45,16 @@ module.exports = function (grunt) {
       options: {
         email: process.env.SCREEPS_EMAIL, // stored in git secrets
         token: process.env.SCREEPS_TOKEN, // stored in git secrets
-        // branch: "world",
         branch: "default",
         //server: 'season'
       },
       dist: {
+        src: ["build/*.js"],
+      },
+      world: {
+        options: {
+          branch: "world",
+        },
         src: ["build/*.js"],
       },
     },
