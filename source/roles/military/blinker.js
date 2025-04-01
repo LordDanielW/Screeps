@@ -11,7 +11,7 @@ var roleBlinker = {
     creepTasks = ["MOVIN", "BREAK", "HEAL", "SIT"];
 
     if (!creepTasks.includes(creep.memory.task)) {
-      utils.role.sayState(creep, "IDLE", true);
+      utils.action.sayState(creep, "IDLE", true);
       return;
     }
 
@@ -34,7 +34,7 @@ var roleBlinker = {
         creep.memory.flagPOS = flagPOS;
       } else {
         creep.heal(creep);
-        utils.role.sayState(creep, "MOVE", true);
+        utils.action.sayState(creep, "MOVE", true);
         creep.moveTo(flagPOS, { reusePath: 4 });
       }
     } else if (creep.memory.task == "BREAK") {

@@ -16,7 +16,7 @@ var roleUpgrader = {
       (creep.memory.task == "UPGRADE" && creep.carry.energy == 0) ||
       !creepTasks.includes(creep.memory.task)
     ) {
-      utils.role.sayState(creep, "GET", true);
+      utils.action.sayState(creep, "GET", true);
       creep.memory.task = "GET";
     } else if (
       creep.memory.task == "GET" &&
@@ -28,7 +28,7 @@ var roleUpgrader = {
     //  Do Task
     //
     if (creep.memory.task == "UPGRADE") {
-      utils.role.doUpgrade(creep);
+      utils.action.doUpgrade(creep);
     } else if (creep.memory.task == "GET") {
       //  Get energy from container
       if (
@@ -41,7 +41,7 @@ var roleUpgrader = {
 
         var iState = creep.withdraw(upSource, RESOURCE_ENERGY);
         if (iState == ERR_NOT_IN_RANGE) {
-          utils.role.moveTo(creep, upSource);
+          utils.action.moveTo(creep, upSource);
           return true;
         } else if (iState == OK) {
           return true;
@@ -50,7 +50,7 @@ var roleUpgrader = {
         }
       } else {
         //  Pickup energy from ground
-        utils.role.getResource(creep);
+        utils.action.getResource(creep);
       }
     } else if (creep.memory.task == "MOVIN") {
       var mPOS = creep.memory.movePOS;
@@ -58,7 +58,7 @@ var roleUpgrader = {
       if (creep.pos.isEqualTo(moveTO)) {
         creep.memory.task = "GET";
       } else {
-        utils.role.moveTo(creep, moveTO);
+        utils.action.moveTo(creep, moveTO);
       }
     } else {
       return false;

@@ -34,7 +34,7 @@ var roleSigner = {
       if (creep.pos.inRangeTo(flagPOS, 2)) {
         creep.memory.task = "CLAIM";
       } else {
-        utils.role.moveTo(creep, flagPOS);
+        utils.action.moveTo(creep, flagPOS);
       }
     }
   },

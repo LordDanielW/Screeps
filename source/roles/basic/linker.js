@@ -37,7 +37,7 @@ var roleLinker = {
     //
     if (creep.memory.task == "GET") {
       let sourceId = creep.memory.source;
-      utils.role.getResourceById(creep, sourceId, creep.memory.resource);
+      utils.action.getResourceById(creep, sourceId, creep.memory.resource);
     }
     //  Give
     //
@@ -47,7 +47,7 @@ var roleLinker = {
 
       let response = creep.transfer(giveOBJ, creep.memory.resource);
       if (response == ERR_NOT_IN_RANGE) {
-        utils.role.moveTo(creep, giveOBJ);
+        utils.action.moveTo(creep, giveOBJ);
         state = "MOVE";
       } else if (response == OK) {
         state = "GIVE";
@@ -56,7 +56,7 @@ var roleLinker = {
       }
 
       // Report state
-      utils.role.sayState(creep, state, true);
+      utils.action.sayState(creep, state, true);
     } else {
       creep.memory.task = "GET";
     }

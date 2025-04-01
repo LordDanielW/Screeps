@@ -1,3 +1,4 @@
+// Default Spawn Parameters
 const SPAWN_PARAMETERS_DEFAULT = {
   role: "Carrier",
   task: "GET",
@@ -12,10 +13,10 @@ const SPAWN_PARAMETERS_DEFAULT = {
 
 //  Spawn Creeps
 //
-//
-spawnCreeps = function (spawnName) {
-  let spawn = Game.spawns[spawnName];
-  let roomName = spawn.room.name;
+runSpawner = function (spawn) {
+  const spawnName = spawn.name;
+  const roomName = spawn.room.name;
+  const room = spawn.room;
 
   if (!Memory.TaskMan[spawnName]) {
     // console.log("Spawn: " + spawnName + " not found in Memory.TaskMan");
@@ -23,18 +24,19 @@ spawnCreeps = function (spawnName) {
   }
 
   // If Spawn que overloaded, clear and make a Carrier
-  if (Memory.TaskMan[spawnName].spawn.length > 5) {
-    Memory.TaskMan[spawnName].spawn = [];
-    Memory.TaskMan[spawnName].spawn.push({ role: "Carrier" });
+  if (Memory.TaskMan[spawnName].spawnList.length > 5) {
+    Memory.TaskMan[spawnName].spawnList = [];
+    Memory.TaskMan[spawnName].spawnList.push({ role: "Carrier" });
     Memory.TaskMan[spawnName].spawnListNumber = 0;
   }
+
   // If Spawning, Display it
   if (spawn.spawning) {
     utils.structureMessage(spawn.id, "🛠️" + spawn.spawning.name);
   }
   // Else Check Spawn Que
-  else if (Memory.TaskMan[spawnName].spawn.length != 0) {
-    var spawnMemory = Memory.TaskMan[spawnName].spawn[0];
+  else if (Memory.TaskMan[spawnName].spawnList.length != 0) {
+    var spawnMemory = Memory.TaskMan[spawnName].spawnList[0];
 
     // Generate Unique Name
     let tName = spawnMemory.role;
@@ -69,200 +71,100 @@ spawnCreeps = function (spawnName) {
     });
 
     if (response == OK) {
-      Memory.TaskMan[spawnName].spawn.shift();
+      Memory.TaskMan[spawnName].spawnList.shift();
     } else {
       utils.structureMessage(spawn.id, "🎊 " + response);
       // console.log("Error " + response + ". Spawning:" + spawnMemory.role);
     }
   }
-  //  Else add to Que
+  //  Else Check for Emergency Spawns
   else {
-    this.addSpawnQue(spawnName);
+    // Count creeps in this room
+    const creepsInRoom = _.filter(
+      Game.creeps,
+      (c) => c.room.name === room.name
+    );
 
-    // TODO: Add Back Later
-    // // Count Miners and Carriers
-    // // ToDo add for multi Rooms
-    // var countRoles = {};
-    // for (var name in Game.creeps) {
-    //   var role = Game.creeps[name].memory.role;
-    //   if (countRoles[role] == null) {
-    //     countRoles[role] = 1;
-    //   } else {
-    //     countRoles[role]++;
-    //   }
-    // }
-    // // Check Carriers
-    // if (countRoles.Carrier == undefined || countRoles.Carrier < 1) {
-    //   Memory.TaskMan[spawnName].spawn.push({ role: "Carrier" });
-    // }
-    // // Check Miners
-    // else if (countRoles.Miner == undefined || countRoles.Miner < 1) {
-    //   Memory.TaskMan[spawnName].spawn.push({ role: "Miner" });
-    // }
-  }
-};
-
-module.exports.spawnCreeps = spawnCreeps;
-
-//
-//
-//
-addSpawnQue = function (spawnName) {
-  let spawnListNumber = Memory.TaskMan[spawnName].spawnListNumber;
-  let spawnExtrasNumber = Memory.TaskMan[spawnName].spawnExtrasNumber;
-
-  // Set if undefined
-  if (spawnListNumber == undefined || spawnExtrasNumber == undefined) {
-    Memory.TaskMan[spawnName].spawnListNumber = -1;
-    Memory.TaskMan[spawnName].spawnExtrasNumber = -1;
-  }
-  // if end of list go to extras
-  else if (spawnListNumber != -1) {
-    if (myMemory.spawnList[spawnName].length <= spawnListNumber) {
-      Memory.TaskMan[spawnName].spawnListNumber = -1;
-      Memory.TaskMan[spawnName].spawnExtrasNumber = 0;
+    // Count by role
+    const counts = {};
+    for (let creep of creepsInRoom) {
+      counts[creep.memory.role] = (counts[creep.memory.role] || 0) + 1;
     }
-    // Add routine creeps to spawn que
-    else if (Memory.TaskMan[spawnName].spawn.length == 0) {
-      Memory.TaskMan[spawnName].spawn.push(
-        myMemory.spawnList[spawnName][spawnListNumber]
-      );
-      Memory.TaskMan[spawnName].spawnListNumber++;
-    }
-  }
-  // check for extras to add to spawn que
-  else if (spawnExtrasNumber != -1) {
-    this.conditionalSpawnQue(spawnName);
-  }
-};
 
-module.exports.addSpawnQue = addSpawnQue;
+    // Find a source
+    const sources = room.find(FIND_SOURCES);
 
-//  more Creeps
-conditionalSpawnQue = function (spawnName) {
-  switch (Memory.TaskMan[spawnName].spawnExtrasNumber) {
-    case 10:
-      //  Check for Minerals
-      if (
-        Game.spawns[spawnName].room.find(FIND_MINERALS).length > 0 &&
-        Game.spawns[spawnName].room.find(FIND_MINERALS)[0].mineralAmount > 0 &&
-        Game.spawns[spawnName].room.find(FIND_STRUCTURES, {
-          filter: (structure) => {
-            return (
-              structure.structureType == STRUCTURE_EXTRACTOR &&
-              structure.isActive()
-            );
-          },
-        }).length > 0
-      ) {
-        let mineralType = Game.spawns[spawnName].room.find(FIND_MINERALS)[0];
+    // Miner
+    for (let i = 0; i < sources.length; i++) {
+      const source = sources[i];
+      const pos = findMiningPosition(source, spawn);
 
-        let ePos = Game.spawns[spawnName].room.find(FIND_STRUCTURES, {
-          filter: (structure) => {
-            return (
-              structure.structureType == STRUCTURE_EXTRACTOR &&
-              structure.isActive()
-            );
-          },
-        })[0].pos;
-
-        // Find closest container by range
-        let closestContainer = ePos.findClosestByRange(FIND_STRUCTURES, {
-          filter: (structure) => {
-            return structure.structureType == STRUCTURE_CONTAINER;
-          },
-        });
-        if (closestContainer == null || closestContainer.pos.isNearTo()) {
-          return;
-        }
-        let cPOS = closestContainer.pos;
-
-        Memory.TaskMan[spawnName].spawn.push({
+      if (!counts.Miner || counts.Miner < 1) {
+        Memory.TaskMan[spawnName].spawnList.push({
           role: "Miner",
           say: 1,
           atDest: false,
-          sourceType: FIND_MINERALS,
+          sourceType: RESOURCE_ENERGY,
           body: [
-            [WORK, 15],
-            [MOVE, 5],
-          ],
-          sitPOS: { x: cPOS.x, y: cPOS.y, roomName: cPOS.roomName },
-        });
-
-        Memory.TaskMan[spawnName].spawn.push({
-          role: "Linker",
-          resource: mineralType.mineralType,
-          source: closestContainer.id,
-          destination: Game.spawns[spawnName].room.terminal.id,
-          body: [
-            [CARRY, 8],
-            [MOVE, 8],
-          ],
-        });
-      }
-      break;
-    case 1:
-      //  Check for Construction Sites
-      let roomConstructionSites = false;
-      Object.keys(Game.constructionSites).forEach((x) => {
-        if (Game.constructionSites[x].room == Game.spawns[spawnName].room) {
-          roomConstructionSites = true;
-        }
-      });
-      if (roomConstructionSites) {
-        let myBody = [];
-        // Find body build by room energy
-        if (Game.spawns[spawnName].room.energyCapacityAvailable >= 850) {
-          myBody = [
-            [WORK, 5],
-            [CARRY, 2],
-            [MOVE, 5],
-          ];
-        } else {
-          myBody = [
             [WORK, 2],
-            [CARRY, 1],
             [MOVE, 1],
-          ];
-        }
-
-        Memory.TaskMan[spawnName].spawn.push({
-          role: "Builder",
-          body: myBody,
+          ],
+          sitPOS: pos,
         });
       }
-      break;
-    case 0:
-      // Check if room storage energy is over 400k
-      if (
-        Game.spawns[spawnName].room.storage != undefined &&
-        Game.spawns[spawnName].room.storage.store[RESOURCE_ENERGY] > 400000
-      ) {
-        Memory.TaskMan[spawnName].spawn.push({
-          role: "upCarrier",
-          body: [
-            [CARRY, 8],
-            [MOVE, 4],
-          ],
-        });
+    }
 
-        Memory.TaskMan[spawnName].spawn.push({
-          role: "Upgrader",
-          body: [
-            [WORK, 7],
-            [CARRY, 1],
-            [MOVE, 2],
-          ],
-        });
-      }
-      break;
+    // Carrier
+    if (!counts.Carrier || counts.Carrier < 1) {
+      Memory.TaskMan[spawnName].spawnList.push({
+        role: "Carrier",
+        body: [
+          [CARRY, 2],
+          [MOVE, 1],
+        ],
+      });
+    }
 
-    default:
-      Memory.TaskMan[spawnName].spawnExtrasNumber = -1;
-      return;
+    // Upgrader
+    if (!counts.Upgrader || counts.Upgrader < 1) {
+      Memory.TaskMan[spawnName].spawnList.push({
+        role: "Upgrader",
+        body: [
+          [WORK, 2],
+          [CARRY, 1],
+          [MOVE, 1],
+        ],
+      });
+    }
+
+    // Make sure we have at least 1 builder if there are construction sites
+    const constructionSites = room.find(FIND_MY_CONSTRUCTION_SITES);
+    if (
+      (!counts.Builder || counts.Builder < 1) &&
+      constructionSites.length > 0
+    ) {
+      Memory.TaskMan[spawnName].spawnList.push({
+        role: "Builder",
+        body: [
+          [WORK, 2],
+          [CARRY, 1],
+          [MOVE, 1],
+        ],
+      });
+    }
+
+    // Make sure we have at least 1 Repair
+    if (!counts.Repair || counts.Repair < 1) {
+      Memory.TaskMan[spawnName].spawnList.push({
+        role: "Repair",
+        body: [
+          [WORK, 2],
+          [CARRY, 1],
+          [MOVE, 1],
+        ],
+      });
+    }
   }
-
-  Memory.TaskMan[spawnName].spawnExtrasNumber++;
 };
 
-module.exports.conditionalSpawnQue = conditionalSpawnQue;
+module.exports.runSpawner = runSpawner;

@@ -1,5 +1,6 @@
 # Ignore build directory
 build/
+test/
 
 # Ignore dependencies
 node_modules/
