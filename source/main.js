@@ -55,8 +55,12 @@ function runScreep(creep) {
   // Get the creep's role
   const role = creep.memory.role;
 
-  if (creep.name == Memory.selectCreep) {
-    manage.moveCreep(creep);
+  if (
+    creep.name == Memory.selectCreep &&
+    Memory.creepMove &&
+    Memory.creepMove.length > 0
+  ) {
+    utils.moveCreep(creep);
   } else if (Roles[role]) {
     Roles[role].run(creep);
   } else if (!fixCreep(creep)) {
@@ -172,7 +176,7 @@ var runTicks = function () {
       }
 
       Memory.TaskMan[spawnName].spawn = [];
-      Memory.TaskMan[spawnName].spawnListNumber = 0;
+      // Memory.TaskMan[spawnName].spawnListNumber = 0;
     }
   }
 };
