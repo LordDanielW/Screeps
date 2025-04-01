@@ -11,6 +11,16 @@ var roleMiner = {
     return this.processActionQueue(creep, creep.memory.actionQueue);
   },
 
+  // Define action result constants
+  ACTION_RESULT: {
+    FAILURE_REMOVE: -2, // Action failed and remove from queue
+    FAILURE: -1, // Action failed
+    CONTINUE: 0, // Continue current action
+    CONTINUE_REMOVE: 1, // Continue processing and remove this action
+    SUCCESS: 2, // Action succeeded
+    SUCCESS_REMOVE: 3, // Action succeeded and remove this action
+  },
+
   // Map action names to their handler functions - defined once
   actionMap: null,
 
@@ -38,18 +48,18 @@ var roleMiner = {
 
   //  Process Action Queue
   //
-  //  -1 = Failure
-  //   0 = Continue
-  //   1 = Continue and Remove from Queue
-  //   2 = Success
-  //   3 = Success and Remove from Queue
   processActionQueue: function (creep, actionQueue) {
     let result = 0;
     if (!actionQueue || actionQueue.length === 0) {
-      return -1; // No actions to process
+      return this.ACTION_RESULT.FAILURE_REMOVE;
     }
 
-    for (let i = 0; result < 2 && i < creep.memory.actionQueue.length; i++) {
+    for (
+      let i = 0;
+      result < this.ACTION_RESULT.SUCCESS &&
+      i < creep.memory.actionQueue.length;
+      i++
+    ) {
       let currentActionData = creep.memory.actionQueue[i];
 
       // Handle nested action lists
@@ -60,7 +70,11 @@ var roleMiner = {
       }
 
       // Based on result, manage the queue
-      if (result === 1 || result === 3) {
+      if (
+        result === this.ACTION_RESULT.CONTINUE_REMOVE ||
+        result === this.ACTION_RESULT.SUCCESS_REMOVE ||
+        result === this.ACTION_RESULT.FAILURE_REMOVE
+      ) {
         // Remove action from queue
         creep.memory.actionQueue.splice(i, 1);
         i--; // Adjust index after removal
@@ -83,7 +97,7 @@ var roleMiner = {
     }
 
     console.log(`Unknown action: ${actionName} for creep ${creep.name}`);
-    return -1;
+    return this.ACTION_RESULT.FAILURE_REMOVE;
   },
 
   //  Initialize Miner Memory
@@ -97,7 +111,7 @@ var roleMiner = {
       utils.action.findOptimalMiningPosition(creep);
     }
 
-    return 0;
+    return this.ACTION_RESULT.CONTINUE_REMOVE;
   },
 
   // Move to Sit Position
@@ -105,26 +119,24 @@ var roleMiner = {
   actionMoveToSitPOS: function (creep) {
     if (!creep.memory.sitPOS) {
       console.log(`Creep ${creep.name} has no sitPOS set.`);
-      return -1; // No mining position set, failure
+      return this.ACTION_RESULT.FAILURE;
     }
 
     var mPOS = creep.memory.sitPOS;
     var sitPOS = new RoomPosition(mPOS.x, mPOS.y, mPOS.roomName);
 
     if (creep.pos.isEqualTo(sitPOS)) {
-      // At position, find closest source
-      var source = creep.pos.findClosestByRange(creep.room.find(FIND_SOURCES));
-
-      if (source) {
-        creep.memory.source = source.id;
-        return 1; // Success, proceed to next action
-      }
-      return 0; // At position but no source found
+      return this.ACTION_RESULT.CONTINUE_REMOVE;
     } else {
-      // Move to position
       const moveResult = utils.action.moveTo(creep, sitPOS);
-      return 0; // Continue moving next tick
+      if (moveResult === OK) {
+        return this.ACTION_RESULT.SUCCESS; //
+      } else {
+        utils.action.logError(creep, moveResult, `moveToSitPOS, ${sitPOS}`);
+      }
     }
+
+    return this.ACTION_RESULT.FAILURE;
   },
 
   //  Mine
@@ -132,20 +144,20 @@ var roleMiner = {
   actionMine: function (creep) {
     if (!creep.memory.source) {
       console.log(`Creep ${creep.name} has no source set.`);
-      return -1;
+      return this.ACTION_RESULT.FAILURE;
     }
 
     var source = Game.getObjectById(creep.memory.source);
     if (!source) {
       console.log(`Creep ${creep.name} has an invalid source.`);
       creep.memory.source = null;
-      return -1;
+      return this.ACTION_RESULT.FAILURE;
     }
 
     var error = creep.harvest(source);
 
     if (error === OK) {
-      return 1;
+      return this.ACTION_RESULT.SUCCESS;
     } else if (error === ERR_NOT_ENOUGH_RESOURCES) {
       creep.memory.idleTicks++;
     } else if (error === ERR_NOT_IN_RANGE) {
@@ -153,7 +165,7 @@ var roleMiner = {
     } else {
       util.action.logError(creep, error, `harvest, ${source.id}`);
     }
-    return -1;
+    return this.ACTION_RESULT.FAILURE;
   },
 
   //  Sing
