@@ -24,7 +24,8 @@ var roleUpCarrier = {
     //  Get
     //
     if (creep.memory.task == "GET") {
-      let sourceId = Memory.TaskMan[creep.room.name].upCarryId;
+      let sourceId = Memory.TaskMan[creep.room.name].sourceContainers[1];
+      // let sourceId = Memory.TaskMan[creep.room.name].upCarryId;
       utils.action.getResourceById(creep, sourceId);
     }
     //  Give

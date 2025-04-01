@@ -234,9 +234,11 @@ function generatePhase3Queue(roomName) {
   }
 
   // upCarrier
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < numSources; i++) {
+    const source = sources[i];
     Memory.TaskMan[spawnName].spawnList.push({
       role: "upCarrier",
+      sourceId: source.id,
       body: [
         [CARRY, 5],
         [MOVE, 3],

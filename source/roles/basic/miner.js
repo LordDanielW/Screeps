@@ -142,17 +142,13 @@ var roleMiner = {
   //  Mine
   //
   actionMine: function (creep) {
-    if (!creep.memory.source) {
+    if (!creep.memory.sourceId) {
       console.log(`Creep ${creep.name} has no source set.`);
-      return this.ACTION_RESULT.FAILURE;
+      creep.memory.sourceId = creep.pos.findClosestByPath(FIND_SOURCES).id;
+      // return this.ACTION_RESULT.FAILURE;
     }
 
-    var source = Game.getObjectById(creep.memory.source);
-    if (!source) {
-      console.log(`Creep ${creep.name} has an invalid source.`);
-      creep.memory.source = null;
-      return this.ACTION_RESULT.FAILURE;
-    }
+    var source = Game.getObjectById(creep.memory.sourceId);
 
     var error = creep.harvest(source);
 

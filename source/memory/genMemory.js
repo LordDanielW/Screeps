@@ -29,14 +29,10 @@ function initMemory() {
     }
 
     // Find and set source containers
-    if (Memory.TaskMan[roomName].sourceContainers.length === 0) {
-      findSourceContainers(room);
-    }
+    findSourceContainers(room);
 
     // Find and set upgrade container
-    if (!Memory.TaskMan[roomName].upgradeContainer) {
-      findUpgradeContainer(room);
-    }
+    findUpgradeContainer(room);
 
     // Find and set links
     updateRoomLinks(room);

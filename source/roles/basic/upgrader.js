@@ -40,6 +40,7 @@ var roleUpgrader = {
         );
 
         var iState = creep.withdraw(upSource, RESOURCE_ENERGY);
+
         if (iState == ERR_NOT_IN_RANGE) {
           utils.action.moveTo(creep, upSource);
           return true;
