@@ -1,16 +1,16 @@
 //  Run Room
 //
-runRoom = function (theRoom) {
-  // if (!Memory.TaskMan[theRoom]) {
-  //   console.log("No TaskMan for room " + theRoom);
+runRoom = function (roomName) {
+  // if (!Memory.TaskMan[roomName]) {
+  //   console.log("No TaskMan for room " + roomName);
   //   return;
   // }
 
   Memory.Tick;
   if (Memory.Tick && Memory.Tick == 1) {
     // generate spawn queue
-    runSpawnQueue(theRoom);
-    // Memory.TaskMan[theRoom].spawnQueue = manage.generateSpawnQueue(theRoom);
+    runSpawnQueue(roomName);
+    // Memory.TaskMan[roomName].spawnQueue = manage.generateSpawnQueue(roomName);
   }
 
   //  run Linker Transfer
@@ -23,7 +23,7 @@ runRoom = function (theRoom) {
 
   // run Spawn
   //
-  const spawns = Game.rooms[theRoom].find(FIND_MY_STRUCTURES, {
+  const spawns = Game.rooms[roomName].find(FIND_MY_STRUCTURES, {
     filter: { structureType: STRUCTURE_SPAWN },
   });
 
@@ -51,15 +51,15 @@ module.exports.runRoom = runRoom;
 
 //  Run Links
 //
-runLinks = function (theRoom) {
+runLinks = function (roomName) {
   let linkFrom = null;
   let linkTo = null;
 
-  if (Memory.TaskMan[theRoom].linkFrom) {
-    linkFrom = Game.getObjectById(Memory.TaskMan[theRoom].linkFrom);
+  if (Memory.TaskMan[roomName].linkFrom) {
+    linkFrom = Game.getObjectById(Memory.TaskMan[roomName].linkFrom);
   }
-  if (Memory.TaskMan[theRoom].linkTo) {
-    linkTo = Game.getObjectById(Memory.TaskMan[theRoom].linkTo);
+  if (Memory.TaskMan[roomName].linkTo) {
+    linkTo = Game.getObjectById(Memory.TaskMan[roomName].linkTo);
   }
 
   if (linkFrom && linkTo) {
