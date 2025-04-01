@@ -92,6 +92,7 @@ moveCreep = function (creep) {
   }
 };
 // End Move Creep
+exports.moveCreep = moveCreep;
 
 //  Spawn Creep
 //
@@ -144,8 +145,8 @@ global.sC = function (spawnType) {
       spawnObject = {
         role: "Carrier",
         body: [
-          [CARRY, 8],
-          [MOVE, 4],
+          [CARRY, 4],
+          [MOVE, 2],
         ],
       };
       break;
@@ -165,9 +166,9 @@ global.sC = function (spawnType) {
       spawnObject = {
         role: "Upgrader",
         body: [
-          [WORK, 10],
-          [CARRY, 10],
-          [MOVE, 20],
+          [WORK, 6],
+          [CARRY, 1],
+          [MOVE, 1],
         ],
         movePOS: { x: 27, y: 45, roomName: "E12N51" },
       };
@@ -279,7 +280,7 @@ global.sC = function (spawnType) {
       return false;
   }
 
-  Memory.TaskMan[selectSpawn].spawnList.push(spawnObject);
+  Memory.TaskMan[spawnName].spawnList.push(spawnObject);
   return true;
 };
 
