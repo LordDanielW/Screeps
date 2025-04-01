@@ -78,6 +78,7 @@ var roleCarrier = {
     creep.memory.source = null;
     if (creep.store[RESOURCE_ENERGY] != 0) {
       let emptyStructure = undefined;
+
       // Check Spawner Extensions
       emptyStructure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
         filter: (structure) => {
@@ -92,6 +93,31 @@ var roleCarrier = {
         creep.memory.destination = emptyStructure.id;
         return true;
       }
+
+      // Check Upgrade Container
+      const roomName = creep.room.name;
+      let upgradeContainerId = null;
+      if (
+        Memory.TaskMan &&
+        Memory.TaskMan[roomName] &&
+        Memory.TaskMan[roomName].upgradeContainer
+      ) {
+        upgradeContainerId = Memory.TaskMan[roomName].upgradeContainer;
+      }
+
+      let upgradeContainer = null;
+      if (upgradeContainerId) {
+        upgradeContainer = Game.getObjectById(upgradeContainerId);
+      }
+
+      if (
+        upgradeContainer &&
+        upgradeContainer.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+      ) {
+        creep.memory.destination = upgradeContainer.id;
+        return true;
+      }
+
       // Check Towers
       emptyStructure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
         filter: (structure) => {
