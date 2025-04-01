@@ -1,114 +1,163 @@
 var roleMiner = {
-  /** @param {Creep} creep **/
+  //  Run Miner
+  //
   run: function (creep) {
-    // creep.memory.atDest = true;
-    // creep.memory.source = "5982fdb5b097071b4adbfbbf";
+    // Initialize action queue if it doesn't exist
+    if (!creep.memory.actionQueue) {
+      this.initializeActionQueue(creep);
+    }
+
+    // Process the action queue
+    return this.processActionQueue(creep, creep.memory.actionQueue);
+  },
+
+  // Map action names to their handler functions - defined once
+  actionMap: null,
+
+  // Initialize the action map if needed
+  getActionMap: function () {
+    if (!this.actionMap) {
+      this.actionMap = {
+        initializeMemory: this.actionInitMinerMemory,
+        moveToSitPOS: this.actionMoveToSitPOS,
+        mine: this.actionMine,
+      };
+    }
+    return this.actionMap;
+  },
+
+  //  Initialize Action Queue
+  //
+  initializeActionQueue: function (creep) {
+    creep.memory.actionQueue = [
+      { action: "initializeMemory" },
+      { action: "moveToSitPOS" },
+      { action: "mine" },
+    ];
+  },
+
+  //  Process Action Queue
+  //
+  //  -1 = Failure
+  //   0 = Continue
+  //   1 = Continue and Remove from Queue
+  //   2 = Success
+  //   3 = Success and Remove from Queue
+  processActionQueue: function (creep, actionQueue) {
+    let result = 0;
+    if (!actionQueue || actionQueue.length === 0) {
+      return -1; // No actions to process
+    }
+
+    for (let i = 0; result < 2 && i < creep.memory.actionQueue.length; i++) {
+      let currentActionData = creep.memory.actionQueue[i];
+
+      // Handle nested action lists
+      if (Array.isArray(currentActionData)) {
+        result = this.processActionQueue(creep, currentActionData);
+      } else {
+        result = this.processActionNode(creep, currentActionData);
+      }
+
+      // Based on result, manage the queue
+      if (result === 1 || result === 3) {
+        // Remove action from queue
+        creep.memory.actionQueue.splice(i, 1);
+        i--; // Adjust index after removal
+      }
+    }
+    return result;
+  },
+
+  // Execute Action
+  //
+  processActionNode: function (creep, actionData) {
+    const actionName = actionData.action;
+    if (this.actionMap === null) {
+      this.actionMap = this.getActionMap();
+    }
+    const actionMap = this.actionMap;
+
+    if (actionMap[actionName]) {
+      return actionMap[actionName].call(this, creep, actionData);
+    }
+
+    console.log(`Unknown action: ${actionName} for creep ${creep.name}`);
+    return -1;
+  },
+
+  //  Initialize Miner Memory
+  //
+  actionInitMinerMemory: function (creep, actionData) {
     if (!creep.memory.sourceType) {
       creep.memory.sourceType = FIND_SOURCES;
     }
-    //creep.memory.sitPOS = new RoomPosition(37, 36, "E46N33");
-    if (creep.memory.atDest) {
-      var source = Game.getObjectById(creep.memory.source);
-      var error = creep.harvest(source);
-      if (error != OK) {
-        // creep.say("Nope");
-        // Memory.Foo = error;
-        // creep.memory.atDest = false;
+
+    if (creep.memory.sitPOS) {
+      utils.action.findOptimalMiningPosition(creep);
+    }
+
+    return 0;
+  },
+
+  // Move to Sit Position
+  //
+  actionMoveToSitPOS: function (creep) {
+    if (!creep.memory.sitPOS) {
+      console.log(`Creep ${creep.name} has no sitPOS set.`);
+      return -1; // No mining position set, failure
+    }
+
+    var mPOS = creep.memory.sitPOS;
+    var sitPOS = new RoomPosition(mPOS.x, mPOS.y, mPOS.roomName);
+
+    if (creep.pos.isEqualTo(sitPOS)) {
+      // At position, find closest source
+      var source = creep.pos.findClosestByRange(creep.room.find(FIND_SOURCES));
+
+      if (source) {
+        creep.memory.source = source.id;
+        return 1; // Success, proceed to next action
       }
-      if (global.showGraphics) {
-        this.sing(creep);
-      }
+      return 0; // At position but no source found
     } else {
-      if (!creep.memory.sitPOS) {
-        this.findOptimalMiningPosition(creep);
-      }
-      var mPOS = creep.memory.sitPOS;
-      var sitPOS = new RoomPosition(mPOS.x, mPOS.y, mPOS.roomName);
-      if (creep.pos.isEqualTo(sitPOS)) {
-        // First parameter to findClosestByRange needs to be an array of objects
-        var source = creep.pos.findClosestByRange(
-          creep.room.find(creep.memory.sourceType)
-        );
-        if (source) {
-          creep.memory.atDest = true;
-          creep.memory.source = source.id;
-        }
-      } else {
-        utils.role.moveTo(creep, sitPOS);
-      }
+      // Move to position
+      const moveResult = utils.action.moveTo(creep, sitPOS);
+      return 0; // Continue moving next tick
     }
   },
 
-  /**
-   * Find the best mining position - preferably on a container near a source
-   * @param {Creep} creep
-   */
-  findOptimalMiningPosition: function (creep) {
-    if (!creep.memory.sourceType) {
-      creep.memory.sourceType = RESOURCE_ENERGY;
-    }
-    const sources = creep.room.find(creep.memory.sourceType);
-    if (!sources.length) return;
-
-    // Try to find sources with containers nearby
-    for (let source of sources) {
-      // Find containers within 1 tile of the source
-      const containers = source.pos.findInRange(FIND_STRUCTURES, 1, {
-        filter: (s) => s.structureType === STRUCTURE_CONTAINER,
-      });
-
-      // Check if any container positions are available (not occupied by other miners)
-      for (let container of containers) {
-        // Check if position is occupied
-        const creepsAtPos = container.pos.lookFor(LOOK_CREEPS);
-        if (creepsAtPos.length === 0 || creepsAtPos[0].id === creep.id) {
-          // Found an available container position
-          creep.memory.sitPOS = {
-            x: container.pos.x,
-            y: container.pos.y,
-            roomName: container.pos.roomName,
-          };
-          return;
-        }
-      }
+  //  Mine
+  //
+  actionMine: function (creep) {
+    if (!creep.memory.source) {
+      console.log(`Creep ${creep.name} has no source set.`);
+      return -1;
     }
 
-    // If no containers found or all occupied, find an available position adjacent to a source
-    for (let source of sources) {
-      const terrain = Game.map.getRoomTerrain(source.room.name);
-
-      // Check the 8 surrounding tiles
-      for (let dx = -1; dx <= 1; dx++) {
-        for (let dy = -1; dy <= 1; dy++) {
-          if (dx === 0 && dy === 0) continue; // Skip the source's own position
-
-          const x = source.pos.x + dx;
-          const y = source.pos.y + dy;
-
-          // Check if the position is walkable and not occupied
-          if (terrain.get(x, y) !== TERRAIN_MASK_WALL) {
-            const pos = new RoomPosition(x, y, source.room.name);
-            const creepsAtPos = pos.lookFor(LOOK_CREEPS);
-
-            if (creepsAtPos.length === 0 || creepsAtPos[0].id === creep.id) {
-              creep.memory.sitPOS = {
-                x: x,
-                y: y,
-                roomName: source.room.name,
-              };
-              return;
-            }
-          }
-        }
-      }
+    var source = Game.getObjectById(creep.memory.source);
+    if (!source) {
+      console.log(`Creep ${creep.name} has an invalid source.`);
+      creep.memory.source = null;
+      return -1;
     }
+
+    var error = creep.harvest(source);
+
+    if (error === OK) {
+      return 1;
+    } else if (error === ERR_NOT_ENOUGH_RESOURCES) {
+      creep.memory.idleTicks++;
+    } else if (error === ERR_NOT_IN_RANGE) {
+      console.log(`Creep ${creep.name} is not in range to harvest.`);
+    } else {
+      util.action.logError(creep, error, `harvest, ${source.id}`);
+    }
+    return -1;
   },
 
-  /**
-   * Makes the creep say lines from a set of lyrics
-   * @param {Creep} creep
-   * @param {Object} lyricSet - The set of lyrics to use
-   */
+  //  Sing
+  //
   sing: function (creep, lyricSet = LYRICS.rammstein) {
     if (!creep.memory.sayIndex) {
       creep.memory.sayIndex = 0;
