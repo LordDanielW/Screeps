@@ -24,7 +24,7 @@ runSpawner = function (spawn) {
   }
 
   // If Spawn que overloaded, clear and make a Carrier
-  if (Memory.TaskMan[spawnName].spawnList.length > 5) {
+  if (Memory.TaskMan[spawnName].spawnList.length > 15) {
     Memory.TaskMan[spawnName].spawnList = [];
     Memory.TaskMan[spawnName].spawnList.push({ role: "Carrier" });
     Memory.TaskMan[spawnName].spawnListNumber = 0;
@@ -105,6 +105,7 @@ runSpawner = function (spawn) {
           say: 1,
           atDest: false,
           sourceType: RESOURCE_ENERGY,
+          sourceId: source.id,
           body: [
             [WORK, 2],
             [MOVE, 1],
