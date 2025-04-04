@@ -7,203 +7,199 @@ function runSpawnQueue(roomName) {
    * Phase 1: Up to 300 energy
    * Phase 2: 301-550 energy
    * Phase 3: 551-800 energy
+   * Phase 4: 801+ energy
    */
 
   // Determine room phase based on energy capacity
   let phase = 1;
-  if (room.energyCapacityAvailable > 550) {
+  if (room.energyCapacityAvailable > 800) {
+    phase = 4;
+    generatePhaseQueue(roomName, 4);
+  } else if (room.energyCapacityAvailable > 550) {
     phase = 3;
+    generatePhaseQueue(roomName, 3);
   } else if (room.energyCapacityAvailable > 300) {
     phase = 2;
-  }
-
-  // Generate queue based on phase
-  if (phase === 1) {
-    generatePhase1Queue(roomName);
-  } else if (phase === 2) {
-    generatePhase2Queue(roomName);
-  } else if (phase === 3) {
-    generatePhase3Queue(roomName);
+    generatePhaseQueue(roomName, 2);
+  } else {
+    phase = 1;
+    generatePhaseQueue(roomName, 1);
   }
 }
 
 exports.runSpawnQueue = runSpawnQueue;
 
 /**
- * Phase 1 Queue (up to 300 energy)
- * Basic creeps with minimal parts
+ * Body part configurations by role and phase
  */
-function generatePhase1Queue(roomName) {
-  const room = Game.rooms[roomName];
-  console.log("Generating Phase" + 1 + "Queue for " + room.name);
-  // TODO: fix when multiple spawns
-  const spawn = room.find(FIND_MY_SPAWNS)[0];
-  if (!spawn) {
-    console.log("No spawn found in room " + roomName);
-    return;
-  }
-  const spawnName = spawn.name;
-
-  // Get sources
-  const sources = room.find(FIND_SOURCES);
-  const numSources = sources.length;
-
-  // Miners: 1 per source with minimal parts
-  if (!counts.Miner || counts.Miner < numSources) {
-    const sourceIndex = counts.Miner || 0;
-    if (sourceIndex < sources.length) {
-      const source = sources[sourceIndex];
-      const pos = findMiningPosition(source, spawn);
-
-      Memory.TaskMan[spawnName].spawnList.push({
-        role: "Miner",
-        say: 1,
-        atDest: false,
-        sourceType: FIND_SOURCES,
-        sourceId: source.id,
-        body: [
-          [WORK, 2],
-          [MOVE, 1],
-        ],
-        sitPOS: pos,
-        sourceId: source.id,
-      });
-      return;
-    }
-  }
-
-  // Carriers: 1 per source
-  if (!counts.Carrier || counts.Carrier < numSources) {
-    Memory.TaskMan[spawnName].spawnList.push({
-      role: "Carrier",
-      body: [
-        [CARRY, 2],
-        [MOVE, 2],
-      ],
-    });
-    return;
-  }
-
-  // Basic upgrader
-  if (!counts.Upgrader || counts.Upgrader < 1) {
-    Memory.TaskMan[spawnName].spawnList.push({
-      role: "Upgrader",
-      body: [
-        [WORK, 1],
-        [CARRY, 1],
-        [MOVE, 1],
-      ],
-    });
-    return;
-  }
-
-  // Basic builder
-  if (!counts.Builder || counts.Builder < 1) {
-    Memory.TaskMan[spawnName].spawnList.push({
-      role: "Builder",
-      body: [
-        [WORK, 1],
-        [CARRY, 1],
-        [MOVE, 1],
-      ],
-    });
-    return;
-  }
-}
-
-/**
- * Phase 2 Queue (301-550 energy)
- * More specialized creeps with better parts
- */
-function generatePhase2Queue(room) {
-  console.log("Generating Phase 2 Queue for " + room.name);
-  // TODO: fix when multiple spawns
-  const spawn = room.find(FIND_MY_SPAWNS)[0];
-  if (!spawn) {
-    console.log("No spawn found in room " + roomName);
-    return;
-  }
-  const spawnName = spawn.name;
-
-  // Get sources
-  const sources = room.find(FIND_SOURCES);
-  const numSources = sources.length;
-
-  // Miners: 1 per source
-  for (let i = 0; i < numSources; i++) {
-    const source = sources[i];
-    const pos = findMiningPosition(source, spawn);
-
-    Memory.TaskMan[spawnName].spawnList.push({
-      role: "Miner",
-      say: 1,
-      atDest: false,
-      sourceType: FIND_SOURCES,
-      sourceId: source.id,
-      body: [
-        [WORK, 3],
-        [MOVE, 2],
-      ],
-      sitPOS: pos,
-      sourceId: source.id,
-    });
-  }
-
-  // Carriers: 2 per source
-  for (let i = 0; i < numSources; i++) {
-    Memory.TaskMan[spawnName].spawnList.push({
-      role: "Carrier",
-      body: [
-        [CARRY, 3],
-        [MOVE, 3],
-      ],
-    });
-  }
-
-  // Upgraders: 2 per source
-  for (let i = 0; i < numSources * 2; i++) {
-    Memory.TaskMan[spawnName].spawnList.push({
-      role: "Upgrader",
-      body: [
-        [WORK, 2],
-        [CARRY, 1],
-        [MOVE, 2],
-      ],
-    });
-  }
-
-  // Builders: 1
-  const constructionSites = room.find(FIND_CONSTRUCTION_SITES);
-  if (constructionSites.length != 0) {
-    Memory.TaskMan[spawnName].spawnList.push({
-      role: "Builder",
-      body: [
-        [WORK, 2],
-        [CARRY, 2],
-        [MOVE, 2],
-      ],
-    });
-  }
-
-  // Repair: 1
-  Memory.TaskMan[spawnName].spawnList.push({
-    role: "Repair",
-    body: [
+const bodyConfigs = {
+  Miner: {
+    1: [
+      [WORK, 2],
+      [MOVE, 1],
+    ],
+    2: [
+      [WORK, 3],
+      [MOVE, 2],
+    ],
+    3: [
+      [WORK, 5],
+      [MOVE, 1],
+    ],
+    4: [
+      [WORK, 6],
+      [MOVE, 2],
+    ],
+  },
+  Carrier: {
+    1: [
+      [CARRY, 2],
+      [MOVE, 2],
+    ],
+    2: [
+      [CARRY, 3],
+      [MOVE, 3],
+    ],
+    3: [
+      [CARRY, 3],
+      [MOVE, 3],
+    ],
+    4: [
+      [CARRY, 4],
+      [MOVE, 4],
+    ],
+  },
+  upCarrier: {
+    3: [
+      [CARRY, 5],
+      [MOVE, 3],
+    ],
+    4: [
+      [CARRY, 6],
+      [MOVE, 4],
+    ],
+  },
+  Upgrader: {
+    1: [
+      [WORK, 1],
+      [CARRY, 1],
+      [MOVE, 1],
+    ],
+    2: [
+      [WORK, 2],
+      [CARRY, 1],
+      [MOVE, 2],
+    ],
+    3: [
+      [WORK, 4],
+      [CARRY, 1],
+      [MOVE, 1],
+    ],
+    4: [
+      [WORK, 6],
+      [CARRY, 2],
+      [MOVE, 2],
+    ],
+  },
+  Builder: {
+    1: [
+      [WORK, 1],
+      [CARRY, 1],
+      [MOVE, 1],
+    ],
+    2: [
+      [WORK, 2],
+      [CARRY, 2],
+      [MOVE, 2],
+    ],
+    3: [
+      [WORK, 2],
+      [CARRY, 2],
+      [MOVE, 2],
+    ],
+    4: [
+      [WORK, 3],
+      [CARRY, 3],
+      [MOVE, 3],
+    ],
+  },
+  Repair: {
+    2: [
       [WORK, 1],
       [CARRY, 2],
       [MOVE, 2],
     ],
-  });
+    3: [
+      [WORK, 1],
+      [CARRY, 2],
+      [MOVE, 2],
+    ],
+    4: [
+      [WORK, 2],
+      [CARRY, 3],
+      [MOVE, 3],
+    ],
+  },
+};
+
+/**
+ * Role counts by phase and conditions
+ */
+function getRoleRequirements(room, phase) {
+  const sources = room.find(FIND_SOURCES);
+  const numSources = sources.length;
+  let numBuilders = 0;
+  if (room.find(FIND_CONSTRUCTION_SITES).length > 0) {
+    numBuilders = 1;
+  }
+
+  // Define role counts for each phase
+  const requirements = {
+    1: {
+      Miner: numSources,
+      Carrier: numSources,
+      Upgrader: 1,
+      Builder: numBuilders,
+    },
+    2: {
+      Miner: numSources,
+      Carrier: numSources * 2,
+      Upgrader: numSources * 2,
+      Builder: numBuilders,
+      Repair: 1,
+    },
+    3: {
+      Miner: numSources,
+      Carrier: 1,
+      upCarrier: numSources,
+      Upgrader: 3,
+      Builder: numBuilders,
+      Repair: 2,
+    },
+    4: {
+      Miner: numSources,
+      Carrier: 2,
+      upCarrier: numSources,
+      Upgrader: 4,
+      Builder: numBuilders,
+      Repair: 2,
+    },
+  };
+
+  if (requirements[phase]) {
+    return requirements[phase];
+  } else {
+    return {};
+  }
 }
 
 /**
- * Phase 3 Queue (551+ energy)
- * Highly specialized creeps with optimal parts
+ * Generate spawn queue based on room phase
  */
-function generatePhase3Queue(roomName) {
+function generatePhaseQueue(roomName, phase) {
   const room = Game.rooms[roomName];
-  console.log("Generating Phase 3 Queue for " + room.name);
-  // TODO: fix when multiple spawns
+  console.log(`Generating Phase ${phase} Queue for ${room.name}`);
+
   const spawn = room.find(FIND_MY_SPAWNS)[0];
   if (!spawn) {
     console.log("No spawn found in room " + roomName);
@@ -213,87 +209,65 @@ function generatePhase3Queue(roomName) {
 
   // Get sources
   const sources = room.find(FIND_SOURCES);
-  const numSources = sources.length;
 
-  // Miners
-  for (let i = 0; i < numSources; i++) {
-    const source = sources[i];
-    const pos = findMiningPosition(source, spawn);
+  // Get role requirements for this phase
+  const roleRequirements = getRoleRequirements(room, phase);
 
-    Memory.TaskMan[spawnName].spawnList.push({
-      role: "Miner",
-      say: 1,
-      atDest: false,
-      sourceType: RESOURCE_ENERGY,
-      sourceId: source.id,
-      body: [
-        [WORK, 5],
-        [MOVE, 1],
-      ],
-      sitPOS: pos,
-    });
-  }
+  // Process each role
+  Object.keys(roleRequirements).forEach((role) => {
+    const count = roleRequirements[role];
+    const roleCount = counts[role] || 0;
 
-  // Carriers
-  for (let i = 0; i < 1; i++) {
-    Memory.TaskMan[spawnName].spawnList.push({
-      role: "Carrier",
-      body: [
-        [CARRY, 3],
-        [MOVE, 3],
-      ],
-    });
-  }
+    if (roleCount < count) {
+      // For miners, we need to handle their special requirements
+      if (role === "Miner") {
+        for (let i = roleCount; i < count; i++) {
+          if (i < sources.length) {
+            const source = sources[i];
+            const pos = findMiningPosition(source, spawn);
 
-  // upCarrier
-  for (let i = 0; i < numSources; i++) {
-    const source = sources[i];
-    Memory.TaskMan[spawnName].spawnList.push({
-      role: "upCarrier",
-      sourceId: source.id,
-      body: [
-        [CARRY, 5],
-        [MOVE, 3],
-      ],
-    });
-  }
+            let sourceType;
+            if (phase === 3) {
+              sourceType = RESOURCE_ENERGY;
+            } else {
+              sourceType = FIND_SOURCES;
+            }
 
-  // Upgraders
-  for (let i = 0; i < 3; i++) {
-    Memory.TaskMan[spawnName].spawnList.push({
-      role: "Upgrader",
-      body: [
-        [WORK, 4],
-        [CARRY, 1],
-        [MOVE, 1],
-      ],
-    });
-  }
-
-  // Builders
-  const constructionSites = room.find(FIND_CONSTRUCTION_SITES);
-  if (constructionSites.length != 0) {
-    Memory.TaskMan[spawnName].spawnList.push({
-      role: "Builder",
-      body: [
-        [WORK, 2],
-        [CARRY, 2],
-        [MOVE, 2],
-      ],
-    });
-  }
-
-  // Repair
-  for (let i = 0; i < 2; i++) {
-    Memory.TaskMan[spawnName].spawnList.push({
-      role: "Repair",
-      body: [
-        [WORK, 1],
-        [CARRY, 2],
-        [MOVE, 2],
-      ],
-    });
-  }
+            Memory.TaskMan[spawnName].spawnList.push({
+              role: "Miner",
+              say: 1,
+              atDest: false,
+              sourceType: sourceType,
+              sourceId: source.id,
+              body: bodyConfigs.Miner[phase],
+              sitPOS: pos,
+              sourceId: source.id,
+            });
+          }
+        }
+      }
+      // For upCarrier, we need to assign sources
+      else if (role === "upCarrier") {
+        for (let i = roleCount; i < count; i++) {
+          const sourceIndex = i % sources.length;
+          Memory.TaskMan[spawnName].spawnList.push({
+            role: "upCarrier",
+            sourceId: sources[sourceIndex].id,
+            body: bodyConfigs.upCarrier[phase],
+          });
+        }
+      }
+      // For other roles, just add them to the queue
+      else {
+        for (let i = roleCount; i < count; i++) {
+          Memory.TaskMan[spawnName].spawnList.push({
+            role: role,
+            body: bodyConfigs[role][phase],
+          });
+        }
+      }
+    }
+  });
 }
 
 //  Find Mining Position
