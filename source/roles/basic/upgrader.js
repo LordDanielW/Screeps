@@ -28,6 +28,21 @@ var roleUpgrader = {
     //  Do Task
     //
     if (creep.memory.task == "UPGRADE") {
+      // If creep doesn't have a position assigned, find the best upgrade position
+      if (!creep.memory.upgradePOS) {
+        let upSource = Game.getObjectById(
+          Memory.TaskMan[creep.room.name].upgradeContainer
+        );
+        if (upSource) {
+          const bestPos = utils.action.findUpgradePosition(
+            creep.room.controller,
+            upSource
+          );
+          if (bestPos) {
+            creep.memory.upgradePOS = bestPos;
+          }
+        }
+      }
       utils.action.doUpgrade(creep);
     } else if (creep.memory.task == "GET") {
       //  Get energy from container

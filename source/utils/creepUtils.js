@@ -284,7 +284,25 @@ var creepAction = {
     }
 
     if (iState == ERR_NOT_IN_RANGE) {
-      creep.moveTo(creep.room.controller, this.pathStyle);
+      if (creep.memory.upgradePOS) {
+        let tUpPos = new RoomPosition(
+          creep.memory.upgradePOS.x,
+          creep.memory.upgradePOS.y,
+          creep.memory.upgradePOS.roomName
+        );
+        var result = creep.moveTo(tUpPos, this.pathStyle);
+        // console.log( "Move to Upgrade: " + result);
+        this.logError(
+          creep,
+          result,
+          "Move to Upgrade: " +
+            creep.memory.upgradePOS.x +
+            "," +
+            creep.memory.upgradePOS.y
+        );
+      } else {
+        creep.moveTo(creep.room.controller, this.pathStyle);
+      }
       return true;
     } else if (iState == OK) {
       // creep.say("🌟 🔫 🦄", true);
@@ -328,6 +346,72 @@ var creepAction = {
     console.log(
       `[${creep.name}] Error: ${baseMessage} (${error}) - ${message}`
     );
+  },
+
+  //  Find Upgrade Position
+  //
+  findUpgradePosition: function (controller, upgradeContainer) {
+    if (!controller || !upgradeContainer) return null;
+
+    const terrain = Game.map.getRoomTerrain(controller.room.name);
+    let bestPos = null;
+    let minDistanceToContainer = Infinity;
+
+    // Check all positions within range 3 of the controller
+    for (let dx = -3; dx <= 3; dx++) {
+      for (let dy = -3; dy <= 3; dy++) {
+        const x = controller.pos.x + dx;
+        const y = controller.pos.y + dy;
+
+        // Skip if out of bounds
+        if (x < 0 || y < 0 || x > 49 || y > 49) continue;
+        if (dx === 0 && dy === 0) continue; // Skip the controller's own position
+        // Check if occupied by a creep
+        const creep = controller.room.lookForAt(LOOK_CREEPS, x, y);
+        if (creep.length > 0) continue; // Skip if occupied by a creep
+
+        // Check if occupied by a structure
+        const structure = controller.room.lookForAt(LOOK_STRUCTURES, x, y);
+        if (structure.length > 0) {
+          // Skip if occupied by a structure that is not a container
+          if (
+            structure[0].structureType !== STRUCTURE_CONTAINER &&
+            structure[0].structureType !== STRUCTURE_ROAD &&
+            structure[0].structureType !== STRUCTURE_RAMPART
+          ) {
+            continue;
+          }
+        }
+
+        // Check if position is walkable
+        terrainType = terrain.get(x, y);
+        if (
+          terrainType == TERRAIN_MASK_WALL ||
+          terrainType == TERRAIN_MASK_SWAMP
+        ) {
+          continue; // Skip if wall or swamp
+        }
+        const pos = new RoomPosition(x, y, controller.room.name);
+
+        // Make sure position is within range 3 of controller
+        if (pos.getRangeTo(controller) <= 3) {
+          // Calculate distance to container
+          const distanceToContainer = pos.getRangeTo(upgradeContainer);
+
+          // If this position is closer to container, update it
+          if (distanceToContainer < minDistanceToContainer) {
+            minDistanceToContainer = distanceToContainer;
+            bestPos = {
+              x: x,
+              y: y,
+              roomName: controller.room.name,
+            };
+          }
+        }
+      }
+    }
+
+    return bestPos;
   },
 
   findOptimalMiningPosition: function (creep) {

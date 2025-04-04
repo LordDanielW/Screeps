@@ -42,6 +42,11 @@ var roleCarrier = {
 
       // Move and transfer energy
       if (emptyStructure != null) {
+        // move to 1 distance of the structure
+        if (creep.pos.getRangeTo(emptyStructure) > 0) {
+          utils.action.moveTo(creep, emptyStructure);
+        }
+
         let response = creep.transfer(emptyStructure, RESOURCE_ENERGY);
         if (response == ERR_NOT_IN_RANGE) {
           utils.action.moveTo(creep, emptyStructure);
@@ -110,13 +115,14 @@ var roleCarrier = {
         upgradeContainer = Game.getObjectById(upgradeContainerId);
       }
 
-      if (
-        upgradeContainer &&
-        upgradeContainer.store.getFreeCapacity(RESOURCE_ENERGY) > 0
-      ) {
-        creep.memory.destination = upgradeContainer.id;
-        return true;
-      }
+      // // Check Upgrade Container
+      // if (
+      //   upgradeContainer &&
+      //   upgradeContainer.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+      // ) {
+      //   creep.memory.destination = upgradeContainer.id;
+      //   return true;
+      // }
 
       // Check Towers
       emptyStructure = creep.pos.findClosestByRange(FIND_STRUCTURES, {

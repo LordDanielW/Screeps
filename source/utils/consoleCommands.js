@@ -279,7 +279,7 @@ global.sC = function (spawnType) {
     default:
       return false;
   }
-
+  Memory.TaskMan[spawnName].spawnList = [];
   Memory.TaskMan[spawnName].spawnList.push(spawnObject);
   return true;
 };
