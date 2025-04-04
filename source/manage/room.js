@@ -1,6 +1,7 @@
 //  Run Room
 //
 runRoom = function (roomName) {
+  const room = Game.rooms[roomName];
   // if (!Memory.TaskMan[roomName]) {
   //   console.log("No TaskMan for room " + roomName);
   //   return;
@@ -23,7 +24,7 @@ runRoom = function (roomName) {
 
   // run Spawn
   //
-  const spawns = Game.rooms[roomName].find(FIND_MY_STRUCTURES, {
+  const spawns = room.find(FIND_MY_STRUCTURES, {
     filter: { structureType: STRUCTURE_SPAWN },
   });
 
@@ -31,20 +32,20 @@ runRoom = function (roomName) {
     runSpawner(spawn);
   }
 
-  // //  Run Towers
-  // //  check repair, heal, and attack
-  // //  show attack rings
-  // var towers = room.find(FIND_STRUCTURES, {
-  //   filter: (structure) => {
-  //     return structure.structureType == STRUCTURE_TOWER;
-  //   },
-  // });
-  // for (var i = 0; i < towers.length; i++) {
-  //   manage.Tower.run(towers[i]);
-  //   if (showGraphics) {
-  //     utils.displayAttackRings(room.name, towers[i]);
-  //   }
-  // }
+  //  Run Towers
+  //  check repair, heal, and attack
+  //  show attack rings
+  var towers = room.find(FIND_STRUCTURES, {
+    filter: (structure) => {
+      return structure.structureType == STRUCTURE_TOWER;
+    },
+  });
+  for (var i = 0; i < towers.length; i++) {
+    runTower(towers[i]);
+    if (showGraphics) {
+      // utils.displayAttackRings(room.name, towers[i]);
+    }
+  }
 };
 
 module.exports.runRoom = runRoom;
