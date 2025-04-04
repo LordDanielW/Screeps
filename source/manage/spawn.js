@@ -73,6 +73,19 @@ runSpawner = function (spawn) {
     if (response == OK) {
       Memory.TaskMan[spawnName].spawnList.shift();
     } else {
+      if (response == ERR_NOT_ENOUGH_ENERGY) {
+        // Count creeps in this room
+        const creepsInRoom = _.filter(
+          Game.creeps,
+          (c) => c.room.name === room.name
+        );
+
+        if (creepsInRoom.length < 1) {
+          console.log("No Creeps in Room: " + roomName + " Emergency Spawn");
+          emergencySpawn(spawn);
+          return;
+        }
+      }
       utils.structureMessage(spawn.id, "🎊 " + response);
       // console.log("Error " + response + ". Spawning:" + spawnMemory.role);
     }
@@ -85,87 +98,88 @@ runSpawner = function (spawn) {
       (c) => c.room.name === room.name
     );
 
-    // Count by role
-    const counts = {};
-    for (let creep of creepsInRoom) {
-      counts[creep.memory.role] = (counts[creep.memory.role] || 0) + 1;
-    }
-
-    // Find a source
-    const sources = room.find(FIND_SOURCES);
-
-    // Miner
-    for (let i = 0; i < sources.length; i++) {
-      const source = sources[i];
-      const pos = findMiningPosition(source, spawn);
-
-      if (!counts.Miner || counts.Miner < 1) {
-        Memory.TaskMan[spawnName].spawnList.push({
-          role: "Miner",
-          say: 1,
-          atDest: false,
-          sourceType: RESOURCE_ENERGY,
-          sourceId: source.id,
-          body: [
-            [WORK, 2],
-            [MOVE, 1],
-          ],
-          sitPOS: pos,
-        });
-      }
-    }
-
-    // Carrier
-    if (!counts.Carrier || counts.Carrier < 1) {
-      Memory.TaskMan[spawnName].spawnList.push({
-        role: "Carrier",
-        body: [
-          [CARRY, 2],
-          [MOVE, 1],
-        ],
-      });
-    }
-
-    // Upgrader
-    if (!counts.Upgrader || counts.Upgrader < 1) {
-      Memory.TaskMan[spawnName].spawnList.push({
-        role: "Upgrader",
-        body: [
-          [WORK, 2],
-          [CARRY, 1],
-          [MOVE, 1],
-        ],
-      });
-    }
-
-    // Make sure we have at least 1 builder if there are construction sites
-    const constructionSites = room.find(FIND_MY_CONSTRUCTION_SITES);
-    if (
-      (!counts.Builder || counts.Builder < 1) &&
-      constructionSites.length > 0
-    ) {
-      Memory.TaskMan[spawnName].spawnList.push({
-        role: "Builder",
-        body: [
-          [WORK, 2],
-          [CARRY, 1],
-          [MOVE, 1],
-        ],
-      });
-    }
-
-    // Make sure we have at least 1 Repair
-    if (!counts.Repair || counts.Repair < 1) {
-      Memory.TaskMan[spawnName].spawnList.push({
-        role: "Repair",
-        body: [
-          [WORK, 2],
-          [CARRY, 1],
-          [MOVE, 1],
-        ],
-      });
+    if (creepsInRoom.length < 1) {
+      // console.log("No Creeps in Room: " + roomName);
+      emergencySpawn(spawn);
+      return;
     }
   }
 };
 
 module.exports.runSpawner = runSpawner;
+
+// Emergency Spawn
+//
+emergencySpawn = function (spawn) {
+  const spawnName = spawn.name;
+  const roomName = spawn.room.name;
+  const room = spawn.room;
+
+  console.log("No Creeps in Room: " + roomName + " Emergency Spawn");
+
+  Memory.TaskMan[spawnName].spawnList = [];
+
+  // Spawn Carrier first if energy is available
+  const droppedEnergy = room.find(FIND_DROPPED_RESOURCES, {
+    filter: (resource) => resource.resourceType === RESOURCE_ENERGY,
+  });
+  const containers = room.find(FIND_STRUCTURES, {
+    filter: (structure) =>
+      structure.structureType === STRUCTURE_CONTAINER &&
+      structure.store[RESOURCE_ENERGY] > 0,
+  });
+  const storage =
+    room.storage && room.storage.store[RESOURCE_ENERGY] > 0
+      ? room.storage.store[RESOURCE_ENERGY]
+      : 0;
+
+  let totalEnergy = storage;
+  for (let energy of droppedEnergy) {
+    totalEnergy += energy.amount;
+  }
+  for (let container of containers) {
+    totalEnergy += container.store[RESOURCE_ENERGY];
+  }
+
+  if (totalEnergy > 300) {
+    Memory.TaskMan[spawnName].spawnList.push({
+      role: "Carrier",
+      body: [
+        [CARRY, 2],
+        [MOVE, 1],
+      ],
+    });
+  }
+
+  // Find a source
+  const sources = room.find(FIND_SOURCES);
+
+  // Miner
+  for (let i = 0; i < sources.length; i++) {
+    const source = sources[i];
+    const pos = findMiningPosition(source, spawn);
+
+    Memory.TaskMan[spawnName].spawnList.push({
+      role: "Miner",
+      say: 1,
+      atDest: false,
+      sourceType: RESOURCE_ENERGY,
+      sourceId: source.id,
+      body: [
+        [WORK, 2],
+        [MOVE, 1],
+      ],
+      sitPOS: pos,
+    });
+  }
+
+  // Carrier
+
+  Memory.TaskMan[spawnName].spawnList.push({
+    role: "Carrier",
+    body: [
+      [CARRY, 2],
+      [MOVE, 1],
+    ],
+  });
+};
