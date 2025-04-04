@@ -38,6 +38,10 @@ function generatePhase1Queue(roomName) {
   console.log("Generating Phase" + 1 + "Queue for " + room.name);
   // TODO: fix when multiple spawns
   const spawn = room.find(FIND_MY_SPAWNS)[0];
+  if (!spawn) {
+    console.log("No spawn found in room " + roomName);
+    return;
+  }
   const spawnName = spawn.name;
 
   // Get sources
@@ -115,6 +119,10 @@ function generatePhase2Queue(room) {
   console.log("Generating Phase 2 Queue for " + room.name);
   // TODO: fix when multiple spawns
   const spawn = room.find(FIND_MY_SPAWNS)[0];
+  if (!spawn) {
+    console.log("No spawn found in room " + roomName);
+    return;
+  }
   const spawnName = spawn.name;
 
   // Get sources
@@ -197,6 +205,10 @@ function generatePhase3Queue(roomName) {
   console.log("Generating Phase 3 Queue for " + room.name);
   // TODO: fix when multiple spawns
   const spawn = room.find(FIND_MY_SPAWNS)[0];
+  if (!spawn) {
+    console.log("No spawn found in room " + roomName);
+    return;
+  }
   const spawnName = spawn.name;
 
   // Get sources
