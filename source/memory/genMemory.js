@@ -11,7 +11,6 @@ function initMemory() {
   // Base memory initialization
   if (!Memory.TaskMan) Memory.TaskMan = {};
   if (!Memory.Tick) Memory.Tick = 0;
-  if (!Memory.lastLoopFailed) Memory.lastLoopFailed = false;
   if (!Memory.TaskMan.NameNum) Memory.TaskMan.NameNum = 1;
 
   // Initialize for each room we control

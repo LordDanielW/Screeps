@@ -132,7 +132,7 @@ var roleMiner = {
       if (moveResult === OK) {
         return this.ACTION_RESULT.SUCCESS; //
       } else {
-        utils.action.logError(creep, moveResult, `moveToSitPOS, ${sitPOS}`);
+        // utils.action.logError(creep, moveResult, `moveToSitPOS, ${sitPOS}`);
       }
     }
 

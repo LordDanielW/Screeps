@@ -6,7 +6,7 @@
 // Global functions for console use
 global.inspect = function (path) {
   if (!path) {
-    return _.pick(Memory, ["TaskMan", "Tick", "lastLoopFailed"]);
+    return _.pick(Memory, ["TaskMan", "Tick"]);
   }
 
   const parts = path.split(".");

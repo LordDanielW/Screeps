@@ -291,15 +291,15 @@ var creepAction = {
           creep.memory.upgradePOS.roomName
         );
         var result = creep.moveTo(tUpPos, this.pathStyle);
-        // console.log( "Move to Upgrade: " + result);
-        this.logError(
-          creep,
-          result,
-          "Move to Upgrade: " +
-            creep.memory.upgradePOS.x +
-            "," +
-            creep.memory.upgradePOS.y
-        );
+
+        // this.logError(
+        //   creep,
+        //   result,
+        //   "Move to Upgrade: " +
+        //     creep.memory.upgradePOS.x +
+        //     "," +
+        //     creep.memory.upgradePOS.y
+        // );
       } else {
         creep.moveTo(creep.room.controller, this.pathStyle);
       }
