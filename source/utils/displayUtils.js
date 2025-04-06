@@ -15,20 +15,25 @@ module.exports.structureMessage = structureMessage;
 //  Display Attack Rings
 //
 //
-displayAttackRings = function (aRoom, aTower) {
-  aRoom.visual.circle(aTower.pos.x, aTower.pos.y, {
+displayAttackRings = function (aTower) {
+  if (!aTower || !aTower.room || !aTower.room.visual) {
+    console.error("Invalid tower or tower.room.visual is undefined");
+    return;
+  }
+
+  aTower.room.visual.circle(aTower.pos, {
     fill: "transparent",
     stroke: "red",
     strokeWidth: 0.1,
     radius: 5,
   });
-  aRoom.visual.circle(aTower.pos.x, aTower.pos.y, {
+  aTower.room.visual.circle(aTower.pos, {
     fill: "transparent",
     stroke: "yellow",
     strokeWidth: 0.1,
     radius: 10,
   });
-  return aRoom.visual.circle(aTower.pos.x, aTower.pos.y, {
+  aTower.room.visual.circle(aTower.pos, {
     fill: "transparent",
     stroke: "blue",
     strokeWidth: 0.1,
