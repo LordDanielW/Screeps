@@ -42,16 +42,22 @@ var roleCarrier = {
 
       // Move and transfer energy
       if (emptyStructure != null) {
+        // serialize emtpy structure to console
+        // console.log(JSON.stringify(emptyStructure));
+
         // move to 1 distance of the structure
-        if (creep.pos.getRangeTo(emptyStructure) > 0) {
-          utils.action.moveTo(creep, emptyStructure);
-        }
+        // if (creep.pos.getRangeTo(emptyStructure) > 0) {
+        utils.action.moveTo(creep, emptyStructure);
+        // }
 
         let response = creep.transfer(emptyStructure, RESOURCE_ENERGY);
         if (response == ERR_NOT_IN_RANGE) {
           utils.action.moveTo(creep, emptyStructure);
           state = "MOVE";
         } else if (response == OK) {
+          // console.log(
+          //   `${creep.name} transferred ${creep.store[RESOURCE_ENERGY]} energy to ${emptyStructure.structureType} ${emptyStructure.id}`
+          // );
           creep.memory.destination = null;
 
           state = "GIVE";
@@ -85,11 +91,21 @@ var roleCarrier = {
       let emptyStructure = undefined;
 
       // Check Spawner Extensions
+      let logStructure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+        filter: (structure) => {
+          return (
+            structure.structureType == STRUCTURE_SPAWN &&
+            structure.energy < structure.energyCapacity
+          );
+        },
+      });
+      // console.log("Spawn: " + logStructure.pos);
+      // Check Spawner Extensions
       emptyStructure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
         filter: (structure) => {
           return (
-            (structure.structureType == STRUCTURE_EXTENSION ||
-              structure.structureType == STRUCTURE_SPAWN) &&
+            structure.structureType == STRUCTURE_EXTENSION &&
+            //  || structure.structureType == STRUCTURE_SPAWN) &&
             structure.energy < structure.energyCapacity
           );
         },

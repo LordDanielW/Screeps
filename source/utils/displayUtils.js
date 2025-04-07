@@ -4,6 +4,7 @@
 structureMessage = function (structureId, message) {
   let structure = Game.getObjectById(structureId);
   structure.pos.x += 1;
+  structure.pos.y -= 2;
   structure.room.visual.text(message, structure.pos, {
     align: "left",
     opacity: 0.8,

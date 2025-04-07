@@ -25,12 +25,20 @@ var roleUpCarrier = {
     //
     if (creep.memory.task == "GET") {
       // let sourceId = Memory.TaskMan[creep.room.name].sourceContainers[1];
-      let sourceId = creep.memory.sourceId;
+      let sourceId = creep.room.storage.id;
+      creep.memory.sourceId = sourceId;
+      // let sourceId = creep.memory.sourceId;
       if (!creep.memory.sourceId) {
         sourceId = Memory.TaskMan[creep.room.name].sourceContainers[0];
         Memory.TaskMan[creep.room.name].sourceId = sourceId;
       }
-
+      let sourceOBJ = Game.getObjectById(sourceId);
+      if (
+        sourceOBJ &&
+        sourceOBJ.store[RESOURCE_ENERGY] < creep.carryCapacity + 200
+      ) {
+        return; // Exit if the source container doesn't have enough energy
+      }
       utils.action.getResourceById(creep, sourceId);
     }
     //  Give

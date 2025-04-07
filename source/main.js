@@ -6,7 +6,7 @@ var myMemory = require("memory.all");
 var utils = require("utils.all");
 
 //  Globals
-global.showGraphics = true;
+global.showGraphics = false;
 
 // This is a function accessible to all modules and the console
 global.helloWorld = () => {

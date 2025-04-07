@@ -156,11 +156,12 @@ var roleMiner = {
       return this.ACTION_RESULT.SUCCESS;
     } else if (error === ERR_NOT_ENOUGH_RESOURCES) {
       creep.memory.idleTicks++;
-    } else if (error === ERR_NOT_IN_RANGE) {
-      console.log(`Creep ${creep.name} is not in range to harvest.`);
-    } else {
-      util.action.logError(creep, error, `harvest, ${source.id}`);
     }
+    // else if (error === ERR_NOT_IN_RANGE) {
+    // console.log(`Creep ${creep.name} is not in range to harvest.`);
+    // } else {
+    // util.action.logError(creep, error, `harvest, ${source.id}`);
+    // }
     return this.ACTION_RESULT.FAILURE;
   },
 

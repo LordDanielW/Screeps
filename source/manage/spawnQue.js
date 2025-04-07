@@ -179,7 +179,7 @@ function getRoleRequirements(room, phase) {
     4: {
       Carrier: 2,
       Miner: numSources,
-      upCarrier: numSources,
+      upCarrier: 1,
       Upgrader: 3,
       Builder: numBuilders,
       Repair: 1,
