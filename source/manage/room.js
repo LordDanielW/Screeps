@@ -57,6 +57,53 @@ runRoom = function (roomName) {
       return structure.structureType == STRUCTURE_TOWER;
     },
   });
+  const towers = room.find(FIND_STRUCTURES, {
+    filter: (structure) => structure.structureType === STRUCTURE_TOWER,
+  });
+  const towerEnergy = _.sum(towers, (tower) =>
+    tower.store.getUsedCapacity(RESOURCE_ENERGY)
+  );
+  Memory.TaskMan[room.name].towerEnergy = towerEnergy;
+  const towerCapacity = _.sum(towers, (tower) =>
+    tower.store.getCapacity(RESOURCE_ENERGY)
+  );
+  Memory.TaskMan[room.name].towerCapacity = towerCapacity;
+
+  // If enemies in the room, and tower energy is low or zero, activate safe mode
+  const hostiles = room.find(FIND_HOSTILE_CREEPS);
+  if (hostiles.length > 0 && towerEnergy < 20) {
+    // Check if we can activate safe mode
+    if (
+      room.controller &&
+      room.controller.my &&
+      !room.controller.safeMode &&
+      room.controller.safeModeAvailable > 0 &&
+      !room.controller.safeModeCooldown
+    ) {
+      console.log(
+        `🔴 ALERT: Hostiles detected in ${room.name} with low tower energy! Activating safe mode!`
+      );
+      const result = room.controller.activateSafeMode();
+
+      if (result === OK) {
+        console.log(`🛡️ Safe mode activated in ${room.name}`);
+      } else {
+        console.log(
+          `⚠️ Failed to activate safe mode in ${room.name}, error code: ${result}`
+        );
+      }
+    } else if (room.controller && room.controller.safeMode) {
+      console.log(
+        `🛡️ ${room.name} is already in safe mode for ${room.controller.safeMode} more ticks`
+      );
+    } else if (room.controller && room.controller.safeModeCooldown) {
+      console.log(
+        `⌛ Safe mode is on cooldown in ${room.name} for ${room.controller.safeModeCooldown} more ticks`
+      );
+    }
+  }
+
+  // For each tower
   for (var i = 0; i < towers.length; i++) {
     runTower(towers[i]);
     if (showGraphics) {
@@ -82,7 +129,8 @@ function displayRoomVisuals(room) {
     (Memory.TaskMan[room.name] && Memory.TaskMan[room.name].energyMined) || []
   );
 
-  visual.rect(1, 1, 10, 6, { fill: "black", opacity: 0.5 });
+  // Increase height of main info box to accommodate tower energy
+  visual.rect(1, 1, 10, 7, { fill: "black", opacity: 0.5 });
   visual.text(`Tick: ${Memory.Tick}`, 2, 2, { align: "left", color: "white" });
   visual.text(`Energy Mined: ${totalEnergyMined}`, 2, 3, {
     align: "left",
@@ -101,17 +149,35 @@ function displayRoomVisuals(room) {
     color: "white",
   });
 
+  // Add tower energy information
+
+  visual.text(
+    `Tower: ${Memory.TaskMan[room.name].towerEnergy}/${
+      Memory.TaskMan[room.name].towerCapacity
+    }`,
+    2,
+    6,
+    {
+      align: "left",
+      color: "white",
+    }
+  );
+
   // Get creep stats
   const { creeps, creepCounts } = getCreepStats(room);
 
-  // Display total creeps
-  visual.text(`Creeps: ${creeps.length}`, 2, 6, {
+  // Display total creeps (moved down one line to accommodate tower energy)
+  visual.text(`Creeps: ${creeps.length}`, 2, 7, {
     align: "left",
     color: "white",
   });
 
   // Display creep roles in the second column
   let yOffset = 2;
+  visual.rect(11, 1, 8, Object.keys(creepCounts).length + 2, {
+    fill: "black",
+    opacity: 0.5,
+  });
   visual.text(`Creep Roles:`, 12, yOffset++, { align: "left", color: "white" });
   for (const [role, count] of Object.entries(creepCounts)) {
     visual.text(`${role}: ${count}`, 12, yOffset++, {
