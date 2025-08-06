@@ -27,6 +27,12 @@ runRoom = function (roomName) {
       break;
   }
 
+  // Exit if no TaskMan for the room
+  if (!Memory.TaskMan[room.name]) {
+    // console.log("No TaskMan for room " + room.name);
+    return; // Exit if no TaskMan
+  }
+
   // Display room visuals
   if (showGraphics) {
     displayRoomVisuals(room);
@@ -56,9 +62,6 @@ runRoom = function (roomName) {
     filter: (structure) => {
       return structure.structureType == STRUCTURE_TOWER;
     },
-  });
-  const towers = room.find(FIND_STRUCTURES, {
-    filter: (structure) => structure.structureType === STRUCTURE_TOWER,
   });
   const towerEnergy = _.sum(towers, (tower) =>
     tower.store.getUsedCapacity(RESOURCE_ENERGY)
@@ -110,7 +113,11 @@ runRoom = function (roomName) {
       utils.displayAttackRings(towers[i]);
     }
   }
-};
+}; // End Run Room
+
+// *********************************************************************************
+//
+// *********************************************************************************
 
 function getCreepStats(room) {
   const creeps = _.filter(

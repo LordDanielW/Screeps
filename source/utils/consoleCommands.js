@@ -153,7 +153,7 @@ global.sC = function (spawnType) {
     case "Builder":
       spawnObject = {
         role: "Builder",
-        task: "MOVIN",
+        task: "GET",
         body: [
           [WORK, 6],
           [CARRY, 6],
