@@ -137,10 +137,17 @@ global.sC = function (spawnType) {
       spawnObject = {
         role: "Linker",
         body: [
-          [CARRY, 1],
-          [MOVE, 1],
+          [CARRY, 15],
+          [MOVE, 15],
         ],
+        // source: "680667feeb29db4d4335fcea", // Terminal
+        // source: "67e8bdd9d83f3f2d268c47dc", // Mine Container
+        source: "67f3323229f7fe65af3a2c60", // Storage
+        destination: "6895307698c61921ad6f2de0", // Nuker
+        resource: RESOURCE_ENERGY,
+        task: "GET",
       };
+      break;
     case "Carrier":
       spawnObject = {
         role: "Carrier",

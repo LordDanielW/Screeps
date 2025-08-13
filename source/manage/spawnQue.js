@@ -65,8 +65,8 @@ const bodyConfigs = {
       [MOVE, 3],
     ],
     4: [
-      [CARRY, 4],
-      [MOVE, 4],
+      [CARRY, 5],
+      [MOVE, 5],
     ],
   },
   upCarrier: {
@@ -118,9 +118,9 @@ const bodyConfigs = {
       [MOVE, 2],
     ],
     4: [
-      [WORK, 3],
-      [CARRY, 3],
-      [MOVE, 3],
+      [WORK, 5],
+      [CARRY, 10],
+      [MOVE, 10],
     ],
   },
   Repair: {
@@ -135,9 +135,9 @@ const bodyConfigs = {
       [MOVE, 2],
     ],
     4: [
-      [WORK, 2],
-      [CARRY, 3],
-      [MOVE, 3],
+      [WORK, 5],
+      [CARRY, 10],
+      [MOVE, 10],
     ],
   },
 };
@@ -174,15 +174,15 @@ function getRoleRequirements(room, phase) {
       upCarrier: numSources,
       Upgrader: 3,
       Builder: numBuilders,
-      Repair: 1,
+      Repair: 2,
     },
     4: {
       Carrier: 2,
       Miner: numSources,
       upCarrier: 1,
-      Upgrader: 1,
+      Upgrader: 3,
       Builder: numBuilders,
-      Repair: 1,
+      Repair: 4,
     },
   };
 
