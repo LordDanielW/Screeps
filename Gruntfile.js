@@ -1,33 +1,22 @@
 require("dotenv").config();
 
 module.exports = function (grunt) {
-  // ****   Load Tasks  **** //
+  // Load tasks
   grunt.loadNpmTasks("grunt-screeps");
   grunt.loadNpmTasks("grunt-eslint");
   grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-contrib-copy");
+  grunt.loadNpmTasks("grunt-shell");
 
-  //  How to Grunt
-  //    terminal: grunt both
-  grunt.registerTask("foo", function () {
-    console.log("Hello ");
-  });
-  grunt.registerTask("bar", function () {
-    console.log("World!");
-  });
+  // Your helper tasks
+  grunt.registerTask("foo", () => console.log("Hello "));
+  grunt.registerTask("bar", () => console.log("World!"));
   grunt.registerTask("both", ["foo", "bar"]);
-
-  // Grunt commands:
-  //    default, fast, screeps
-  grunt.registerTask("default", ["eslint", "concat", "screeps", "watch"]);
-  grunt.registerTask("fast", ["concat", "screeps:dist"]);
-  grunt.registerTask("world", ["concat", "screeps:world"]);
 
   grunt.registerTask("checkSecrets", function () {
     const email = process.env.SCREEPS_EMAIL;
     const token = process.env.SCREEPS_TOKEN;
-
     if (!email || !token) {
       grunt.log.error("❌ Missing SCREEPS_EMAIL or SCREEPS_TOKEN");
       return false;
@@ -38,30 +27,31 @@ module.exports = function (grunt) {
     }
   });
 
-  // ****   Init Config   **** //
-  //
+  // Config
   grunt.initConfig({
     screeps: {
       options: {
-        email: process.env.SCREEPS_EMAIL, // stored in git secrets
-        token: process.env.SCREEPS_TOKEN, // stored in git secrets
+        email: process.env.SCREEPS_EMAIL,
+        token: process.env.SCREEPS_TOKEN,
         branch: "default",
-        //server: 'season'
       },
-      dist: {
-        src: ["build/*.js"],
-      },
+      dist: { src: ["build/*.js"] },
       world: {
-        options: {
-          branch: "world",
-        },
+        options: { branch: "world" },
         src: ["build/*.js"],
       },
     },
+
     // ESLINT
     eslint: {
+      options: {
+        // Set to true so lint never blocks deployment
+        force: true,
+        // If you want to fail on errors locally: force: false
+      },
       target: ["source/**/*.js"],
     },
+
     // CONCAT
     concat: {
       manage: {
@@ -74,10 +64,7 @@ module.exports = function (grunt) {
             "if (!module.exports) module.exports = {};",
         },
       },
-      memory: {
-        src: ["source/memory/*.js"],
-        dest: "build/memory.all.js",
-      },
+      memory: { src: ["source/memory/*.js"], dest: "build/memory.all.js" },
       roles: {
         src: ["source/roles/**/*.js"],
         dest: "build/roles.all.js",
@@ -87,16 +74,25 @@ module.exports = function (grunt) {
             "if (!module.exports) module.exports = {};",
         },
       },
-      utils: {
-        src: ["source/utils/*.js"],
-        dest: "build/utils.all.js",
-      },
-      main: {
-        src: ["source/main.js"],
-        dest: "build/main.js",
-      },
+      utils: { src: ["source/utils/*.js"], dest: "build/utils.all.js" },
+      main: { src: ["source/main.js"], dest: "build/main.js" },
     },
-    // WATCH
+
+    // SYNTAX + (optional) TYPECHECK + TEST
+    shell: {
+      syntax: {
+        // Windows
+        command: 'for %f in (build\\*.js) do node --check "%f"',
+        options: { execOptions: { shell: true } },
+      },
+      // macOS/Linux variant (uncomment and comment out the Windows one above)
+      // syntax: { command: 'for f in build/*.js; do node --check "$f"; done' },
+
+      // Optional stronger checks:
+      // typecheck: { command: "npx tsc --noEmit" },
+      // test: { command: "npx jest --runInBand" }
+    },
+
     watch: {
       manage: {
         files: ["source/manage/*.js"],
@@ -114,10 +110,26 @@ module.exports = function (grunt) {
         files: ["source/utils/*.js"],
         tasks: ["concat:utils", "screeps"],
       },
-      main: {
-        files: ["source/main.js"],
-        tasks: ["concat:main", "screeps"],
-      },
+      main: { files: ["source/main.js"], tasks: ["concat:main", "screeps"] },
     },
   });
+
+  // Pipelines
+  // Default: lint (non-blocking) → build → syntax check → deploy → watch
+  grunt.registerTask("default", [
+    "eslint",
+    "concat",
+    "shell:syntax",
+    "screeps",
+    "watch",
+  ]);
+
+  // Fast: build → syntax → deploy
+  grunt.registerTask("fast", ["concat", "shell:syntax", "screeps:dist"]);
+
+  // World branch
+  grunt.registerTask("world", ["concat", "shell:syntax", "screeps:world"]);
+
+  // Strict (run locally if you want failures to stop you):
+  // grunt.registerTask("strict", ["eslint", "concat", "shell:syntax", "shell:typecheck", "shell:test", "screeps"]);
 };

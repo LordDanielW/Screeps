@@ -6,12 +6,17 @@
   "version": "1.0.0",
   "main": "Gruntfile.js",
   "devDependencies": {
+    "@types/screeps": "^3.3.8",
+    "@typescript-eslint/eslint-plugin": "^8.39.1",
+    "@typescript-eslint/parser": "^8.39.1",
     "dotenv": "^16.4.7",
-    "eslint": "^8.39.0",
+    "eslint": "^8.57.1",
     "grunt-contrib-concat": "^2.1.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
-    "grunt-eslint": "^24.0.1"
+    "grunt-eslint": "^24.0.1",
+    "grunt-shell": "^4.0.0",
+    "typescript": "^5.9.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
